@@ -7,6 +7,7 @@ import Productos from './pages/Productos';
 import Locales from './pages/Locales';
 import Afiliarse from './pages/Afiliarse';
 import SobreNosotros from './pages/SobreNosotros';
+import Register from './pages/Register/Register';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/productos" element={<Productos />} />
         <Route path="/locales" element={<Locales />} />
