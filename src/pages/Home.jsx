@@ -1,22 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
-// Navbar Component
-const Navbar = () => {
-  return (
-    <nav className="bg-gray-800 text-white p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-2xl font-bold">FoodGlobal</Link>
-        <div>
-          <Link to="/about" className="mx-4">Sobre Nosotros</Link>
-          <Link to="/support" className="mx-4">Ayuda y Soporte</Link>
-          <Link to="/contact" className="mx-4">Contacto</Link>
-        </div>
-      </div>
-    </nav>
-  );
-};
-
+import Navbar from '../components/Navbar';
 // Home Component
 const Home = () => {
   return (
