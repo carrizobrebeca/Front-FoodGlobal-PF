@@ -1,0 +1,23 @@
+.cardContainer {
+
+background-color: grey;
+border: 1px solid grey;
+border-radius: 5px;
+padding: 25px;
+cursor: pointer;
+-moz-osx-font-smoothing: grayscale;
+backface-visibility: hidden;
+transform: translateZ(0);
+transition: transform 0.25s ease-out;
+}
+
+.cardContainer:hover {
+  transform: scale(1.05);
+}
+
+.content {
+  background-color: #fff;
+  padding: 50px;
+  box-sizing: border-box;
+  border-radius: 90px;
+}
