@@ -27,7 +27,7 @@ const RegistroAfiliacion = () => {
       <section className="registro-intro text-center py-16">
         <h1 className="text-4xl font-bold mb-4">Afíliate con FoodGlobal</h1>
         <p className="text-lg mb-8">
-          Únete a nuestra plataforma y empieza a vender tus productos a nivel internacional. Completa el siguiente formulario para registrarte
+          Únete a nuestra plataforma y empieza a vender tus productos a nivel internacional. Completa el siguiente formulario para registrarte.
         </p>
       </section>
 
