@@ -82,15 +82,15 @@ const Home = () => {
         <div className="benefits-list mx-auto max-w-2xl">
           <div className="benefit mb-8">
             <h3 className="text-xl font-semibold">Conexión Global</h3>
-            <p>Accede a productos de mercados locales de cualquier parte del mundo.</p>
+            <p>Accede a productos de mercados locales de cualquier parte del mundo</p>
           </div>
           <div className="benefit mb-8">
             <h3 className="text-xl font-semibold">Comercio Justo</h3>
-            <p>Apoya a pequeñas empresas y mercados locales, garantizando precios justos para todos.</p>
+            <p>Apoya a pequeñas empresas y mercados locales, garantizando precios justos para todos</p>
           </div>
           <div className="benefit mb-8">
             <h3 className="text-xl font-semibold">Fácil y Seguro</h3>
-            <p>Realiza compras internacionales con opciones de pago seguras y fáciles de usar.</p>
+            <p>Realiza compras internacionales con opciones de pago seguras y fáciles de usar</p>
           </div>
         </div>
       </section>
