@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import Login from './pages/Login'; // Asegúrate de tener este archivo
+import Login from './pages/Login/Login'; // Asegúrate de tener este archivo
 import Dashboard from './pages/Dashboard'; // Asegúrate de tener este archivo
 import Productos from './pages/Productos';
 import Locales from './pages/Locales';

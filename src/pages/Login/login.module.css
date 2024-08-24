@@ -1,0 +1,80 @@
+/* Estilos generales para el contenedor principal */
+.container {
+    display: flex;
+    height: 100vh; /* Ocupa el 100% del alto de la ventana */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-image: URL('https://www.campdenbri.co.uk/images/food-cuisine-large.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* Estilos para el contenedor izquierdo */
+.left {
+    flex: 1;
+    background-color: rgba(244, 244, 244, 0.046); /* Color de fondo con opacidad para el contenedor izquierdo */
+    padding: 20px;
+    box-sizing: border-box;
+    color: white;
+    font-size: 50px;
+}
+
+/* Estilos para el contenedor derecho con gradiente */
+.right {
+    flex: 1;
+    background: linear-gradient(to right, rgba(6, 3, 3, 0.01), rgb(0, 0, 0)); /* Gradiente lineal de izquierda a derecha */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.logo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+}
+.login {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: rgba(53, 51, 50, 0.97);
+    /* opacity: 0.99; */
+    border-radius: 30px;
+    padding: 30px;
+    color: white;
+}
+
+.buttonStyle{
+    border-radius: 30px;
+    background-color: rgb(254, 165, 0);
+}
+
+input{
+    border-radius: 30px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+h1, h5{
+    display: flex;
+    justify-content: center;
+}
+
+.buttonApp {
+    border: none; /* Elimina el borde por defecto */
+    background: none; /* Elimina el fondo por defecto */
+    padding: 0; /* Elimina el padding */
+    cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+.resizable {
+    
+    width: 50px; /* Ajusta el ancho según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+}
+
+.appBn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
