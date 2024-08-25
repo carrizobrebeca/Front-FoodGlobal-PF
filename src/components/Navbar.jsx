@@ -9,7 +9,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://ipinfo.io/json?token=YOUR_API_KEY'); // Reemplaza con tu API key
+        const response = await fetch('https://ipinfo.io/json?token=115342b5b7cd4d'); // Reemplaza con tu API key
         const data = await response.json();
         setLocation(data);
       } catch (error) {
