@@ -1,36 +1,62 @@
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../../store/registerSlice";
 import style from "../Login/login.module.css";
 import logo from "../../assets/images/logofood.png";
 
 const Register = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { status, error } = useSelector((state) => state.register);
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [state, setState] = useState({
-    name: "",
+    nombre: "",
+    apellido: "",
     email: "",
     password: "",
+    imagen: "" ,
+    rol: "usuario"
   });
 
+  useEffect(() => {
+    if (status === 'succeeded') {
+      navigate("/"); // Redirige a la página principal o al destino deseado
+    }
+  }, [status, navigate]);
+
+  const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;  
+  const apellidoRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /(?=.*\d)/;
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
   const [errors, setErrors] = useState({
-    name: "Name cannot be empty",
+    nombre: "Name cannot be empty",
+    apellido: "Last Name cannot be empty",
     email: "Email cannot be empty",
     password: "Password cannot be empty",
   });
 
   const validate = (state, name) => {
-    if (name === "name") {
-      if (state.name === "")
-        setErrors({ ...errors, name: "Name cannot be empty" });
-      else if (state.name.length >= 80)
-        setErrors({ ...errors, name: "Name is long" });
+    if (name === "nombre") {
+      if (state.nombre === "")
+        setErrors({ ...errors, nombre: "Name cannot be empty" });
+      else if (!nombreRegex.test(state.nombre))
+        setErrors({ ...errors, nombre: "Name format is not valid" });
       else {
-        setErrors({ ...errors, name: "" });
+        setErrors({ ...errors, nombre: "" });
+        return;
+      }
+    }
+
+    if (name === "apellido") {
+      if (state.apellido === "")
+        setErrors({ ...errors, apellido: "Last Name cannot be empty" });
+      else if (!apellidoRegex.test(state.apellido))
+        setErrors({ ...errors, apellido: "Last Name format is not valid" });
+      else {
+        setErrors({ ...errors, apellido: "" });
         return;
       }
     }
@@ -49,14 +75,10 @@ const Register = () => {
     if (name === "password") {
       if (state.password === "")
         setErrors({ ...errors, password: "Password cannot be empty" });
-      else if (state.password.length < 8)
-        setErrors({ ...errors, password: "Password is short" });
-      else if (state.password.length > 15)
-        setErrors({ ...errors, password: "Password is long" });
       else if (!passwordRegex.test(state.password))
         setErrors({
           ...errors,
-          password: "Password must contain at least one number",
+          password: "6-20, Password must contain at least one number",
         });
       else {
         setErrors({ ...errors, password: "" });
@@ -69,13 +91,15 @@ const Register = () => {
     e.preventDefault();
 
     if (
-      e.target.name === "name" ||
+      e.target.name === "nombre" ||
+      e.target.name === "apellido" ||
       e.target.name === "email" ||
       e.target.name === "password"
     ) {
       setState({
         ...state,
         [e.target.name]: e.target.value,
+        imagen: state.imagen 
       });
     }
 
@@ -90,8 +114,31 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   
-    // dispatch(postUser());
+    setFormSubmitted(true);
+
+    if (!disable()) {
+      dispatch(registerUser(state))
+        .unwrap()
+        .then(() => {
+          navigate("/login"); // Redirige a la página principal o al destino deseado
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
+  const disable = () => {
+    if (formSubmitted) return true;
+    let disabled = true;
+    for (let error in errors) {
+      if (errors[error] === "" || errors[error].length === 0) disabled = false;
+      else {
+        disabled = true;
+        break;
+      }
+    }
+    return disabled;
   };
 
   return (
@@ -112,17 +159,22 @@ const Register = () => {
                 <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto" />
               </h5>
               <h1>Ingresa tus datos para continuar</h1>
+              <label htmlFor="">Name</label>
+              <input onChange={handleChange} name="nombre" id="nombre" />
+              <label className={style.form_error}>{errors.nombre}</label>
+              <label htmlFor="">Last Name</label>
+              <input onChange={handleChange} name="apellido" id="apellido" />
+              <label className={style.form_error}>{errors.apellido}</label>
               <label htmlFor="">Mail</label>
-              <input onChange={handleChange} name="email" id="email"/>
+              <input onChange={handleChange} name="email" id="email" />
               <label className={style.form_error}>{errors.email}</label>
               <label htmlFor="">Password</label>
               <input onChange={handleChange} name="password" id="password" />
               <label className={style.form_error}>{errors.password}</label>
-              <label htmlFor="">Name</label>
-              <input onChange={handleChange} name="name" id="name"/>
-              <label className={style.form_error}>{errors.name}</label>
               <button
-                onClick={() => navigate("/")}
+                type="submit"
+                name="submit"
+                disabled={disable()}
                 className={style.buttonStyle}
               >
                 Continue
@@ -130,7 +182,7 @@ const Register = () => {
               <Link to="/password" className="underline">
                 Forgot password?
               </Link>
-              <h5>or continue whit</h5>
+              <h5>or continue with</h5>
               <div className={style.appBn}>
                 <a href="" className={style.buttonApp}>
                   <img

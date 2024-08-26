@@ -24,7 +24,7 @@ export const fetchProductosPorSupermercado = createAsyncThunk('productos/fetchPr
 const productosSlice = createSlice({
   name: 'productos',
   initialState: {
-    items: [],
+    allUsers: [],
     selectedItem: null,
     productosPorSupermercado: [],
     status: 'idle',
