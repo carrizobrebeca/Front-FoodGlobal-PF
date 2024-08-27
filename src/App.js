@@ -8,11 +8,14 @@ import Locales from './pages/Locales';
 import Afiliarse from './pages/Afiliarse';
 import SobreNosotros from './pages/SobreNosotros';
 import Register from './pages/Register/Register';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 
 const App = () => {
   return (
     <Router>
+      <Navbar/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -23,6 +26,7 @@ const App = () => {
         <Route path="/afiliarse" element={<Afiliarse />} />
         <Route path="/about" element={<SobreNosotros />} />
       </Routes>
+      <Footer/>
     </Router>
   );
 };
