@@ -22,7 +22,7 @@ const Register = () => {
 
   useEffect(() => {
     if (status === 'succeeded') {
-      navigate("/"); // Redirige a la página principal o al destino deseado
+      navigate("/login"); // Redirige a la página principal o al destino deseado
     }
   }, [status, navigate]);
 

@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const loginStatus = useSelector((state) => state.login.status);
+  const { status, user } = useSelector((state) => state.login); 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [state, setState] = useState({
     email: "",
@@ -20,10 +20,18 @@ const Login = () => {
   });
 
   useEffect(() => {
-    if (loginStatus === 'succeeded') {
-      navigate("/"); // Redirige a la página principal o al destino deseado
+    if (status === 'succeeded') {
+      
+      if (user.rol === 'socio') {
+        navigate("/dashboard");
+        
+      } else if (user.rol === 'admin') {
+        navigate("/dashboardadmin");
+      }else {
+        navigate("/");
+      }
     }
-  }, [loginStatus, navigate]);
+  }, [status, user, navigate]);
 
   const validate = (state, name) => {
     if (name === "email") {

@@ -3,13 +3,13 @@ import axios from 'axios';
 
 export const fetchLogin = createAsyncThunk('login/fetchLogin', async (userData) => {
   const response = await axios.post('http://localhost:3001/login', userData);
-  return response.data;
+  return response.data.usuario; // Cambia aquí para devolver el usuario
 });
 
 const loginSlice = createSlice({
   name: 'login',
   initialState: {
-    user: JSON.parse(localStorage.getItem('user')) || null, // Cargar usuario desde localStorage
+    user: JSON.parse(localStorage.getItem('user')) || null,
     status: 'idle',
     error: null,
   },
@@ -18,7 +18,7 @@ const loginSlice = createSlice({
       state.user = null;
       state.status = 'idle';
       state.error = null;
-      localStorage.removeItem('user'); // Limpiar localStorage en logout
+      localStorage.removeItem('user');
     },
   },
   extraReducers: (builder) => {
@@ -28,8 +28,8 @@ const loginSlice = createSlice({
       })
       .addCase(fetchLogin.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = action.payload.usuario; // Asegúrate de que el payload contiene el usuario
-        localStorage.setItem('user', JSON.stringify(state.user)); // Guardar usuario en localStorage
+        state.user = action.payload;
+        localStorage.setItem('user', JSON.stringify(state.user));
         alert("Successfully logged in user: " + JSON.stringify(state.user));
       })
       .addCase(fetchLogin.rejected, (state, action) => {

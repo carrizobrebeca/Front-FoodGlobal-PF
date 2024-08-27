@@ -8,6 +8,9 @@ import Locales from './pages/Locales';
 import Afiliarse from './pages/Afiliarse';
 import SobreNosotros from './pages/SobreNosotros';
 import Register from './pages/Register/Register';
+import ProductsConfig from './components/ProductsConfig/ProductsConfig';
+import UsersConfig from './components/UsersConfig/UsersConfig';
+import DashBoardAdmin from './pages/DashboardAdmin';
 
 
 const App = () => {
@@ -18,7 +21,10 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/dashboardadmin" element={<DashBoardAdmin />} />
         <Route path="/productos" element={<Productos />} />
+        <Route path="/products" element={<ProductsConfig />} />
+        <Route path="/users" element={<UsersConfig />} />
         <Route path="/locales" element={<Locales />} />
         <Route path="/afiliarse" element={<Afiliarse />} />
         <Route path="/about" element={<SobreNosotros />} />
