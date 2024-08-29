@@ -1,23 +1,30 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductos } from '../store/productosSlice';
-import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import image1 from '../assets/images/promo1.png';
 import image2 from '../assets/images/promo2.png';
 import image3 from '../assets/images/promo3.png';
+import CardProducto from '../components/CardProducto';
+import CardDetail from '../components/CarDetail'; // Asegúrate de importar el componente del detalle
+import comidaRapidaImg from '../assets/images/fastfood.png';
+import restaurantesImg from '../assets/images/restaurantes.png';
+import supermercadosImg from '../assets/images/supermercado.png';
+import kioscosImg from '../assets/images/Kioscos.png';
 
 const Productos = () => {
   const dispatch = useDispatch();
-  const productos = useSelector((state) => state.productos.items);
+  const productos = useSelector((state) => state.productos.items || []);
   const status = useSelector((state) => state.productos.status);
   const error = useSelector((state) => state.productos.error);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
   const [busqueda, setBusqueda] = useState('');
-  const [supermercadoSeleccionado, setSupermercadoSeleccionado] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const productosPorPagina = 12;
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null); // Estado para el producto seleccionado
+  const [mostrarModal, setMostrarModal] = useState(false); // Estado para mostrar el modal
 
   useEffect(() => {
     if (status === 'idle') {
@@ -31,24 +38,18 @@ const Productos = () => {
         categoriaSeleccionada ? producto.categoria === categoriaSeleccionada : true
       )
       .filter(producto =>
-        supermercadoSeleccionado ? producto.supermercado === supermercadoSeleccionado : true
-      )
-      .filter(producto =>
         busqueda ? producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) : true
       );
   };
 
-  const categoriesOptions = [
-    { name: 'Comida Rápida', image: 'url-to-image-1', link: '/categoria/fast-food' },
-    { name: 'Supermercados', image: 'url-to-image-2', link: '#', isSupermercado: true },
-    { name: 'Restaurantes', image: 'url-to-image-3', link: '/categoria/restaurantes' },
-    { name: 'Kioscos', image: 'url-to-image-4', link: '/categoria/kioscos' },
-  ];
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
 
-  const supermercadosOptions = [
-    { name: 'Super1' },
-    // Agrega más supermercados si es necesario
-  ];
+  const productosAmostar = filtrarProductos()
+    .slice((currentPage - 1) * productosPorPagina, currentPage * productosPorPagina);
+
+  const totalPages = Math.ceil(filtrarProductos().length / productosPorPagina);
 
   const sliderSettings = {
     dots: true,
@@ -66,15 +67,32 @@ const Productos = () => {
     { image: image3, alt: 'Promo 3' },
   ];
 
+  const categoriaImagens = {
+    'Comida Rapida': comidaRapidaImg,
+    'Restaurantes': restaurantesImg,
+    'Supermercados': supermercadosImg,
+    'Kioscos': kioscosImg,
+  };
+
+  const openModal = (producto) => {
+    setProductoSeleccionado(producto);
+    setMostrarModal(true);
+  };
+
+  const closeModal = () => {
+    setMostrarModal(false);
+    setProductoSeleccionado(null);
+  };
+
   return (
     <>
-      <Navbar />
+     
       <div className="p-8 bg-white">
         {/* Filtros */}
-        <section className="filter-section mb-8">
-          <div className="filter-container bg-white p-4 rounded-lg shadow-md">
+        <section className="mb-8">
+          <div className="bg-white p-4 rounded-lg shadow-md">
             <h2 className="text-2xl font-semibold mb-4">Filtros</h2>
-            <div className="filter-group mb-4">
+            <div className="mb-4">
               <label className="block text-gray-700 mb-2">Buscar</label>
               <input
                 type="text"
@@ -84,65 +102,75 @@ const Productos = () => {
                 placeholder="Buscar productos..."
               />
             </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 mb-2">Categoría</label>
+              <div className="flex flex-wrap gap-4">
+                {Object.keys(categoriaImagens).map((categoria) => (
+                  <button
+                    key={categoria}
+                    onClick={() => setCategoriaSeleccionada(categoria)}
+                    className={`p-4 border rounded-lg flex-1 ${categoriaSeleccionada === categoria ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'} transition duration-300`}
+                    style={{ flexBasis: 'calc(25% - 1rem)' }} // Asegura que los botones se alineen correctamente
+                  >
+                    <img
+                      src={categoriaImagens[categoria]}  // Usar imágenes mapeadas aquí
+                      alt={categoria}
+                      className="w-[438px] h-[132px] mb-2 mx-auto object-cover"  // Establecer dimensiones específicas
+                    />
+                    {categoria}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
-
-        {/* Opciones de Categorías */}
-        <section className="categories-section grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {categoriesOptions.map((category, index) => (
-            <div
-              key={index}
-              onClick={() => {
-                setCategoriaSeleccionada(category.name);
-                if (category.isSupermercado) {
-                  setSupermercadoSeleccionado('');
-                }
-              }}
-              className="relative h-48 flex items-center justify-center bg-center bg-cover text-white text-2xl font-bold rounded-lg shadow-md cursor-pointer"
-              style={{ backgroundImage: `url(${category.image})` }}
-            >
-              <div className="bg-black bg-opacity-50 p-4 rounded">{category.name}</div>
-            </div>
-          ))}
-        </section>
-
-        {/* Opciones de Supermercados */}
-        {categoriaSeleccionada === 'Supermercados' && (
-          <section className="supermercados-section mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Supermercados</h2>
-            <div className="supermercados-options grid grid-cols-1 md:grid-cols-2 gap-6">
-              {supermercadosOptions.map((supermercado, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSupermercadoSeleccionado(supermercado.name)}
-                  className="bg-white p-4 rounded-lg shadow-md text-center"
-                >
-                  {supermercado.name}
-                </button>
-              ))}
-            </div>
-          </section>
-        )}
 
         {/* Lista de Productos */}
         <section className="productos mb-8">
           {status === 'loading' && <p>Cargando productos...</p>}
           {status === 'failed' && <p>Error: {error}</p>}
           {status === 'succeeded' && (
-            filtrarProductos().length > 0 ? (
-              filtrarProductos().map((producto) => (
-                <div key={producto.id} className="producto-card mb-4 p-4 border rounded-lg shadow-md">
-                  <h3 className="text-xl font-semibold">{producto.nombre}</h3>
-                  <Link to={`/productos/${producto.id}`}>
-                    <button className="bg-blue-500 text-white py-2 px-4 rounded shadow-lg hover:bg-blue-400 transition duration-300">
-                      Ver Detalles
-                    </button>
-                  </Link>
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-4">
+                {productosAmostar.map((producto) => (
+                  <CardProducto
+                    key={producto.id}
+                    producto={producto}
+                    onOpenModal={() => openModal(producto)}
+                  />
+                ))}
+              </div>
+              {/* Controles de Paginación */}
+              <div className="flex flex-col items-center mb-4">
+                <div className="flex gap-2 mb-4">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="bg-blue-500 text-white py-2 px-4 rounded shadow-lg hover:bg-blue-400 transition duration-300"
+                  >
+                    Anterior
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="bg-blue-500 text-white py-2 px-4 rounded shadow-lg hover:bg-blue-400 transition duration-300"
+                  >
+                    Siguiente
+                  </button>
                 </div>
-              ))
-            ) : (
-              <p>No hay productos para mostrar</p>
-            )
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                      key={index + 1}
+                      onClick={() => handlePageChange(index + 1)}
+                      className={`py-2 px-4 rounded border ${currentPage === index + 1 ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </>
           )}
         </section>
 
@@ -157,6 +185,21 @@ const Productos = () => {
             ))}
           </Slider>
         </section>
+
+        {/* Modal de Detalle */}
+        {mostrarModal && productoSeleccionado && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white p-8 rounded-lg max-w-md w-full relative">
+              <button
+                onClick={closeModal}
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              >
+                &times;
+              </button>
+              <CardDetail producto={productoSeleccionado} />
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

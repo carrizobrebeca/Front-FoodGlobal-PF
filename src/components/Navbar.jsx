@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import logo from '../assets/images/logofood.png'; // Asegúrate de que la ruta sea correcta
-
+import { logout } from '../store/loginSlice'; // Ajusta la ruta según tu estructura de carpetas
+import usuarioSvg from '../assets/images/usuario.png'
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [location, setLocation] = useState(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.login.user);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -24,12 +28,16 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <>
-      <nav className="bg-white text-gray-800 p-4 flex justify-between items-center shadow-lg">
-        {/* Logo en lugar del texto */}
+      <nav className="bg-white text-gray-800 p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto" />
+          <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto animate-pulse" />
         </Link>
 
         {/* Barra de Búsqueda Centrada */}
@@ -41,7 +49,7 @@ const Navbar = () => {
           />
         </div>
 
-        {/* Ubicación, Bandera y Ingreso a la Cuenta */}
+        {/* Ubicación, Bandera y Estado de Usuario */}
         <div className="flex items-center">
           {location && (
             <div className="flex items-center text-gray-600 mr-4">
@@ -53,10 +61,19 @@ const Navbar = () => {
               />
             </div>
           )}
-          <Link to="/login" className="p-2 bg-blue-500 text-white rounded-lg mr-4 hover:bg-blue-600 transition">
-            Ingresar
-          </Link>
-
+          {user ? (
+            <div className="flex items-center">
+              <span className="mr-4">Bienvenido, {user.nombre}</span>
+              <img src={usuarioSvg} alt="User" className="w-8 h-8 rounded-full mr-4" />
+              <button onClick={handleLogout} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="p-2 bg-blue-600 text-white rounded-lg mr-4 hover:bg-blue-700 transition">
+              Ingresar
+            </Link>
+          )}
           {/* Botón de la Barra Lateral */}
           <button className="ml-4" onClick={toggleSidebar}>
             <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -76,8 +93,8 @@ const Navbar = () => {
           </button>
           <div className="p-4">
             <div className="mb-4">
-              <Link to="/login" className="block py-2 px-4 bg-blue-500 rounded">Login</Link>
-              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-500 rounded">Register</Link>
+              <Link to="/login" className="block py-2 px-4 bg-blue-600 rounded">Login</Link>
+              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-600 rounded">Register</Link>
             </div>
             <ul className="space-y-4">
               <li><Link to="/">Inicio</Link></li>

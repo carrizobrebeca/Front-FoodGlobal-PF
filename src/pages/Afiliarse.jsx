@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Navbar from '../components/Navbar';
 
 const RegistroAfiliacion = () => {
   const [nombreLocal, setNombreLocal] = useState('');
@@ -25,7 +24,7 @@ const RegistroAfiliacion = () => {
 
   return (
     <>
-    <Navbar/>
+  
     <div className="p-8 bg-gray-100">
       <section className="registro-intro text-center py-16">
         <h1 className="text-4xl font-bold mb-4">Afíliate con FoodGlobal</h1>
