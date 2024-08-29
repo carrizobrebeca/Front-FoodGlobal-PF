@@ -15,15 +15,17 @@ const imagenes = {
 
 const CardProducto = ({ producto, onOpenModal }) => {
   // Selecciona la imagen según el nombre del producto
-  const imagen = imagenProducto2; // Imagen por defecto si no hay coincidencia
+  const imagen = imagenes[producto.nombre] || imagenProducto2; // Imagen por defecto si no hay coincidencia
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md">
-      <img
-        src={imagen}
-        alt={producto.nombre}
-        className="w-full h-32 object-cover rounded-lg mb-4"
-      />
+      <div className="w-full h-64 mb-4 overflow-hidden">
+        <img
+          src={imagen}
+          alt={producto.nombre}
+          className="w-full h-full object-cover rounded-lg"
+        />
+      </div>
       <h3 className="text-xl font-semibold mb-2">{producto.nombre}</h3>
       <p className="mb-2">{producto.descripcion}</p>
       <p className="font-bold mb-4">Precio: ${producto.precio.toFixed(2)}</p>

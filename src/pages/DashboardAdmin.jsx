@@ -5,16 +5,16 @@ import axios from "axios";
 import Card from "../components/Card/Card"; // Asegúrate de que la ruta sea correcta
 
 import style from "./dashBoard.module.css";
-
+import logo from "../assets/images/logofood.png";
 import { useDispatch } from "react-redux";
 
-const DashBoard = () => {
+const DashBoardAdmin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
 
- 
+  
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:3001/usuarios");
@@ -22,7 +22,7 @@ const DashBoard = () => {
       const users = response.data;
 
       // Filtra el usuario con rol 'admin'
-      const adminUser = users.find((user) => user.rol === "socio");
+      const adminUser = users.find((user) => user.rol === "admin");
       setUser(adminUser);
 
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
@@ -51,15 +51,15 @@ const DashBoard = () => {
       <div className={style.sidebar}>
         <div>
           <button onClick={() => navigate("/login")}>❮ Back</button>
-        </div>{" "}
-        <img src={user?.imagen} alt="User" />
-        {/* <div className={style.imgcontent}>
-          <div className={style.imgcont}></div>
-        </div> */}
+        </div>
+        <div className={style.imgcontent}>
+          <img src={user?.foto || logo} alt="User" />
+        </div>
         <div>
           <p>{user?.nombre + " " + user?.apellido || "Name"}</p>
           <p>{user?.rol || "Role"}</p>
         </div>
+
         <div className={style.optionsPanel}>
           <div>
             <button className={style.btn} onClick={() => navigate("/users")}>
@@ -103,6 +103,7 @@ const DashBoard = () => {
             </button>
           </div>
         </div>
+
         <div>
           <button onClick={handleLogout} className={style.buttonApp}>
             <img
@@ -178,4 +179,4 @@ const DashBoard = () => {
   );
 };
 
-export default DashBoard;
+export default DashBoardAdmin;

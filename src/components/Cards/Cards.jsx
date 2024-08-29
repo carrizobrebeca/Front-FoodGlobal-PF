@@ -6,9 +6,6 @@ function Cards () {
   return (
     <div className={style.container}>
       <Card />
-      <Card /> 
-      <Card /> 
-      
     </div>
   );
 };

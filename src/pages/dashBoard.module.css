@@ -85,3 +85,16 @@
     border-radius: 50%;
     box-shadow: 0px 6px rgba(189, 105, 26, 0.384);
   }
+
+  .cardsContainer {
+    display: flex;
+    flex-wrap: nowrap; /* Evita que las tarjetas se envuelvan a la siguiente línea */
+    overflow-x: auto; /* Permite el desplazamiento horizontal si las tarjetas exceden el ancho del contenedor */
+    gap: 10px; /* Espacio entre las tarjetas */
+    padding: 10px; /* Espacio alrededor del contenedor */
+}
+
+.imgcont {
+    max-width: 50px;
+    max-height: 50px;
+}

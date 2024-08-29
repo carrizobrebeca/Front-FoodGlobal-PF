@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import logo from '../assets/images/logofood.png'; // Asegúrate de que la ruta sea correcta
 import { logout } from '../store/loginSlice'; // Ajusta la ruta según tu estructura de carpetas
-
+import usuarioSvg from '../assets/images/usuario.png'
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [location, setLocation] = useState(null);
@@ -64,7 +64,7 @@ const Navbar = () => {
           {user ? (
             <div className="flex items-center">
               <span className="mr-4">Bienvenido, {user.nombre}</span>
-              <img src="" alt="User" className="w-8 h-8 rounded-full mr-4" />
+              <img src={usuarioSvg} alt="User" className="w-8 h-8 rounded-full mr-4" />
               <button onClick={handleLogout} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
                 Logout
               </button>
