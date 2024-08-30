@@ -11,22 +11,30 @@ const Register = () => {
   const { status, error } = useSelector((state) => state.register);
 
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  
   const [state, setState] = useState({
     nombre: "",
     apellido: "",
     email: "",
     password: "",
-    imagen: "" ,
-    rol: "usuario"
+    imagen: "",
+    rol: "usuario",
   });
 
   useEffect(() => {
-    if (status === 'succeeded') {
+    if (status === "succeeded") {
       navigate("/login"); // Redirige a la página principal o al destino deseado
     }
   }, [status, navigate]);
 
-  const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;  
+  useEffect(() => {
+    if (status === "failed" && error) {
+      alert(error); // Muestra el error como una alerta
+    }
+  }, [status, error]);
+
+  const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const apellidoRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
@@ -99,7 +107,7 @@ const Register = () => {
       setState({
         ...state,
         [e.target.name]: e.target.value,
-        imagen: state.imagen 
+        imagen: state.imagen,
       });
     }
 
@@ -169,16 +177,34 @@ const Register = () => {
               <input onChange={handleChange} name="email" id="email" />
               <label className={style.form_error}>{errors.email}</label>
               <label htmlFor="">Password</label>
-              <input onChange={handleChange} name="password" id="password" />
+              <div className={style.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  name="password"
+                  id="password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={style.showPasswordButton}
+                >
+                  {showPassword ? (
+                    <img
+                      src="https://img.icons8.com/ios-filled/50/000000/visible.png" // Icono para mostrar
+                      alt="Show"
+                      className={style.passwordIcon}
+                    />
+                  ) : (
+                    <img
+                      src="https://img.icons8.com/ios-filled/50/000000/invisible.png" // Icono para ocultar
+                      alt="Hide"
+                      className={style.passwordIcon}
+                    />
+                  )}
+                </button>
+              </div>
               <label className={style.form_error}>{errors.password}</label>
-              <button
-                type="submit"
-                name="submit"
-                disabled={disable()}
-                className={style.buttonStyle}
-              >
-                Continue
-              </button>
               <Link to="/password" className="underline">
                 Forgot password?
               </Link>

@@ -5,7 +5,7 @@ import axios from "axios";
 import Card from "../components/Card/Card"; // Asegúrate de que la ruta sea correcta
 
 import style from "./dashBoard.module.css";
-import logo from "../assets/images/logofood.png";
+
 import { useDispatch } from "react-redux";
 
 const DashBoardAdmin = () => {
@@ -13,25 +13,32 @@ const DashBoardAdmin = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
-
-  
+  const [socios, setSocios] = useState([]);
+ 
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:3001/usuarios");
-      console.log("Usuarios:", response.data); // Verifica la estructura de los datos
-      const users = response.data;
+      const data = response.data;
 
-      // Filtra el usuario con rol 'admin'
-      const adminUser = users.find((user) => user.rol === "admin");
+      // Filtra el usuario con rol 'socio'
+      const adminUser = data.find((user) => user.rol === "admin");
       setUser(adminUser);
 
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
-      const recentUsers = users
+      const recentUsers = data
         .filter((user) => user.rol === "usuario")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5);
 
       setUsers(recentUsers);
+
+      // Filtra los usuarios con rol 'socio', ordénalos y toma los 5 más recientes
+      const recentSocios = data
+        .filter((socio) => socio.rol === "socio")
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 5);
+
+      setSocios(recentSocios);
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -51,19 +58,17 @@ const DashBoardAdmin = () => {
       <div className={style.sidebar}>
         <div>
           <button onClick={() => navigate("/login")}>❮ Back</button>
-        </div>
-        <div className={style.imgcontent}>
-          <img src={user?.foto || logo} alt="User" />
-        </div>
+        </div>{" "}
+        <img src={user?.imagen} alt="User" />
+       
         <div>
           <p>{user?.nombre + " " + user?.apellido || "Name"}</p>
           <p>{user?.rol || "Role"}</p>
         </div>
-
         <div className={style.optionsPanel}>
-          <div>
+        <div>
             <button className={style.btn} onClick={() => navigate("/users")}>
-              👥 Users
+              🔲 Users
             </button>
           </div>
           <div>
@@ -103,7 +108,6 @@ const DashBoardAdmin = () => {
             </button>
           </div>
         </div>
-
         <div>
           <button onClick={handleLogout} className={style.buttonApp}>
             <img
@@ -134,40 +138,25 @@ const DashBoardAdmin = () => {
           <div className={style.cardsContainer}>
             {users.length > 0 ? (
               users.map((user) => (
-                <Card key={user.id} user={user} /> // Pasa el usuario individualmente
+                <Card key={user.id} item={user} /> // Pasa el usuario individualmente
               ))
             ) : (
               <p>No users found</p>
             )}
           </div>
-          <Link to="" className={style.view}>
+          <Link to="/users" className={style.view}>
             View More
           </Link>
         </div>
         <div className={style.content}>
-          <h2>Recent Users</h2>
+          <h2>Recent Socios</h2>
           <div className={style.cardsContainer}>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <Card key={user.id} user={user} /> // Pasa el usuario individualmente
+            {socios.length > 0 ? (
+              socios.map((socio) => (
+                <Card key={socio.id} item={socio} /> // Pasa el socio individualmente
               ))
             ) : (
-              <p>No users found</p>
-            )}
-          </div>
-          <Link to="" className={style.view}>
-            View More
-          </Link>
-        </div>
-        <div className={style.content}>
-          <h2>Recent Users</h2>
-          <div className={style.cardsContainer}>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <Card key={user.id} user={user} /> // Pasa el usuario individualmente
-              ))
-            ) : (
-              <p>No users found</p>
+              <p>No socios found</p>
             )}
           </div>
           <Link to="" className={style.view}>

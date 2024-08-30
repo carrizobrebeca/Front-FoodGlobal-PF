@@ -1,0 +1,43 @@
+.cardContainer {
+
+background-color: grey;
+border: 1px solid grey;
+border-radius: 5px;
+padding: 20px;
+cursor: pointer;
+-moz-osx-font-smoothing: grayscale;
+backface-visibility: hidden;
+transform: translateZ(0);
+transition: transform 0.25s ease-out;
+max-width: 30%;
+max-height: auto;
+}
+
+.cardContainer:hover {
+  transform: scale(1.05);
+}
+
+.content {
+  justify-content: center;
+  background-color: #fff;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 90px;
+  max-width: 100%;
+
+}
+
+.imgContainer {
+  flex: 1;
+  margin-right: 20px; /* Space between image and inputs */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none; 
+  background: none; 
+  padding: 0;
+  width: 50%; /* Fit image within the container */
+  height: 50%; /* Fit image within the container */
+  
+}
+

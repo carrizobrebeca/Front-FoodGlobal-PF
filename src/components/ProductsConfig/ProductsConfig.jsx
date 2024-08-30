@@ -22,12 +22,13 @@ const ProductsConfig = () => {
     }
   }, [dispatch, status]);
 
+console.log(productos);
 
   return (
     <div className={style.mainContainer}>
       <div className={style.cont}>
-        <button onClick={() => navigate("/dashBoard")}>❮ Back</button>
-        <button onClick={() => navigate("/createProduct")}>Edit Product</button>
+        <button onClick={() => navigate(-1)}>❮ Back</button>
+        <button onClick={() => navigate("/createproducts")}>Edit Product</button>
       </div>
       <div className={style.containerBarra}>
         <h2>All</h2>

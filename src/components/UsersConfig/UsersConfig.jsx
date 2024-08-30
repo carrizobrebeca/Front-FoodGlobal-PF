@@ -13,7 +13,7 @@ const UsersConfig = () => {
         const response = await axios.get("http://localhost:3001/usuarios");
         const users = response.data;
         // Filtra los usuarios con rol usuario
-        const filteredUsers = users.filter((user) => user.rol === "usuario");
+        const filteredUsers = users.filter((user) => user);
         setUsers(filteredUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
@@ -27,8 +27,8 @@ const UsersConfig = () => {
     <>
       <div className={style.mainContainer}>
         <div className={style.cont}>
-          <button onClick={() => navigate("/dashBoard")}>❮ Back</button>
-          <button onClick={() => navigate("/createUser")}>Edit users</button>
+          <button onClick={() => navigate(-1)}>❮ Back</button>
+          <button onClick={() => navigate("/createusers")}>Edit users</button>
         </div>
 
         <div className={style.container}>
@@ -63,7 +63,7 @@ const UsersConfig = () => {
                 <div className={style.content}>
                   <img
                     src={
-                      user.foto ||
+                      user.imagen ||
                       "https://w7.pngwing.com/pngs/857/213/png-transparent-man-avatar-user-business-avatar-icon.png"
                     }
                     alt="User"

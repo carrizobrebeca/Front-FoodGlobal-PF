@@ -51,6 +51,7 @@
 }
 
 input{
+    padding: 5px;
     border-radius: 30px;
     margin-top: 15px;
     margin-bottom: 20px;
@@ -83,3 +84,28 @@ h1, h5{
 p{
     padding-top: 20px;
 }
+.passwordContainer {
+    position: relative;
+  }
+  
+  .passwordContainer input {
+    width: 100%;
+    padding-right: 40px; /* Espacio para el icono */
+  }
+  
+  .showPasswordButton {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .passwordIcon {
+    width: 20px; /* Ajusta el tamaño según sea necesario */
+    height: auto;
+  }
+  

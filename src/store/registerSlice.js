@@ -2,9 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // Acción para registrar un nuevo usuario
-export const registerUser = createAsyncThunk('register/registerUser', async (userData) => {
-  const response = await axios.post('http://localhost:3001/usuarios', userData);
+export const registerUser = createAsyncThunk('register/registerUser', async (userData, { rejectWithValue }) => {
+  try {
+    const response = await axios.post('http://localhost:3001/usuarios', userData);
   return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response.data.error);
+  }
+  
 });
 
 const registerSlice = createSlice({
@@ -21,13 +26,13 @@ const registerSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload; // Aquí podrías guardar la información del usuario registrado
-        alert("Successfully created User: ", state);
+        alert("Successfully created User: ");
         
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-        alert("No created User. Error: ", state);
+        alert("Usuario ya registrado con ese email");
          
       });
   },

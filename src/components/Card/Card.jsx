@@ -2,25 +2,22 @@ import React from "react";
 import style from "./card.module.css";
 import { useNavigate } from "react-router-dom";
 
-function Card({ user }) { 
+function Card({ item }) {
   const navigate = useNavigate();
 
   return (
     <div className={style.cardContainer}>
       <div className={style.content}>
         <div className={style.imgContainer}>
-          <img
-            src={user.imagen || "https://w7.pngwing.com/pngs/857/213/png-transparent-man-avatar-user-business-avatar-icon.png"}
-            alt={user.nombre}
-          />
+          <img src={item.imagen} alt={item.nombre} />
         </div>
         <h2>
-          <span>{user.nombre}</span>
+          <span>{item.nombre}</span>
         </h2>
         <h2>
-          <span>{user.apellido}</span>
+          <span>{item.apellido}</span>
         </h2>
-        <button onClick={() => navigate(`/user/${user.id}`)}>+</button>
+        <button onClick={() => navigate(`/user/${item.id}`)}>+</button>
       </div>
     </div>
   );
