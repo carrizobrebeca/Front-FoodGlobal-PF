@@ -1,4 +1,3 @@
-// src/store/productosSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -16,23 +15,68 @@ export const fetchProductoById = createAsyncThunk('productos/fetchProductoById',
 
 // Acción para obtener productos de un supermercado específico
 export const fetchProductosPorSupermercado = createAsyncThunk('productos/fetchProductosPorSupermercado', async (supermercado) => {
-  // Ajusta la URL según el endpoint que tengas
   const response = await axios.get(`http://localhost:3001/productos/supermercado/${supermercado}`);
   return response.data;
+});
+
+// Acción para obtener todos los negocios
+export const fetchNegocios = createAsyncThunk('productos/fetchNegocios', async () => {
+  const response = await axios.get('http://localhost:3001/negocios');
+  return response.data;
+});
+
+// Acción para obtener productos de un negocio específico por ID
+export const fetchProductosPorNegocio = createAsyncThunk('productos/fetchProductosPorNegocio', async (negocioId) => {
+  const response = await axios.get(`http://localhost:3001/negocios/${negocioId}/productos`);
+  return response.data;
+});
+
+export const fetchNewProducts = createAsyncThunk('productos/fetchNewProducts', async (productData) => {
+  const { nombre, descripcion, precio, negocio_id } = productData;
+  const response = await axios.post('http://localhost:3001/productos', { nombre, descripcion, precio, negocio_id });
+  return response.data;
+});
+
+export const deleteProductos = createAsyncThunk('productos/deleteProductos', async (id) => {
+  await axios.delete(`http://localhost:3001/productos/${id}`);
+  return id;
 });
 
 const productosSlice = createSlice({
   name: 'productos',
   initialState: {
-    allUsers: [],
+    items: [],
     selectedItem: null,
     productosPorSupermercado: [],
+    productosPorNegocio: [],
     status: 'idle',
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchNegocios.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchNegocios.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+      })
+      .addCase(fetchNegocios.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
+      .addCase(fetchProductosPorNegocio.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchProductosPorNegocio.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.productosPorNegocio = action.payload;
+      })
+      .addCase(fetchProductosPorNegocio.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      })
       .addCase(fetchProductos.pending, (state) => {
         state.status = 'loading';
       })
@@ -65,8 +109,36 @@ const productosSlice = createSlice({
       .addCase(fetchProductosPorSupermercado.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(fetchNewProducts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+        console.error('Error al crear el producto:', action.error.message);
+        alert(`Error: failed Create a Product - ${action.error.message}`);
+      })
+      .addCase(fetchNewProducts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items.push(action.payload);
+        alert('Producto creado exitosamente!');
+      })
+      .addCase(deleteProductos.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+        console.error('Error al eliminar el producto:', action.error.message);
+        alert(`Error: failed delete Product - ${action.error.message}`);
+      })
+      .addCase(deleteProductos.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = state.items.filter(producto => producto.id !== action.payload);
+        alert('Producto eliminado exitosamente!');
       });
   },
 });
+
+export const selectProductos = (state) => state.productos.items;
+export const selectSelectedItem = (state) => state.productos.selectedItem;
+export const selectProductosPorNegocio = (state) => state.productos.productosPorNegocio;
+export const selectProductosPorSupermercado = (state) => state.productos.productosPorSupermercado;
+export const selectError = (state) => state.productos.error;
 
 export default productosSlice.reducer;

@@ -1,40 +1,52 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-// Importa todas las imágenes necesarias aquí
-import imagenProducto1 from '../assets/images/producto1.png';
-import imagenProducto2 from '../assets/images/producto2.png';
+const CardProducto = ({ producto, onOpenModal, onAgregarAlCarrito }) => {
+  const [cantidad, setCantidad] = useState(1);
 
-// Añade más importaciones de imágenes según sea necesario
+  const handleCantidadChange = (event) => {
+    setCantidad(Number(event.target.value));
+  };
 
-const imagenes = {
-  'Producto1': imagenProducto1,
-  'Producto2': imagenProducto2,
-
-  // Añade todas las imágenes necesarias aquí
-};
-
-const CardProducto = ({ producto, onOpenModal }) => {
-  // Selecciona la imagen según el nombre del producto
-  const imagen = imagenes[producto.nombre] || imagenProducto2; // Imagen por defecto si no hay coincidencia
+  const handleAgregarAlCarrito = () => {
+    onAgregarAlCarrito({ ...producto, cantidad });
+  };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md">
-      <div className="w-full h-64 mb-4 overflow-hidden">
+    <div className="border rounded-lg p-4 shadow-md relative max-w-xs mx-auto">
+      <div className="w-full h-40 mb-3 overflow-hidden rounded-lg">
         <img
-          src={imagen}
+          src={producto.imagen}
           alt={producto.nombre}
-          className="w-full h-full object-cover rounded-lg"
+          className="w-full h-full object-cover"
         />
       </div>
-      <h3 className="text-xl font-semibold mb-2">{producto.nombre}</h3>
-      <p className="mb-2">{producto.descripcion}</p>
-      <p className="font-bold mb-4">Precio: ${producto.precio.toFixed(2)}</p>
-      <button
-        onClick={onOpenModal}
-        className="bg-blue-500 text-white py-2 px-4 rounded shadow-lg hover:bg-blue-400 transition duration-300"
-      >
-        Ver Detalles
-      </button>
+      <h3 className="text-lg font-semibold truncate">{producto.nombre}</h3>
+      <p className="text-md mb-2">Precio: ${producto.precio.toFixed(2)}</p>
+      <div className="flex items-center mb-3">
+        <label htmlFor={`cantidad-${producto.id}`} className="mr-2 text-md">Cantidad:</label>
+        <input
+          id={`cantidad-${producto.id}`}
+          type="number"
+          value={cantidad}
+          min="1"
+          onChange={handleCantidadChange}
+          className="border rounded px-2 py-1 text-center text-md w-20"
+        />
+      </div>
+      <div className="flex gap-2">
+        <button
+          onClick={() => onOpenModal(producto)}
+          className="bg-blue-500 text-white py-2 px-3 rounded shadow-md hover:bg-blue-400 transition duration-300 text-md"
+        >
+          Ver Detalles
+        </button>
+        <button
+          onClick={handleAgregarAlCarrito}
+          className="bg-green-500 text-white py-2 px-3 rounded shadow-md hover:bg-green-400 transition duration-300 text-md"
+        >
+          Agregar al Carrito
+        </button>
+      </div>
     </div>
   );
 };
