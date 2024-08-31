@@ -71,7 +71,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setFormSubmitted(false);
 
     if (!disable()) {
       dispatch(fetchLogin(state))
@@ -146,7 +146,7 @@ const Login = () => {
               <button
                 type="submit"
                 name="submit"
-                disabled={disable()}
+                // disabled={disable()}
                 className={style.buttonStyle}
               >
                 Sign in
@@ -155,22 +155,7 @@ const Login = () => {
                 Forgot password?
               </Link>
               <h5>or continue with</h5>
-              <div className={style.appBn}>
-                <a href="" className={style.buttonApp}>
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/012/871/371/non_2x/google-search-icon-google-product-illustration-free-png.png"
-                    alt="boton"
-                    className={style.resizable}
-                  />
-                </a>
-                <a href="" className={style.buttonApp}>
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/016/716/447/non_2x/facebook-icon-free-png.png"
-                    alt="boton"
-                    className={style.resizable}
-                  />
-                </a>
-              </div>
+            
               <p>
                 Al continuar aceptas{" "}
                 <Link to="/terms" className="underline">

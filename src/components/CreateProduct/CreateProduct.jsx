@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import style from "./products.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchNegocios } from "../../store/negocioSlice";
-import { fetchNewProducts } from "../../store/productosSlice";
+import { deleteProductos, fetchNewProducts } from "../../store/productosSlice";
 
 const CreateProduct = () => {
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ const CreateProduct = () => {
     descripcion: "",
     precio: "",
     negocio_id: "",
+    id: "",
   });
 
   const [errors, setErrors] = useState({
@@ -39,7 +40,10 @@ const CreateProduct = () => {
     }
     if (name === "descripcion") {
       if (state.descripcion === "")
-        setErrors({ ...errors, descripcion: "Descripción no puede estar vacío" });
+        setErrors({
+          ...errors,
+          descripcion: "Descripción no puede estar vacío",
+        });
       else setErrors({ ...errors, descripcion: "" });
     }
     if (name === "precio") {
@@ -74,6 +78,15 @@ const CreateProduct = () => {
     dispatch(fetchNewProducts(state));
   };
 
+  const handleDelete = (e) => {
+    e.preventDefault();
+    if (state.id) {
+      dispatch(deleteProductos(state.id));
+    } else {
+      alert("Por favor, ingrese un ID de producto para eliminar");
+    }
+  };
+
   return (
     <>
       <div className={style.mainContainer}>
@@ -83,22 +96,23 @@ const CreateProduct = () => {
         </div>
         <form onSubmit={handleSubmit}>
           <div className={style.formContainer}>
-            <div className={style.imgContainer}>
-              <img src="" alt="" className={style.imageCont} />
-            </div>
-
             <div className={style.inputsContainer}>
-              <div className={style.inputRow}>
-                <label>
-                  Upload photo
-                  <input type="file" name="logo" onChange="" />
-                </label>
-              </div>
               <div className={style.inputRow}>
                 <input type="text" placeholder="Search" />
                 <button>&#128269;</button>
               </div>
               <div className={style.inputRow}>
+                <label>Upload photo |</label>
+                <input
+                  type="text"
+                  onChange={handleChange}
+                  name="imagen"
+                  id="imagen"
+                />
+                <label className={style.form_error}>{errors.imagen}</label>
+              </div>
+              <div className={style.inputRow}>
+                <label>Nombre |</label>
                 <input
                   type="text"
                   onChange={handleChange}
@@ -106,9 +120,10 @@ const CreateProduct = () => {
                   id="nombre"
                   placeholder=""
                 />
+                <label className={style.form_error}>{errors.nombre}</label>
               </div>
-              <label className={style.form_error}>{errors.nombre}</label>
               <div className={style.inputRow}>
+                <label>Descripción |</label>
                 <input
                   type="text"
                   onChange={handleChange}
@@ -116,21 +131,20 @@ const CreateProduct = () => {
                   id="descripcion"
                   placeholder="Description"
                 />
+                <label className={style.form_error}>{errors.descripcion}</label>
               </div>
-              <label className={style.form_error}>{errors.descripcion}</label>
-
-              <div className={style.inputRow}></div>
               <div className={style.inputRow}>
+                <label>Precio |</label>
                 <input
                   type="number"
                   onChange={handleChange}
                   name="precio"
                   id="precio"
                 />
-                
-              </div> <label className={style.form_error}>{errors.precio}</label>
+                <label className={style.form_error}>{errors.precio}</label>
+              </div>
               <div className={style.inputRow}>
-                <label>Categories</label>
+                <label>Categoría |</label>
                 <select
                   onChange={handleChange}
                   name="negocio_id"
@@ -147,8 +161,23 @@ const CreateProduct = () => {
               </div>
             </div>
           </div>
+          <div className={style.formContainer}>
+            <div className={style.inputRow}>
+              <h2>
+                Si desea ELIMINAR un PRODUCTO, solo ingrese el ID del mismo |
+              </h2>
+            </div>
+            <div className={style.inputRow}>
+              <label>Producto ID (para eliminar) |</label>
+              <input type="text" onChange={handleChange} name="id" id="id" />
+            </div>
+          </div>
+
           <div className={style.btnContent}>
             <button type="submit">+ Create</button>
+            <button type="button" onClick={handleDelete}>
+              X Delete
+            </button>
           </div>
         </form>
       </div>

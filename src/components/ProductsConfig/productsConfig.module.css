@@ -1,70 +1,35 @@
-/* productsConfig.module.css */
-
-.mainContainer {
-  background-color: rgba(53, 52, 50, 0.856);
-  padding: 50px;
-}
-
-.cont {
+.userList {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: rgba(201, 199, 197, 0.856);
-  margin: 10px;
-  border-radius: 5px;
+  flex-wrap: wrap;
+  gap: 10px; /* Espacio entre los bloques de usuario */
 }
 
 .container {
-  display: flex;
-  flex-direction: column; /* Cambiar a columna para mostrar productos uno debajo del otro */
-  background-color: rgba(201, 199, 197, 0.856);
-  margin: 10px;
-  border-radius: 5px;
-}
-
-.content {
-  background-color: #fff;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  width: 100%;
   box-sizing: border-box;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  
+  margin: 0;
 }
-
-/* .content img {
-  width: 100px; 
-  height: 100px; 
-  border-radius: 10px;
-  object-fit: cover;
-  margin-right: 20px; 
-} */
 
 .content img {
-  width: 100px; /* Ajusta el tamaño según sea necesario */
-  height: auto;
-  /* Otros estilos si es necesario */
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.content div {
-  flex-grow: 1; /* Ocupa el espacio restante */
+button {
+  cursor: pointer;
+  margin-right: 10px;
 }
+.container h2{
 
-h2 {
   margin: 0;
-  font-size: 16px;
-}
-
-.containerBarra {
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  background-color: rgba(201, 199, 197, 0.856);
-  margin: 10px;
-  border-radius: 5px;
-
-
 }

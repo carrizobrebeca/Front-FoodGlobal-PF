@@ -122,7 +122,7 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setFormSubmitted(false);
 
     if (!disable()) {
       dispatch(registerUser(state))
@@ -205,6 +205,14 @@ const Register = () => {
                 </button>
               </div>
               <label className={style.form_error}>{errors.password}</label>
+              <button
+                type="submit"
+                name="submit"
+                // disabled={disable()}
+                className={style.buttonStyle}
+              >
+                Continue
+              </button>
               <Link to="/password" className="underline">
                 Forgot password?
               </Link>

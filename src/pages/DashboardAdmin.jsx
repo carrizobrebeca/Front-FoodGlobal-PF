@@ -122,7 +122,7 @@ const DashBoardAdmin = () => {
 
       <div className={style.mainContent}>
         <div className={style.nav}>
-          <input type="text" name="" id="" placeholder="Search" />
+          {/* <input type="text" name="" id="" placeholder="Search" />
           <button className={style.buttonApp}>&#128269;</button>
           <button className={style.buttonApp}>&#x1F48C;</button>
           <button className={style.buttonApp}>&#128276;</button>
@@ -131,7 +131,7 @@ const DashBoardAdmin = () => {
             className={style.buttonApp}
           >
             &#128277;
-          </button>
+          </button> */}
         </div>
         <div className={style.content}>
           <h2>Recent Users</h2>

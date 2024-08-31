@@ -38,7 +38,7 @@ const loginSlice = createSlice({
         state.user = action.payload;
         localStorage.setItem('user', JSON.stringify(state.user));
         // Puedes manejar la navegación aquí si es necesario
-        alert(`Successfully login`);
+        alert(`Inicio de sesión exitosame`);
       })
       .addCase(fetchLogin.rejected, (state, action) => {
         state.status = 'failed';
