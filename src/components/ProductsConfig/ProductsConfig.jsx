@@ -8,12 +8,14 @@ const ProductsConfig = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Obtener datos del estado de Redux
+//Obtener datos del estado de Redux
   const {
     items: productos,
     status,
     error,
   } = useSelector((state) => state.productos);
+
+
 
   // Fetch products on component mount
   useEffect(() => {
