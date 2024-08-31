@@ -23,48 +23,50 @@ const ProductsConfig = () => {
   }, [dispatch, status]);
 
 
+
   return (
     <div className={style.mainContainer}>
       <div className={style.cont}>
-        <button onClick={() => navigate("/dashBoard")}>❮ Back</button>
-        <button onClick={() => navigate("/createProduct")}>Edit Product</button>
+        <button onClick={() => navigate(-1)}>❮ Back</button>
+        <button onClick={() => navigate("/createproducts")}>
+          Edit Product
+        </button>
       </div>
-      <div className={style.containerBarra}>
+      <div className={style.container}>
         <h2>All</h2>
-        <h2>Categories</h2>
         <h2>Out of stock</h2>
         <h2>Low stock</h2>
         <h2>High stock</h2>
+        <h2>Categories</h2>
       </div>
+  
       <div className={style.container}>
-        <input type="text" placeholder="Search..." />
-        <button>&#128269;</button>
-      </div>
-      <div className={style.containerBarra}>
-        <button>Image</button>
-        <button>Name ↑</button>
-
-        
-        <button>Category</button>
-        <button>Price</button>
-        
+        <button>Imagen</button>
+        <button>Nombre</button>
+        <button>Categoría</button>
+        <button>Precio</button>
         <button>Stock</button>
-     <button>Description</button>
+        <button>Descripción</button>
+        <button>Id</button>
+       
       </div>
-      <div className={style.container}>
+      <div className={style.userList}>
         {status === "loading" && <p>Loading...</p>}
         {status === "failed" && <p>Error: {error}</p>}
         {status === "succeeded" && productos.length > 0 ? (
           productos.map((producto) => (
-            <div key={producto.id} className={style.content}>
-              <img src={producto.imagen} alt={producto.nombre} />
+            <div key={producto.id} className={style.container}>
+             
+              <div className={style.content}>
+              
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTir2Q8xy34EmPnDVjKIn8RWq2aqCdyl7An_w&s" />
+              </div>
               <h2>{producto.nombre}</h2>
-              
               <h2>{producto.categoria}</h2>
-              
               <h2>{producto.precio}</h2>
               <h2>?</h2>
               <h2>{producto.descripcion}</h2>
+              <h2>{producto.id}</h2>
             </div>
           ))
         ) : (

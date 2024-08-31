@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { status, user } = useSelector((state) => state.login); 
+  const { status, user } = useSelector((state) => state.login);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [state, setState] = useState({
     email: "",
@@ -18,16 +18,15 @@ const Login = () => {
     email: "Email cannot be empty",
     password: "Password cannot be empty",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (status === 'succeeded') {
-      
-      if (user.rol === 'socio') {
+    if (status === "succeeded") {
+      if (user.rol === "socio") {
         navigate("/dashboard");
-        
-      } else if (user.rol === 'admin') {
+      } else if (user.rol === "admin") {
         navigate("/dashboardadmin");
-      }else {
+      } else {
         navigate("/");
       }
     }
@@ -72,7 +71,7 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
+    setFormSubmitted(false);
 
     if (!disable()) {
       dispatch(fetchLogin(state))
@@ -116,12 +115,38 @@ const Login = () => {
               <input onChange={handleChange} name="email" id="email" />
               <label className={style.form_error}>{errors.email}</label>
               <label htmlFor="">Password</label>
-              <input onChange={handleChange} name="password" id="password" />
+              <div className={style.passwordContainer}>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  name="password"
+                  id="password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={style.showPasswordButton}
+                >
+                  {showPassword ? (
+                    <img
+                      src="https://img.icons8.com/ios-filled/50/000000/visible.png" // Icono para mostrar
+                      alt="Show"
+                      className={style.passwordIcon}
+                    />
+                  ) : (
+                    <img
+                      src="https://img.icons8.com/ios-filled/50/000000/invisible.png" // Icono para ocultar
+                      alt="Hide"
+                      className={style.passwordIcon}
+                    />
+                  )}
+                </button>
+              </div>
               <label className={style.form_error}>{errors.password}</label>
               <button
                 type="submit"
                 name="submit"
-                disabled={disable()}
+                // disabled={disable()}
                 className={style.buttonStyle}
               >
                 Sign in
@@ -130,22 +155,7 @@ const Login = () => {
                 Forgot password?
               </Link>
               <h5>or continue with</h5>
-              <div className={style.appBn}>
-                <a href="" className={style.buttonApp}>
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/012/871/371/non_2x/google-search-icon-google-product-illustration-free-png.png"
-                    alt="boton"
-                    className={style.resizable}
-                  />
-                </a>
-                <a href="" className={style.buttonApp}>
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/016/716/447/non_2x/facebook-icon-free-png.png"
-                    alt="boton"
-                    className={style.resizable}
-                  />
-                </a>
-              </div>
+            
               <p>
                 Al continuar aceptas{" "}
                 <Link to="/terms" className="underline">

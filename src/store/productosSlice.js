@@ -1,23 +1,33 @@
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
 // Acción para obtener todos los productos
-export const fetchProductos = createAsyncThunk('productos/fetchProductos', async () => {
-  const response = await axios.get('http://localhost:3001/productos');
-  return response.data;
-});
+export const fetchProductos = createAsyncThunk(
+  "productos/fetchProductos",
+  async () => {
+    const response = await axios.get("http://localhost:3001/productos");
+    return response.data;
+  }
+);
 
 // Acción para obtener un producto específico por ID
-export const fetchProductoById = createAsyncThunk('productos/fetchProductoById', async (id) => {
-  const response = await axios.get(`http://localhost:3001/productos/${id}`);
-  return response.data;
-});
+export const fetchProductoById = createAsyncThunk(
+  "productos/fetchProductoById",
+  async (id) => {
+    const response = await axios.get(`http://localhost:3001/productos/${id}`);
+    return response.data;
+  }
+);
 
 // Acción para obtener productos de un supermercado específico
+
 export const fetchProductosPorSupermercado = createAsyncThunk('productos/fetchProductosPorSupermercado', async (supermercado) => {
   const response = await axios.get(`http://localhost:3001/productos/supermercado/${supermercado}`);
   return response.data;
 });
+
 
 // Acción para obtener todos los negocios
 export const fetchNegocios = createAsyncThunk('productos/fetchNegocios', async () => {
@@ -43,13 +53,15 @@ export const deleteProductos = createAsyncThunk('productos/deleteProductos', asy
 });
 
 const productosSlice = createSlice({
-  name: 'productos',
+  name: "productos",
   initialState: {
+
     items: [],
     selectedItem: null,
     productosPorSupermercado: [],
     productosPorNegocio: [],
     status: 'idle',
+
     error: null,
   },
   reducers: {},
@@ -78,39 +90,40 @@ const productosSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(fetchProductos.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(fetchProductos.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.items = action.payload;
       })
       .addCase(fetchProductos.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(fetchProductoById.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(fetchProductoById.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.selectedItem = action.payload;
       })
       .addCase(fetchProductoById.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(fetchProductosPorSupermercado.pending, (state) => {
-        state.status = 'loading';
+        state.status = "loading";
       })
       .addCase(fetchProductosPorSupermercado.fulfilled, (state, action) => {
-        state.status = 'succeeded';
+        state.status = "succeeded";
         state.productosPorSupermercado = action.payload;
       })
       .addCase(fetchProductosPorSupermercado.rejected, (state, action) => {
-        state.status = 'failed';
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(fetchNewProducts.rejected, (state, action) => {
+
         state.status = 'failed';
         state.error = action.error.message;
         console.error('Error al crear el producto:', action.error.message);
@@ -142,3 +155,4 @@ export const selectProductosPorSupermercado = (state) => state.productos.product
 export const selectError = (state) => state.productos.error;
 
 export default productosSlice.reducer;
+

@@ -6,15 +6,16 @@ import axios from "axios";
 const UsersConfig = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [selectedRole, setSelectedRole] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("http://localhost:3001/usuarios");
         const users = response.data;
-        // Filtra los usuarios con rol usuario
-        const filteredUsers = users.filter((user) => user.rol === "usuario");
-        setUsers(filteredUsers);
+        setUsers(users);
+        setFilteredUsers(users); // Mostrar todos los usuarios al principio
       } catch (error) {
         console.error("Error fetching users:", error);
       }
@@ -23,12 +24,28 @@ const UsersConfig = () => {
     fetchUsers();
   }, []);
 
+  useEffect(() => {
+    if (selectedRole === "") {
+      setFilteredUsers(users); // Mostrar todos los usuarios si no se selecciona ningún rol
+    } else {
+      const filtered = users.filter((user) => user.rol === selectedRole);
+      setFilteredUsers(filtered);
+    }
+  }, [selectedRole, users]);
+
+  const handleRoleChange = (e) => {
+    setSelectedRole(e.target.value);
+  };
+
+  // Obtener roles únicos para el <select>
+  const uniqueRoles = [...new Set(users.map((user) => user.rol))];
+
   return (
     <>
       <div className={style.mainContainer}>
         <div className={style.cont}>
-          <button onClick={() => navigate("/dashBoard")}>❮ Back</button>
-          <button onClick={() => navigate("/createUser")}>Edit users</button>
+          <button onClick={() => navigate("/dashboardadmin")}>❮ Back</button>
+          <button onClick={() => navigate("/createusers")}>  Create - Edit - Delete users</button>
         </div>
 
         <div className={style.container}>
@@ -40,11 +57,16 @@ const UsersConfig = () => {
         </div>
 
         <div className={style.container}>
-          <select name="Role" id="">
-            <option>Role</option>
+          <label>Role |</label>
+          <select onChange={handleRoleChange} name="rol" id="rol" value={selectedRole}>
+            <option value="">All Users</option>
+            {uniqueRoles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
           </select>
-          <input type="text" placeholder="Search" />
-          <button>&#128269;</button>
+          
         </div>
 
         <div className={style.container}>
@@ -57,13 +79,13 @@ const UsersConfig = () => {
         </div>
 
         <div className={style.userList}>
-          {users.length > 0 ? (
-            users.map((user) => (
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
               <div key={user.id} className={style.container}>
                 <div className={style.content}>
                   <img
                     src={
-                      user.foto ||
+                      user.imagen ||
                       "https://w7.pngwing.com/pngs/857/213/png-transparent-man-avatar-user-business-avatar-icon.png"
                     }
                     alt="User"
@@ -75,7 +97,6 @@ const UsersConfig = () => {
                 <h2>{user.email}</h2>
                 <h2>{user.rol}</h2>
                 <h2 className={style.status}>Active</h2>
-               
               </div>
             ))
           ) : (

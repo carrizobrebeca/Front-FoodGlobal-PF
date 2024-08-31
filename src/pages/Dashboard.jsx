@@ -13,25 +13,26 @@ const DashBoard = () => {
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [socios, setSocios] = useState([]);
 
- 
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:3001/usuarios");
-      console.log("Usuarios:", response.data); // Verifica la estructura de los datos
-      const users = response.data;
+      const data = response.data;
 
-      // Filtra el usuario con rol 'admin'
-      const adminUser = users.find((user) => user.rol === "socio");
-      setUser(adminUser);
+      // Filtra el usuario con rol 'socio'
+      const socioUser = data.find((user) => user.rol === "socio");
+      setUser(socioUser);
 
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
-      const recentUsers = users
+      const recentUsers = data
         .filter((user) => user.rol === "usuario")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5);
 
       setUsers(recentUsers);
+
+      
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -53,19 +54,12 @@ const DashBoard = () => {
           <button onClick={() => navigate("/login")}>❮ Back</button>
         </div>{" "}
         <img src={user?.imagen} alt="User" />
-        {/* <div className={style.imgcontent}>
-          <div className={style.imgcont}></div>
-        </div> */}
         <div>
           <p>{user?.nombre + " " + user?.apellido || "Name"}</p>
           <p>{user?.rol || "Role"}</p>
         </div>
         <div className={style.optionsPanel}>
-          <div>
-            <button className={style.btn} onClick={() => navigate("/users")}>
-              👥 Users
-            </button>
-          </div>
+         
           <div>
             <button className={style.btn} onClick={() => navigate("/products")}>
               🔲 Products
@@ -93,15 +87,6 @@ const DashBoard = () => {
               Sales History
             </button>
           </div>
-          <div>
-            <button
-              className={style.btn}
-              onClick={() => navigate("/storeConfig")}
-            >
-              {" "}
-              🖉 App Config
-            </button>
-          </div>
         </div>
         <div>
           <button onClick={handleLogout} className={style.buttonApp}>
@@ -117,7 +102,7 @@ const DashBoard = () => {
 
       <div className={style.mainContent}>
         <div className={style.nav}>
-          <input type="text" name="" id="" placeholder="Search" />
+          {/* <input type="text" name="" id="" placeholder="Search" />
           <button className={style.buttonApp}>&#128269;</button>
           <button className={style.buttonApp}>&#x1F48C;</button>
           <button className={style.buttonApp}>&#128276;</button>
@@ -126,53 +111,24 @@ const DashBoard = () => {
             className={style.buttonApp}
           >
             &#128277;
-          </button>
+          </button> */}
         </div>
         <div className={style.content}>
           <h2>Recent Users</h2>
           <div className={style.cardsContainer}>
             {users.length > 0 ? (
               users.map((user) => (
-                <Card key={user.id} user={user} /> // Pasa el usuario individualmente
+                <Card key={user.id} item={user} /> // Pasa el usuario individualmente
               ))
             ) : (
               <p>No users found</p>
             )}
           </div>
-          <Link to="" className={style.view}>
+          <Link to="/users" className={style.view}>
             View More
           </Link>
         </div>
-        <div className={style.content}>
-          <h2>Recent Users</h2>
-          <div className={style.cardsContainer}>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <Card key={user.id} user={user} /> // Pasa el usuario individualmente
-              ))
-            ) : (
-              <p>No users found</p>
-            )}
-          </div>
-          <Link to="" className={style.view}>
-            View More
-          </Link>
-        </div>
-        <div className={style.content}>
-          <h2>Recent Users</h2>
-          <div className={style.cardsContainer}>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <Card key={user.id} user={user} /> // Pasa el usuario individualmente
-              ))
-            ) : (
-              <p>No users found</p>
-            )}
-          </div>
-          <Link to="" className={style.view}>
-            View More
-          </Link>
-        </div>
+       
       </div>
     </div>
   );

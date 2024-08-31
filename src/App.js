@@ -10,6 +10,7 @@ import SobreNosotros from './pages/SobreNosotros';
 import Register from './pages/Register/Register';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+
 import DashBoardAdmin from './pages/DashboardAdmin';
 import ProductsConfig from './components/ProductsConfig/ProductsConfig';
 import UsersConfig from './components/UsersConfig/UsersConfig';
@@ -18,6 +19,7 @@ import CreateUser from './components/CreateUser/CreateUser';
 import NegociosComponent from './components/NegociosComponent';
 import ProductosComponent from './components/ProductosComponent';
 import CardDetail from './components/CarDetail'; // Importa el componente CardDetail
+
 
 const App = () => {
   const [selectedNegocio, setSelectedNegocio] = useState(null);
@@ -72,6 +74,7 @@ const App = () => {
         <Route path="/locales" element={<Locales />} />
         <Route path="/afiliarse" element={<Afiliarse />} />
         <Route path="/about" element={<SobreNosotros />} />
+
         <Route 
           path="/negocios" 
           element={<NegociosComponent handleSelectNegocio={handleSelectNegocio} />} 
