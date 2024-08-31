@@ -27,7 +27,7 @@ const categorias = {
 const Productos = () => {
   const dispatch = useDispatch();
   const negocios = useSelector((state) => state.negocios.items || []);
-  const productos = useSelector((state) => state.productos.items || []);
+  const productos = useSelector((state) => state.productos.productosPorNegocio);
   const status = useSelector((state) => state.productos.status);
   const error = useSelector((state) => state.productos.error);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('');
