@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CategorySelector from '../components/CategorySelector';
 import NegocioProductos from '../components/NegocioProductos';
+import Carrito from '../components/Carrito';
 import axios from 'axios';
 
 const NegociosPage = () => {
@@ -10,6 +11,7 @@ const NegociosPage = () => {
   const [selectedNegocio, setSelectedNegocio] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [carrito, setCarrito] = useState([]);
 
   useEffect(() => {
     const fetchNegocios = async () => {
@@ -53,6 +55,28 @@ const NegociosPage = () => {
     setSelectedNegocio(null);
   };
 
+  const agregarAlCarrito = (producto) => {
+    setCarrito(prevCarrito => {
+      const productoExistente = prevCarrito.find(p => p.id === producto.id);
+      if (productoExistente) {
+        return prevCarrito.map(p =>
+          p.id === producto.id
+            ? { ...p, cantidad: p.cantidad + 1 }
+            : p
+        );
+      }
+      return [...prevCarrito, { ...producto, cantidad: 1 }];
+    });
+  };
+
+  const quitarDelCarrito = (id) => {
+    setCarrito(prevCarrito => prevCarrito.filter(producto => producto.id !== id));
+  };
+
+  const calcularTotal = () => {
+    return carrito.reduce((total, producto) => total + (producto.precio * producto.cantidad), 0);
+  };
+
   if (selectedNegocio) {
     return (
       <div className="p-8 bg-white">
@@ -62,7 +86,8 @@ const NegociosPage = () => {
         >
           Volver a la Lista de Productos
         </button>
-        <NegocioProductos negocioId={selectedNegocio} />
+        <NegocioProductos negocioId={selectedNegocio} agregarAlCarrito={agregarAlCarrito} />
+        <Carrito productos={carrito} total={calcularTotal()} onQuitarDelCarrito={quitarDelCarrito} />
       </div>
     );
   }
