@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Login from './pages/Login/Login';
 import Dashboard from './pages/Dashboard';
-import Productos from './pages/Productos';
 import Locales from './pages/Locales';
 import Afiliarse from './pages/Afiliarse';
 import SobreNosotros from './pages/SobreNosotros';
@@ -16,9 +15,10 @@ import ProductsConfig from './components/ProductsConfig/ProductsConfig';
 import UsersConfig from './components/UsersConfig/UsersConfig';
 import CreateProduct from './components/CreateProduct/CreateProduct';
 import CreateUser from './components/CreateUser/CreateUser';
-import NegociosComponent from './components/NegociosComponent';
+
 import ProductosComponent from './components/ProductosComponent';
 import CardDetail from './components/CarDetail'; // Importa el componente CardDetail
+import NegociosPage from './pages/NegociosPage';
 
 
 const App = () => {
@@ -67,18 +67,16 @@ const App = () => {
         <Route path="/createusers" element={<CreateUser />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboardadmin" element={<DashBoardAdmin />} />
-        <Route path="/productos" element={<Productos />} />
+        <Route path="/productos" element={<NegociosPage/>} />
         <Route path="/products" element={<ProductsConfig />} />
         <Route path="/createproducts" element={<CreateProduct />} />
         <Route path="/users" element={<UsersConfig />} />
         <Route path="/locales" element={<Locales />} />
         <Route path="/afiliarse" element={<Afiliarse />} />
         <Route path="/about" element={<SobreNosotros />} />
+      
 
-        <Route 
-          path="/negocios" 
-          element={<NegociosComponent handleSelectNegocio={handleSelectNegocio} />} 
-        />
+      
         <Route 
           path="/negocios/:id/productos" 
           element={<ProductosComponent negocioId={selectedNegocio} handleAddToCart={handleAddToCart} handleOpenDetail={handleOpenDetail} />} 
