@@ -1,22 +1,38 @@
-import React from 'react';
+// src/CarritoPanel.js
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { eliminarProducto } from '../store/carritoSlice'; // Ajusta la ruta según tu estructura de carpetas
+import axios from 'axios';
+import StripeCheckout from '../components/StripeCheckout'; // Asegúrate de ajustar la ruta
 
 const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const dispatch = useDispatch();
+  const [showCheckout, setShowCheckout] = useState(false);
 
   const handleEliminar = (id) => {
     dispatch(eliminarProducto({ id }));
   };
 
-  const handleComprar = () => {
-    // Lógica para proceder a la compra
-    alert('¡Compra realizada!');
-    // Aquí puedes hacer redirección o abrir un modal de pago
-  };
-
   const calcularTotal = () => {
     return productos.reduce((total, producto) => total + producto.precio * producto.cantidad, 0);
+  };
+
+  const handleComprar = async () => {
+    try {
+      // Obtén el total a pagar
+      const amount = calcularTotal() * 100; // Convertir a centavos
+
+      // Solicita un PaymentIntent al backend
+      const { data } = await axios.post('http://localhost:3001/create-payment-intent', {
+        amount,
+      });
+
+      // Pasa el client secret a StripeCheckout
+      setShowCheckout(true);
+    } catch (err) {
+      console.error('Error en la compra:', err);
+      alert('Error en la compra. Inténtalo de nuevo.');
+    }
   };
 
   return (
@@ -68,6 +84,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
           </div>
         )}
       </div>
+      {showCheckout && <StripeCheckout />}
     </div>
   );
 };
