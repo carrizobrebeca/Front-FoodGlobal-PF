@@ -15,6 +15,7 @@ import UsersConfig from './components/UsersConfig/UsersConfig';
 import CreateProduct from './components/CreateProduct/CreateProduct';
 import CreateUser from './components/CreateUser/CreateUser';
 import NegociosPage from './pages/NegociosPage';
+import StripeCheckout from './components/StripeCheckout';
 
 const App = () => {
   return (
@@ -34,6 +35,7 @@ const App = () => {
         <Route path="/locales" element={<Locales />} />
         <Route path="/afiliarse" element={<Afiliarse />} />
         <Route path="/about" element={<SobreNosotros />} />
+        <Route path="/checkout" element={<StripeCheckout />} />
       </Routes>
       <Footer />
     </Router>
