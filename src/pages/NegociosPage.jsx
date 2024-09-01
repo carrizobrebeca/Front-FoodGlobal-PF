@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CategorySelector from '../components/CategorySelector';
 import NegocioProductos from '../components/NegocioProductos';
-import Carrito from '../components/Carrito';
+
 import axios from 'axios';
 
 const NegociosPage = () => {
@@ -87,7 +87,7 @@ const NegociosPage = () => {
           Volver a la Lista de Productos
         </button>
         <NegocioProductos negocioId={selectedNegocio} agregarAlCarrito={agregarAlCarrito} />
-        <Carrito productos={carrito} total={calcularTotal()} onQuitarDelCarrito={quitarDelCarrito} />
+    
       </div>
     );
   }

@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import logo from '../assets/images/logofood.png'; // Asegúrate de que la ruta sea correcta
-import { logout } from '../store/loginSlice'; // Ajusta la ruta según tu estructura de carpetas
-import usuarioSvg from '../assets/images/usuario.png'
-const Navbar = () => {
+import logo from '../assets/images/logofood.png';
+import { logout } from '../store/loginSlice';
+import usuarioSvg from '../assets/images/usuario.png';
+import CarritoPanel from './CarritoPanel';
+
+const Navbar = ({ onOpenCarrito }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCarritoOpen, setIsCarritoOpen] = useState(false);
   const [location, setLocation] = useState(null);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
+  const carrito = useSelector((state) => state.carrito);
 
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://ipinfo.io/json?token=115342b5b7cd4d'); // Reemplaza con tu API key
+        const response = await fetch('https://ipinfo.io/json?token=115342b5b7cd4d');
         const data = await response.json();
         setLocation(data);
       } catch (error) {
@@ -31,6 +35,14 @@ const Navbar = () => {
   const handleLogout = () => {
     dispatch(logout());
   };
+
+  const toggleCarritoPanel = () => {
+    setIsCarritoOpen(!isCarritoOpen);
+  };
+
+  useEffect(() => {
+    if (onOpenCarrito) onOpenCarrito(toggleCarritoPanel);
+  }, [onOpenCarrito]);
 
   return (
     <>
@@ -74,6 +86,13 @@ const Navbar = () => {
               Ingresar
             </Link>
           )}
+          {/* Botón de Carrito */}
+          <button
+            onClick={toggleCarritoPanel}
+            className="ml-4 p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
+          >
+            Carrito
+          </button>
           {/* Botón de la Barra Lateral */}
           <button className="ml-4" onClick={toggleSidebar}>
             <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -81,6 +100,14 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
+
+        {/* Carrito Panel */}
+        <CarritoPanel
+          productos={carrito.items || []}
+          total={carrito.total || 0}
+          onClose={toggleCarritoPanel}
+          isOpen={isCarritoOpen}
+        />
 
         {/* Sidebar */}
         <div

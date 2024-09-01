@@ -3,34 +3,29 @@ import { createSlice } from '@reduxjs/toolkit';
 const carritoSlice = createSlice({
   name: 'carrito',
   initialState: {
-    items: [],
+    productos: [],
   },
   reducers: {
-    agregarAlCarrito(state, action) {
+    agregarProducto: (state, action) => {
       const producto = action.payload;
-      const existente = state.items.find(p => p.id === producto.id);
-
-      if (existente) {
-        // Actualizar la cantidad si el producto ya está en el carrito
-        existente.cantidad += producto.cantidad;
+      // Verifica si el producto ya está en el carrito
+      const productoExistente = state.productos.find(p => p.id === producto.id);
+      if (productoExistente) {
+        // Si el producto ya está en el carrito, actualiza la cantidad
+        productoExistente.cantidad += producto.cantidad;
       } else {
-        // Agregar el producto al carrito
-        state.items.push(producto);
+        // Si el producto no está en el carrito, agréguelo
+        state.productos.push(producto);
       }
     },
-    quitarDelCarrito(state, action) {
-      const id = action.payload;
-      state.items = state.items.filter(producto => producto.id !== id);
+    eliminarProducto: (state, action) => {
+      state.productos = state.productos.filter(p => p.id !== action.payload.id);
     },
-    actualizarCantidad(state, action) {
-      const { id, cantidad } = action.payload;
-      const producto = state.items.find(p => p.id === id);
-      if (producto) {
-        producto.cantidad = cantidad;
-      }
-    },
-  },
+    vaciarCarrito: (state) => {
+      state.productos = [];
+    }
+  }
 });
 
-export const { agregarAlCarrito, quitarDelCarrito, actualizarCantidad } = carritoSlice.actions;
+export const { agregarProducto, eliminarProducto, vaciarCarrito } = carritoSlice.actions;
 export default carritoSlice.reducer;
