@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import style from "./createUser.module.css";
 import { registerUser, deleteUser, fetchUserByEmail, checkUserExists } from "../../store/registerSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Cloudinary from "../Cloudinary";
 
 const CreateUser = () => {
   const dispatch = useDispatch();
@@ -163,20 +164,43 @@ const CreateUser = () => {
         console.log(err);
       });
   };
-
   const handleDelete = (e) => {
     e.preventDefault();
-    if (state.id) {
-      dispatch(deleteUser(state.id))
-        .unwrap()
-        .then(() => {})
-        .catch((err) => {
-          console.log(err);
-        });
+    
+    // Confirma si el usuario quiere eliminar el usuario
+    const confirmDelete = window.confirm("ADVERTENCIA: ELIMINACION PERMANENTE DE USUARIO ¿Está seguro que desea eliminar el usuario?");
+    
+    if (confirmDelete) {
+      if (state.id) {
+        dispatch(deleteUser(state.id))
+          .unwrap()
+          .then(() => {
+            // Opcionalmente puedes limpiar el estado del usuario aquí
+            setState({
+              nombre: "",
+              apellido: "",
+              imagen: "",
+              email: "",
+              password: "",
+              rol: "",
+              id: "",
+            });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        alert("Por favor, ingrese un ID de usuario para eliminar");
+      }
     } else {
-      alert("Por favor, ingrese un ID de usuario para eliminar");
+      // Usuario canceló la acción
+      console.log("Eliminación cancelada");
     }
   };
+  const handleImageUpload = (url) => {
+    setState(prevState => ({ ...prevState, imagen: url }));
+  };
+
 
   const disable = () => {
     if (formSubmitted) return true;
@@ -193,15 +217,22 @@ const CreateUser = () => {
       <div className={style.formContainer}>
         <div className={style.inputsContainer}>
           <div className={style.inputRow}>
+          <label>Search |</label>
             <input
               type="text"
-              placeholder="Search by email"
+              placeholder="Buscar usuario por email"
               value={state.email}
               onChange={handleChange}
               name="email"
               id="email"
             />
             <button onClick={handleSearch}>&#128269;</button>
+          </div>
+          <div>
+          <div className={style.inputRow}>
+                <label>Upload photo |</label>
+                <Cloudinary onImageUpload={handleImageUpload} />
+              </div>
           </div>
           <form>
             <div className={style.inputRow}>
@@ -225,16 +256,16 @@ const CreateUser = () => {
               <label className={style.form_error}>{errors.apellido}</label>
             </div>
             <div className={style.inputRow}>
-              <label>Upload photo |</label>
-              <input
-                type="text"
-                onChange={handleChange}
-                name="imagen"
-                id="imagen"
-                value={state.imagen}
-              />
-              <label className={style.form_error}>{errors.imagen}</label>
-            </div>
+                <label>Imagen URL |</label>
+                <input
+                  type="text"
+                  value={state.imagen}
+                  name="imagen"
+                  id="imagen"
+                  onChange={handleChange}
+                />
+                <label className={style.form_error}>{errors.imagen}</label>
+              </div>
             <div className={style.inputRow}>
               <label>Email |</label>
               <input

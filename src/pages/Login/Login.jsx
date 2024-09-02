@@ -4,7 +4,7 @@ import style from "./login.module.css";
 import logo from "../../assets/images/logofood.png";
 import { fetchLogin } from "../../store/loginSlice";
 import { useDispatch, useSelector } from "react-redux";
-
+import { GoogleLogin } from "@react-oauth/google";
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -22,13 +22,9 @@ const Login = () => {
 
   useEffect(() => {
     if (status === "succeeded") {
-      if (user.rol === "socio") {
+     
         navigate("/dashboard");
-      } else if (user.rol === "admin") {
-        navigate("/dashboardadmin");
-      } else {
-        navigate("/");
-      }
+     
     }
   }, [status, user, navigate]);
 
@@ -155,7 +151,15 @@ const Login = () => {
                 Forgot password?
               </Link>
               <h5>or continue with</h5>
-            
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  console.log(credentialResponse);
+                }}
+                onError={() => {
+                  console.log("Login Failed");
+                }}
+              />
+              
               <p>
                 Al continuar aceptas{" "}
                 <Link to="/terms" className="underline">
