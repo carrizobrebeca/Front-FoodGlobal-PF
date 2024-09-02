@@ -42,8 +42,8 @@ export const fetchProductosPorNegocio = createAsyncThunk('productos/fetchProduct
 });
 
 export const fetchNewProducts = createAsyncThunk('productos/fetchNewProducts', async (productData) => {
-  const { nombre, descripcion, precio, negocio_id } = productData;
-  const response = await axios.post('http://localhost:3001/productos', { nombre, descripcion, precio, negocio_id });
+  const { nombre, descripcion, precio, negocio_id, imagen, categoria, stock } = productData;
+  const response = await axios.post('http://localhost:3001/productos', { nombre, descripcion, precio, negocio_id, imagen, categoria, stock });
   return response.data;
 });
 
