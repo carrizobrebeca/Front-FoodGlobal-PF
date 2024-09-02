@@ -1,0 +1,17 @@
+# Configuración para todos los archivos de texto
+* text=auto
+
+# Configuración específica para archivos JS
+*.js text eol=lf
+
+# Configuración específica para archivos CSS
+*.css text eol=lf
+
+# Configuración específica para archivos JSX
+*.jsx text eol=lf
+
+# Configuración específica para archivos JSON
+*.json text eol=lf
+
+# Configuración específica para archivos HTML
+*.html text eol=lf

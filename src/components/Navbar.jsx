@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../assets/images/logofood.png'; // Asegúrate de que la ruta sea correcta
+import { useSelector, useDispatch } from 'react-redux';
+import logo from '../assets/images/logofood.png';
+import { logout } from '../store/loginSlice';
+import usuarioSvg from '../assets/images/usuario.png';
+import CarritoPanel from './CarritoPanel';
 
-const Navbar = () => {
+const Navbar = ({ onOpenCarrito }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCarritoOpen, setIsCarritoOpen] = useState(false);
   const [location, setLocation] = useState(null);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.login.user);
+  const carrito = useSelector((state) => state.carrito);
 
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await fetch('https://ipinfo.io/json?token=YOUR_API_KEY'); // Reemplaza con tu API key
+        const response = await fetch('https://ipinfo.io/json?token=115342b5b7cd4d');
         const data = await response.json();
         setLocation(data);
       } catch (error) {
@@ -24,12 +32,24 @@ const Navbar = () => {
     setIsOpen(!isOpen);
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  const toggleCarritoPanel = () => {
+    setIsCarritoOpen(!isCarritoOpen);
+  };
+
+  useEffect(() => {
+    if (onOpenCarrito) onOpenCarrito(toggleCarritoPanel);
+  }, [onOpenCarrito]);
+
   return (
     <>
-      <nav className="bg-white text-gray-800 p-4 flex justify-between items-center shadow-lg">
-        {/* Logo en lugar del texto */}
+      <nav className="bg-white text-gray-800 p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
+        {/* Logo */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto" />
+          <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto animate-pulse" />
         </Link>
 
         {/* Barra de Búsqueda Centrada */}
@@ -41,7 +61,7 @@ const Navbar = () => {
           />
         </div>
 
-        {/* Ubicación, Bandera y Ingreso a la Cuenta */}
+        {/* Ubicación, Bandera y Estado de Usuario */}
         <div className="flex items-center">
           {location && (
             <div className="flex items-center text-gray-600 mr-4">
@@ -53,10 +73,26 @@ const Navbar = () => {
               />
             </div>
           )}
-          <Link to="/login" className="p-2 bg-blue-500 text-white rounded-lg mr-4 hover:bg-blue-600 transition">
-            Ingresar
-          </Link>
-
+          {user ? (
+            <div className="flex items-center">
+              <span className="mr-4">Bienvenido, {user.nombre}</span>
+              <img src={usuarioSvg} alt="User" className="w-8 h-8 rounded-full mr-4" />
+              <button onClick={handleLogout} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login" className="p-2 bg-blue-600 text-white rounded-lg mr-4 hover:bg-blue-700 transition">
+              Ingresar
+            </Link>
+          )}
+          {/* Botón de Carrito */}
+          <button
+            onClick={toggleCarritoPanel}
+            className="ml-4 p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
+          >
+            Carrito
+          </button>
           {/* Botón de la Barra Lateral */}
           <button className="ml-4" onClick={toggleSidebar}>
             <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -64,6 +100,14 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
+
+        {/* Carrito Panel */}
+        <CarritoPanel
+          productos={carrito.items || []}
+          total={carrito.total || 0}
+          onClose={toggleCarritoPanel}
+          isOpen={isCarritoOpen}
+        />
 
         {/* Sidebar */}
         <div
@@ -76,8 +120,8 @@ const Navbar = () => {
           </button>
           <div className="p-4">
             <div className="mb-4">
-              <Link to="/login" className="block py-2 px-4 bg-blue-500 rounded">Login</Link>
-              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-500 rounded">Register</Link>
+              <Link to="/login" className="block py-2 px-4 bg-blue-600 rounded">Login</Link>
+              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-600 rounded">Register</Link>
             </div>
             <ul className="space-y-4">
               <li><Link to="/">Inicio</Link></li>

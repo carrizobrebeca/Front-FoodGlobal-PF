@@ -1,0 +1,101 @@
+/* contenedor principal */
+.container {
+    display: grid;
+    grid-template-areas:
+        "sidebar main"
+        "sidebar main";
+    grid-template-columns: 200px 1fr; 
+    grid-template-rows: auto 1fr;
+    height: 100vh; 
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* contenedor lateral */
+.sidebar {
+    grid-area: sidebar;
+    background-color: #f4f4f4;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* contenedor principal */
+.mainContent {
+    grid-area: main;
+    display: grid;
+    grid-template-rows: auto 1fr;
+}
+
+
+.nav {
+    background-color: #fff;
+    color: rgb(0, 0, 0);
+    padding: 10px;
+    box-sizing: border-box;
+   
+}
+
+/* contenido principal */
+.content {
+    background-color: #fff;
+    padding: 10px;
+    box-sizing: border-box;
+    border-radius: 70px;
+
+}
+
+.buttonApp {
+    border: none; 
+    background: none; 
+    padding: 0;
+    cursor: pointer; 
+}
+.resizable {
+    width: 15px; 
+    height: auto; 
+    
+}
+
+.optionsPanel {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    
+}
+
+.view {
+    color: orange;
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    padding: 5px;
+}
+
+.btn {
+    cursor: pointer; 
+    margin-bottom: 20px;
+}
+
+.imgcontent {
+    background-color: #77757252;
+    padding: 30px;
+    box-sizing:border-box;
+    border-radius: 50%;
+    box-shadow: 0px 6px rgba(189, 105, 26, 0.384);
+  }
+
+  .cardsContainer {
+    display: flex;
+    flex-wrap: nowrap; /* Evita que las tarjetas se envuelvan a la siguiente línea */
+    overflow-x: auto; /* Permite el desplazamiento horizontal si las tarjetas exceden el ancho del contenedor */
+    gap: 10px; /* Espacio entre las tarjetas */
+    padding: 10px; /* Espacio alrededor del contenedor */
+    margin-left: 10px;
+}
+
+
+.imgcont {
+    max-width: 30px;
+    max-height: 30px;
+}

@@ -3,7 +3,7 @@ import Navbar from '../components/Navbar';
 const SobreNosotros = () => {
   return (
     <>
-    <Navbar/>
+
     <div className="p-8 bg-gray-100">
       <section className="about-intro text-center py-16">
         <h1 className="text-4xl font-bold mb-4">Sobre FoodGlobal</h1>

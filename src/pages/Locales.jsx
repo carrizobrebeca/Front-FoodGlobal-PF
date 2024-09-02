@@ -1,10 +1,9 @@
 import React from 'react';
-import Navbar from '../components/Navbar';
 
 const Locales = () => {
   return (
     <>
-    <Navbar/>
+  
     <div className="p-8 bg-gray-100">
       <section className="locales-intro text-center py-16">
         <h1 className="text-4xl font-bold mb-4">Locales Asociados</h1>
