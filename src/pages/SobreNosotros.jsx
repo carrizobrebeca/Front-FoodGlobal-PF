@@ -27,7 +27,7 @@ const SobreNosotros = () => {
           <div className="team-member bg-white p-6 rounded-lg shadow-md mb-6 md:mb-0 md:mr-6">
             <img src="https://via.placeholder.com/150" alt="Miembro del equipo 1" className="w-24 h-24 rounded-full mx-auto mb-4"/>
             <h3 className="text-xl font-semibold mb-2">Nombre 1</h3>
-            <p className="text-gray-700">Descripción breve del rol y contribuciones de este miembro del equipo.</p>
+            <p className="text-gray-700">Descripción breve del rol y contribuciones de este miembro del equipo</p>
           </div>
           {/* Más miembros del equipo */}
         </div>
