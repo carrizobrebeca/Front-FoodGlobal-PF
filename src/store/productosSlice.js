@@ -48,7 +48,7 @@ export const fetchNewProducts = createAsyncThunk('productos/fetchNewProducts', a
 });
 
 export const deleteProductos = createAsyncThunk('productos/deleteProductos', async (id) => {
-  await axios.delete(`http://localhost:3001/productos/${id}`);
+  await axios.delete(`http://localhost:3001/${id}`);
   return id;
 });
 
