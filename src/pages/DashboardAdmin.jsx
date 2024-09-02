@@ -60,7 +60,6 @@ const DashBoardAdmin = () => {
           <button onClick={() => navigate("/login")}>❮ Back</button>
         </div>{" "}
         <img src={user?.imagen} alt="User" />
-       
         <div>
           <p>{user?.nombre + " " + user?.apellido || "Name"}</p>
           <p>{user?.rol || "Role"}</p>
