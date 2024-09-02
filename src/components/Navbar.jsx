@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import logo from '../assets/images/logofood.png';
 import { logout } from '../store/loginSlice';
@@ -11,6 +11,7 @@ const Navbar = ({ onOpenCarrito }) => {
   const [isCarritoOpen, setIsCarritoOpen] = useState(false);
   const [location, setLocation] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.login.user);
   const carrito = useSelector((state) => state.carrito);
 
@@ -34,6 +35,7 @@ const Navbar = ({ onOpenCarrito }) => {
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate('/');
   };
 
   const toggleCarritoPanel = () => {
