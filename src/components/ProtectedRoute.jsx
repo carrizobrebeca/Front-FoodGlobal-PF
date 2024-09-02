@@ -1,29 +1,18 @@
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-import { Navigate, Outlet } from 'react-router-dom';
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  
+  const { user } = useSelector((state) => state.login);
 
-//{ children, allowedRoles }
-const ProtectedRoute = ({isAllowed, children}) => {
-
-  if(!isAllowed) {
-    return <Navigate to="/"/>
+  // Si el user no está autenticado
+  if (!user || allowedRoles.includes(user?.rol)) {
+    return <Navigate to="/home"/>;
   }
-  // const { status, user } = useSelector((state) => state.login);
-  // const location = useLocation();
 
-
-  // // Si el usuario no está autenticado
-  // if (status === 'idle' || !user) {
-  //   return alert(`Acceso denegado`);
-  // }
-
-  // // Si el rol del usuario no está permitido para esta ruta
-  // if (!allowedRoles.includes(user.rol)) {
-  //   // Simplemente renderiza un mensaje de acceso denegado o mantén la misma ruta
-  //   return  alert(`Acceso denegado`);
-  // }
-
-  // // Si todo está bien, renderiza el contenido protegido
-  return children ? children : <Outlet/>;
+  
+  return children;
 };
 
 export default ProtectedRoute;

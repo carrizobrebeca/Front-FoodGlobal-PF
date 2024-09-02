@@ -2,18 +2,20 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./productsConfig.module.css";
 import { useNavigate } from "react-router-dom";
-import { fetchProductos } from "../../store/productosSlice";
+import { fetchProductoById, fetchProductos } from "../../store/productosSlice";
 
 const ProductsConfig = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Obtener datos del estado de Redux
+//Obtener datos del estado de Redux
   const {
     items: productos,
     status,
     error,
   } = useSelector((state) => state.productos);
+
+
 
   // Fetch products on component mount
   useEffect(() => {
@@ -22,6 +24,21 @@ const ProductsConfig = () => {
     }
   }, [dispatch, status]);
 
+//Obtener datos del estado de Redux
+  // const {
+  //   items: negocios,
+  //   status,
+  //   error,
+  // } = useSelector((state) => state.negocios);
+
+
+
+  // Fetch products on component mount
+  // useEffect(() => {
+  //   if (status === "idle") {
+  //     dispatch(fetchNegocios());
+  //   }
+  // }, [dispatch, status]);
 
 
   return (
@@ -59,12 +76,12 @@ const ProductsConfig = () => {
              
               <div className={style.content}>
               
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTir2Q8xy34EmPnDVjKIn8RWq2aqCdyl7An_w&s" />
+     
               </div>
               <h2>{producto.nombre}</h2>
               <h2>{producto.categoria}</h2>
               <h2>{producto.precio}</h2>
-              <h2>?</h2>
+              <h2>{producto.stock}</h2>
               <h2>{producto.descripcion}</h2>
               <h2>{producto.id}</h2>
             </div>

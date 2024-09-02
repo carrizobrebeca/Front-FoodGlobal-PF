@@ -8,21 +8,21 @@ import style from "./dashBoard.module.css";
 
 import { useDispatch } from "react-redux";
 
-const DashBoardAdmin = () => {
+const DashboardSocio = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [socios, setSocios] = useState([]);
- 
+
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:3001/usuarios");
       const data = response.data;
 
       // Filtra el usuario con rol 'socio'
-      const adminUser = data.find((user) => user.rol === "admin");
-      setUser(adminUser);
+      const socioUser = data.find((user) => user.rol === "socio");
+      setUser(socioUser);
 
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
       const recentUsers = data
@@ -32,13 +32,7 @@ const DashBoardAdmin = () => {
 
       setUsers(recentUsers);
 
-      // Filtra los usuarios con rol 'socio', ordénalos y toma los 5 más recientes
-      const recentSocios = data
-        .filter((socio) => socio.rol === "socio")
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5);
-
-      setSocios(recentSocios);
+      
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -65,11 +59,7 @@ const DashBoardAdmin = () => {
           <p>{user?.rol || "Role"}</p>
         </div>
         <div className={style.optionsPanel}>
-        <div>
-            <button className={style.btn} onClick={() => navigate("/users")}>
-              🔲 Users
-            </button>
-          </div>
+         
           <div>
             <button className={style.btn} onClick={() => navigate("/products")}>
               🔲 Products
@@ -95,15 +85,6 @@ const DashBoardAdmin = () => {
               onClick={() => navigate("/saleshistory")}
             >
               Sales History
-            </button>
-          </div>
-          <div>
-            <button
-              className={style.btn}
-              onClick={() => navigate("/storeConfig")}
-            >
-              {" "}
-              🖉 App Config
             </button>
           </div>
         </div>
@@ -147,24 +128,10 @@ const DashBoardAdmin = () => {
             View More
           </Link>
         </div>
-        <div className={style.content}>
-          <h2>Recent Socios</h2>
-          <div className={style.cardsContainer}>
-            {socios.length > 0 ? (
-              socios.map((socio) => (
-                <Card key={socio.id} item={socio} /> // Pasa el socio individualmente
-              ))
-            ) : (
-              <p>No socios found</p>
-            )}
-          </div>
-          <Link to="" className={style.view}>
-            View More
-          </Link>
-        </div>
+       
       </div>
     </div>
   );
 };
 
-export default DashBoardAdmin;
+export default DashboardSocio;
