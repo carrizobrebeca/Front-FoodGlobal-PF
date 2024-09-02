@@ -17,7 +17,7 @@ const SobreNosotros = () => {
         <h2 className="text-3xl font-bold mb-4">Nuestra Visión</h2>
         <p className="text-lg mx-auto max-w-3xl">
           Creemos en un futuro donde el acceso a alimentos auténticos sea universal. Nuestra plataforma ofrece una experiencia de compra internacional segura
-          y confiable, promoviendo la cultura culinaria global y apoyando a empresas locales.
+          y confiable, promoviendo la cultura culinaria global y apoyando a empresas locales
         </p>
       </section>
 
