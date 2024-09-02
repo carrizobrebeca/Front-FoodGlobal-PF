@@ -23,17 +23,19 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       const amount = calcularTotal() * 100; // Convertir a centavos
 
       // Solicita un PaymentIntent al backend
-      const { data } = await axios.post('http://localhost:3001/create-payment-intent', {
+      await axios.post('http://localhost:3001/create-payment-intent', {
         amount,
       });
 
-      // Pasa el client secret a StripeCheckout
+      // Pasa el monto total a StripeCheckout
       setShowCheckout(true);
     } catch (err) {
       console.error('Error en la compra:', err);
       alert('Error en la compra. Inténtalo de nuevo.');
     }
   };
+
+  const totalAmount = calcularTotal() * 100; // Monto en centavos
 
   return (
     <div
@@ -84,7 +86,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
           </div>
         )}
       </div>
-      {showCheckout && <StripeCheckout />}
+      {showCheckout && <StripeCheckout totalAmount={totalAmount} />}
     </div>
   );
 };
