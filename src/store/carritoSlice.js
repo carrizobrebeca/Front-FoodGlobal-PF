@@ -23,9 +23,18 @@ const carritoSlice = createSlice({
     },
     vaciarCarrito: (state) => {
       state.productos = [];
+    },
+    actualizarCantidad: (state, action) => {
+      const { id, cantidad } = action.payload;
+      const producto = state.productos.find(p => p.id === id);
+      if (producto) {
+        producto.cantidad = cantidad;
+      }
     }
   }
 });
 
-export const { agregarProducto, eliminarProducto, vaciarCarrito } = carritoSlice.actions;
+
+
+export const { agregarProducto, eliminarProducto, vaciarCarrito, actualizarCantidad } = carritoSlice.actions;
 export default carritoSlice.reducer;

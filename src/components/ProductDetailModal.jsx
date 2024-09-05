@@ -4,7 +4,6 @@ const ProductDetailModal = ({ product, onClose, agregarAlCarrito }) => {
   const [cantidad, setCantidad] = useState(1);
 
   useEffect(() => {
-    // Cierra el modal si se hace clic fuera del modal
     const handleOutsideClick = (event) => {
       if (event.target.classList.contains('modal-overlay')) {
         onClose();
@@ -19,7 +18,7 @@ const ProductDetailModal = ({ product, onClose, agregarAlCarrito }) => {
 
   const handleAddToCart = () => {
     if (cantidad > 0 && cantidad <= product.stock) {
-      agregarAlCarrito({ ...product, cantidad });
+      agregarAlCarrito(product, cantidad); // Pasar cantidad como argumento separado
       onClose();
     } else {
       alert("Cantidad no válida.");

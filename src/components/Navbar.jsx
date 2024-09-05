@@ -131,6 +131,7 @@ const Navbar = ({ onOpenCarrito }) => {
               <li><Link to="/locales">Locales</Link></li>
               <li><Link to="/afiliarse">Afiliarse</Link></li>
               <li><Link to="/about">Sobre Nosotros</Link></li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
             </ul>
           </div>
         </div>
