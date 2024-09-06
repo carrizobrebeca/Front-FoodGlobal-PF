@@ -75,10 +75,17 @@ const NegocioProductos = ({ negocioId }) => {
   };
 
   const handleQuantityChange = (id, value) => {
-    setProductQuantities(prev => ({
-      ...prev,
-      [id]: value // Permite cualquier cantidad, sin verificar el stock
-    }));
+    // Obtener el producto correspondiente
+    const producto = productos.find(prod => prod.id === id);
+
+    // Asegurarse de que la cantidad no exceda el stock disponible
+    if (producto) {
+      const cantidad = Math.min(value, producto.stock);
+      setProductQuantities(prev => ({
+        ...prev,
+        [id]: cantidad
+      }));
+    }
   };
   
   const handleAddToCart = (producto, cantidad = 1) => {
@@ -86,11 +93,18 @@ const NegocioProductos = ({ negocioId }) => {
       console.error('Producto inválido:', producto);
       return;
     }
-  
-    // No verificar el stock antes de agregar al carrito
-    dispatch(agregarProducto({ ...producto, cantidad }));
-    setIsCarritoOpen(true);
-    setProductQuantities(prev => ({ ...prev, [producto.id]: cantidad }));
+
+    // Verificar si la cantidad excede el stock disponible
+    const cantidadFinal = Math.min(cantidad, producto.stock);
+
+    // Solo agregar al carrito si la cantidad es válida
+    if (cantidadFinal > 0) {
+      dispatch(agregarProducto({ ...producto, cantidad: cantidadFinal }));
+      setIsCarritoOpen(true);
+      setProductQuantities(prev => ({ ...prev, [producto.id]: cantidadFinal }));
+    } else {
+      console.error('Cantidad no válida para agregar al carrito.');
+    }
   };
 
   const filteredProductos = productos.filter((producto) => {
