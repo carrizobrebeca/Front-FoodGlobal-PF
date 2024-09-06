@@ -31,23 +31,8 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
     }
   }, [showCheckout]);
 
-  useEffect(() => {
-    // Cargar el stock disponible para todos los productos
-    const fetchStock = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/negocios/1f42eaf2-32d6-40b0-a218-7f6f3f8b16c6/productos');
-        const stockData = response.data.reduce((acc, producto) => {
-          acc[producto.id] = producto.stock;
-          return acc;
-        }, {});
-        setStockInfo(stockData);
-      } catch (error) {
-        console.error('Error al obtener el stock:', error);
-      }
-    };
 
-    fetchStock();
-  }, []);
+
 
   const handleEliminar = (id) => {
     if (!isCartDisabled) {
