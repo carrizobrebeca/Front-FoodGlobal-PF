@@ -7,7 +7,7 @@ import axios from 'axios';
 export const fetchProductos = createAsyncThunk(
   "productos/fetchProductos",
   async () => {
-    const response = await axios.get("http://localhost:3001/productos");
+    const response = await axios.get("/productos");
     return response.data;
   }
 );
@@ -16,7 +16,7 @@ export const fetchProductos = createAsyncThunk(
 export const fetchProductoById = createAsyncThunk(
   "productos/fetchProductoById",
   async (id) => {
-    const response = await axios.get(`http://localhost:3001/productos/${id}`);
+    const response = await axios.get(`/productos/${id}`);
     return response.data;
   }
 );
@@ -24,31 +24,31 @@ export const fetchProductoById = createAsyncThunk(
 // Acción para obtener productos de un supermercado específico
 
 export const fetchProductosPorSupermercado = createAsyncThunk('productos/fetchProductosPorSupermercado', async (supermercado) => {
-  const response = await axios.get(`http://localhost:3001/productos/supermercado/${supermercado}`);
+  const response = await axios.get(`/productos/supermercado/${supermercado}`);
   return response.data;
 });
 
 
 // Acción para obtener todos los negocios
 export const fetchNegocios = createAsyncThunk('productos/fetchNegocios', async () => {
-  const response = await axios.get('http://localhost:3001/negocios');
+  const response = await axios.get('/negocios');
   return response.data;
 });
 
 // Acción para obtener productos de un negocio específico por ID
 export const fetchProductosPorNegocio = createAsyncThunk('productos/fetchProductosPorNegocio', async (negocioId) => {
-  const response = await axios.get(`http://localhost:3001/negocios/${negocioId}/productos`);
+  const response = await axios.get(`/negocios/${negocioId}/productos`);
   return response.data;
 });
 
 export const fetchNewProducts = createAsyncThunk('productos/fetchNewProducts', async (productData) => {
   const { nombre, descripcion, precio, negocio_id, imagen, categoria, stock } = productData;
-  const response = await axios.post('http://localhost:3001/productos', { nombre, descripcion, precio, negocio_id, imagen, categoria, stock });
+  const response = await axios.post('/productos', { nombre, descripcion, precio, negocio_id, imagen, categoria, stock });
   return response.data;
 });
 
 export const deleteProductos = createAsyncThunk('productos/deleteProductos', async (id) => {
-  await axios.delete(`http://localhost:3001/${id}`);
+  await axios.delete(`/${id}`);
   return id;
 });
 
@@ -57,7 +57,7 @@ export const editproducto= createAsyncThunk(
   async ( {id, productData }) => {
     try {
       const response = await axios.put(
-        `http://localhost:3001/productos/${id}`,
+        `/productos/${id}`,
         productData
       );
       return response.data;

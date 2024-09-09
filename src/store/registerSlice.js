@@ -6,7 +6,7 @@ export const checkUserExists = createAsyncThunk(
   "register/checkUserExists",
   async (email, { rejectWithValue }) => {
     try {
-      const response = await axios.get("http://localhost:3001/usuarios");
+      const response = await axios.get("/usuarios");
       const users = response.data;
       const userExists = users.some((user) => user.email === email);
       return userExists;
@@ -29,7 +29,7 @@ export const registerUser = createAsyncThunk(
       }
 
       const response = await axios.post(
-        "http://localhost:3001/usuarios",
+        "/usuarios",
         userData
       );
       return response.data;
@@ -45,7 +45,7 @@ export const editUser = createAsyncThunk(
   async ({ id, userData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `http://localhost:3001/usuarios/${id}`,
+        `/usuarios/${id}`,
         userData
       );
       return response.data;
@@ -62,7 +62,7 @@ export const deleteUser = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `http://localhost:3001/usuarios/${id}`
+        `/${id}`
       );
       return response.data;
     } catch (error) {
@@ -78,7 +78,7 @@ export const fetchUserByEmail = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       // Obtén todos los usuarios
-      const response = await axios.get("http://localhost:3001/usuarios");
+      const response = await axios.get("/usuarios");
       const users = response.data;
 
       // Filtra el usuario con el email proporcionado
