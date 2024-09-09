@@ -15,6 +15,7 @@ import UsersConfig from "./components/UsersConfig/UsersConfig";
 import CreateProduct from "./components/CreateProduct/CreateProduct";
 import CreateUser from "./components/CreateUser/CreateUser";
 import DashBoard from "./pages/Dashboard";
+import CreateNegocio from "./components/Negocio/CreateNegocio";
 
 const App = () => {
 
@@ -35,7 +36,7 @@ const App = () => {
           }
         />
         
-
+        <Route path="/createnegocio" element={<CreateNegocio />} />
         <Route path="/productos" element={<NegociosPage />} />
         <Route path="/products" element={<ProductsConfig />} />
         <Route path="/createproducts" element={<CreateProduct />} />

@@ -20,6 +20,7 @@ const Register = () => {
     password: "",
     imagen: "",
     rol: "usuario",
+    status: "activo"
   });
 
   useEffect(() => {
@@ -34,24 +35,24 @@ const Register = () => {
     }
   }, [status, error]);
 
-  const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-  const apellidoRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+  // const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+  // const apellidoRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
   const [errors, setErrors] = useState({
-    nombre: "Name cannot be empty",
-    apellido: "Last Name cannot be empty",
-    email: "Email cannot be empty",
-    password: "Password cannot be empty",
+    nombre: "Campo requerido",
+    apellido: "Campo requerido",
+    email: "Campo requerido",
+    password: "Campo requerido",
   });
 
   const validate = (state, name) => {
     if (name === "nombre") {
       if (state.nombre === "")
-        setErrors({ ...errors, nombre: "Name cannot be empty" });
-      else if (!nombreRegex.test(state.nombre))
-        setErrors({ ...errors, nombre: "Name format is not valid" });
+        setErrors({ ...errors, nombre: "Campo requerido" });
+      else if (state.name.length < 3)
+        setErrors({ ...errors, nombre: "Formato inválido (al menos 3 letras)" });
       else {
         setErrors({ ...errors, nombre: "" });
         return;
@@ -60,9 +61,9 @@ const Register = () => {
 
     if (name === "apellido") {
       if (state.apellido === "")
-        setErrors({ ...errors, apellido: "Last Name cannot be empty" });
-      else if (!apellidoRegex.test(state.apellido))
-        setErrors({ ...errors, apellido: "Last Name format is not valid" });
+        setErrors({ ...errors, apellido: "Campo requerido" });
+      // else if (!apellidoRegex.test(state.apellido))
+      //   setErrors({ ...errors, apellido: "Formato inválido" });
       else {
         setErrors({ ...errors, apellido: "" });
         return;
@@ -71,9 +72,9 @@ const Register = () => {
 
     if (name === "email") {
       if (state.email === "")
-        setErrors({ ...errors, email: "Email cannot be empty" });
+        setErrors({ ...errors, email: "Campo requerido" });
       else if (!emailRegex.test(state.email))
-        setErrors({ ...errors, email: "Email format is not valid" });
+        setErrors({ ...errors, email: "Formato de mail inválido" });
       else {
         setErrors({ ...errors, email: "" });
         return;
@@ -82,11 +83,11 @@ const Register = () => {
 
     if (name === "password") {
       if (state.password === "")
-        setErrors({ ...errors, password: "Password cannot be empty" });
+        setErrors({ ...errors, password: "Campo requerido" });
       else if (!passwordRegex.test(state.password))
         setErrors({
           ...errors,
-          password: "6-20, Password must contain at least one number",
+          password: "Formato inválido (al menos una mayíscula, al menos un número, entre 6-20 caracteres",
         });
       else {
         setErrors({ ...errors, password: "" });

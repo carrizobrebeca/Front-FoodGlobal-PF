@@ -6,7 +6,7 @@
 
 .container {
   display: grid;
-  grid-template-columns: 190px 190px 190px 190px 190px 190px;
+  grid-template-columns: 190px 190px 190px 250px 190px 190px;
   gap: 10px;
   align-items: center;
   padding: 10px;
