@@ -12,7 +12,7 @@ const UsersConfig = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/usuarios");
+        const response = await axios.get("/usuarios");
         const users = response.data;
         setUsers(users);
         setFilteredUsers(users); // Mostrar todos los usuarios al principio

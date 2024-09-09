@@ -7,7 +7,7 @@ export const fetchNegocios = createAsyncThunk(
   "negocios/fetchNegocios",
   async (categoria) => {
     const response = await axios.get(
-      `http://localhost:3001/negocios?categoria=${categoria}`
+      `/negocios?categoria=${categoria}`
     );
     return response.data;
   }
@@ -16,7 +16,7 @@ export const crearNegocio = createAsyncThunk(
   "negocios/crearNegocio",
   async (negocioData) => {
     const response = await axios.post(
-      "http://localhost:3001/negocios",
+      "/negocios",
       negocioData
     );
     return response.data;
@@ -27,7 +27,7 @@ export const editNegocio = createAsyncThunk(
   async ( id, negocioData ) => {
     try {
       const response = await axios.put(
-        `http://localhost:3001//negocios/${id}`,
+        `//negocios/${id}`,
         negocioData
       );
       return response.data;

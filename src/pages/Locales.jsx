@@ -7,7 +7,7 @@ const Locales = () => {
   useEffect(() => {
     const fetchLocales = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/negocios');
+        const response = await axios.get('/negocios');
         const data = response.data;
 
         // Categorizar locales
