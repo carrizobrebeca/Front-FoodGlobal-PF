@@ -52,6 +52,23 @@ export const deleteProductos = createAsyncThunk('productos/deleteProductos', asy
   return id;
 });
 
+export const editproducto= createAsyncThunk(
+  "productos/editproducto",
+  async ( {id, productData }) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:3001/productos/${id}`,
+        productData
+      );
+      return response.data;
+    } catch (error) {
+      alert("Error al Editar Producto")
+      
+      
+    }
+  }
+);
+
 const productosSlice = createSlice({
   name: "productos",
   initialState: {
@@ -144,7 +161,21 @@ const productosSlice = createSlice({
         state.status = 'succeeded';
         state.items = state.items.filter(producto => producto.id !== action.payload);
         alert('Producto eliminado exitosamente!');
-      });
+      })
+      .addCase(editproducto.pending, (state) => {
+        state.status = 'loading';
+        
+      })
+      .addCase(editproducto.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.items = action.payload;
+        alert('Producto editado exitosamente!');
+      })
+      .addCase(editproducto.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+        alert('Error al editar poducto!');
+      })
   },
 });
 

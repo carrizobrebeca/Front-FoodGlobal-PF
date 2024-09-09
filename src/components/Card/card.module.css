@@ -18,15 +18,6 @@ max-height: auto;
   transform: scale(1.05);
 }
 
-/* .content {
-  justify-content: center;
-  background-color: #fff;
-  padding: 10px;
-  box-sizing: border-box;
-  border-radius: 90px;
-  max-width: 100%;
-
-} */
 
 .imgContainer {
   flex: 1;

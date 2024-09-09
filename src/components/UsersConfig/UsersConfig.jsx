@@ -44,8 +44,8 @@ const UsersConfig = () => {
     <>
       <div className={style.mainContainer}>
         <div className={style.cont}>
-          <button onClick={() => navigate("/dashboardadmin")}>❮ Back</button>
-          <button onClick={() => navigate("/createusers")}>  Create - Edit - Delete users</button>
+          <button onClick={() => navigate("/dashboard")}>❮ Back</button>
+          <button onClick={() => navigate("/createusers")}>  Editar Usuarios</button>
         </div>
 
         <div className={style.container}>
@@ -96,7 +96,7 @@ const UsersConfig = () => {
                 <h2>{user.apellido}</h2>
                 <h2>{user.email}</h2>
                 <h2>{user.rol}</h2>
-                <h2 className={style.status}>Active</h2>
+                <h2 >{user.status}</h2>
               </div>
             ))
           ) : (
