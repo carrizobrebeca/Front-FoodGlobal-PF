@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { eliminarProducto, actualizarCantidad } from '../store/carritoSlice';
+import { eliminarProducto, validarStock , vaciarCarrito } from '../store/carritoSlice';
 import axios from 'axios';
 import StripeCheckout from '../components/StripeCheckout'; // Ajusta la ruta
 
@@ -11,6 +11,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const [showPaymentMessage, setShowPaymentMessage] = useState(false);
   const [isCartDisabled, setIsCartDisabled] = useState(false);
   const [stockInfo, setStockInfo] = useState({});
+  const [entregaSeleccionada, setEntregaSeleccionada] = useState('retiro'); // Valor inicial
 
   useEffect(() => {
     if (paymentMessage) {
@@ -31,23 +32,23 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
     }
   }, [showCheckout]);
 
-
-
-
   const handleEliminar = (id) => {
     if (!isCartDisabled) {
       dispatch(eliminarProducto({ id }));
     }
   };
 
+  const handleEntregaChange = (e) => {
+    setEntregaSeleccionada(e.target.value);
+  };
+
   const handleCantidadChange = (id, cantidad) => {
     if (!isCartDisabled) {
-      const stockDisponible = stockInfo[id] || 0;
-      // Asegúrate de que la cantidad no exceda el stock disponible
-      if (cantidad <= stockDisponible) {
-        dispatch(actualizarCantidad({ id, cantidad }));
+      const producto = productos.find(prod => prod.id === id);
+      if (producto && cantidad <= producto.stock) {
+        dispatch(validarStock({ id, cantidad }));
       } else {
-        alert(`La cantidad máxima disponible para este producto es ${stockDisponible}.`);
+        console.error('Cantidad excede el stock disponible.');
       }
     }
   };
@@ -58,15 +59,14 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
 
   const handleComprar = async () => {
     try {
-      // Eliminar la verificación de stock
       // Obtén el total a pagar
       const amount = calcularTotal() * 100;
-  
+
       // Solicita un PaymentIntent al backend
       await axios.post('http://localhost:3001/create-payment-intent', {
         amount,
       });
-  
+
       setShowCheckout(true);
       setPaymentMessage('');
     } catch (err) {
@@ -78,13 +78,37 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
 
   const totalAmount = calcularTotal() * 100;
 
-  const handleSuccess = () => {
+  const handleSuccess = async () => {
     setPaymentMessage('¡Pago exitoso!');
     setShowCheckout(false);
+
+    try {
+      // Datos de compra
+      const compraData = {
+        usuario_id: "30e7abe5-ade2-43eb-bbd0-1bdc5f0e703b", // ID del usuario
+        productos: productos.map((producto) => ({
+          producto_id: producto.id,
+          cantidad: producto.cantidad,
+        })),
+        tipo_entrega: entregaSeleccionada, // Valor de tipo de entrega seleccionado
+        total: calcularTotal(),
+      };
+
+      // Finaliza la compra y actualiza el stock
+      await axios.post('http://localhost:3001/finalizar-compra', compraData);
+
+      dispatch(vaciarCarrito());
+
+      setPaymentMessage('¡Stock actualizado y compra finalizada!');
+    } catch (err) {
+      console.error('Error al finalizar la compra:', err);
+      setPaymentMessage('Error al finalizar la compra: ' + err.message);
+      alert('Error al finalizar la compra: ' + err.message);
+    }
   };
 
   const handleError = (message) => {
-    setPaymentMessage(message);
+    setPaymentMessage(`Error en el pago: ${message}`);
   };
 
   return (
@@ -92,7 +116,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       {isCartDisabled && !showCheckout && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50"></div>
       )}
-      
+
       <div
         className={`fixed top-0 right-0 h-full w-80 bg-white text-gray-800 transition-transform transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -141,6 +165,21 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
               </ul>
               <div className="mt-4">
                 <h3 className="text-xl font-bold">Total: ${calcularTotal().toFixed(2)}</h3>
+                
+                {/* Agregar selección de tipo de entrega */}
+                <div className="mt-4">
+                  <label htmlFor="tipo-entrega" className="text-gray-600 mr-2">Tipo de Entrega:</label>
+                  <select
+                    id="tipo-entrega"
+                    value={entregaSeleccionada}
+                    onChange={handleEntregaChange}
+                    className="p-2 border rounded"
+                  >
+                    <option value="retiro">Retiro</option>
+                    <option value="domicilio">Domicilio</option>
+                  </select>
+                </div>
+
                 <button
                   onClick={handleComprar}
                   className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"

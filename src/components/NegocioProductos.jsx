@@ -75,10 +75,7 @@ const NegocioProductos = ({ negocioId }) => {
   };
 
   const handleQuantityChange = (id, value) => {
-    // Obtener el producto correspondiente
     const producto = productos.find(prod => prod.id === id);
-
-    // Asegurarse de que la cantidad no exceda el stock disponible
     if (producto) {
       const cantidad = Math.min(value, producto.stock);
       setProductQuantities(prev => ({
@@ -93,15 +90,21 @@ const NegocioProductos = ({ negocioId }) => {
       console.error('Producto inválido:', producto);
       return;
     }
-
+  
     // Verificar si la cantidad excede el stock disponible
     const cantidadFinal = Math.min(cantidad, producto.stock);
-
-    // Solo agregar al carrito si la cantidad es válida
+  
     if (cantidadFinal > 0) {
       dispatch(agregarProducto({ ...producto, cantidad: cantidadFinal }));
       setIsCarritoOpen(true);
       setProductQuantities(prev => ({ ...prev, [producto.id]: cantidadFinal }));
+      // Actualizar el stock disponible del producto
+      setProductos(prevProductos => prevProductos.map(prod => {
+        if (prod.id === producto.id) {
+          return { ...prod, stock: prod.stock - cantidadFinal };
+        }
+        return prod;
+      }));
     } else {
       console.error('Cantidad no válida para agregar al carrito.');
     }
@@ -194,40 +197,45 @@ const NegocioProductos = ({ negocioId }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredProductos.map((producto) => (
-          <div key={producto.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
-            <div>
-              <img src={producto.imagen} alt={producto.nombre} className="w-full h-48 object-cover mb-4" />
-              <h3 className="text-lg font-semibold">{producto.nombre}</h3>
-              <p className="text-gray-600">Precio: ${producto.precio}</p>
-              <p className="text-gray-600">Categoría: {producto.categoria}</p>
-              <p className="text-gray-600">Stock: {producto.stock}</p>
-            </div>
-            <div>
-              <input
-                type="number"
-                min="1"
-                max={producto.stock}
-                value={productQuantities[producto.id] || 1}
-                onChange={(e) => handleQuantityChange(producto.id, parseInt(e.target.value, 10))}
-                className="border rounded p-1 w-16 mr-2"
-              />
-              <button
-                onClick={() => handleAddToCart(producto, productQuantities[producto.id] || 1)}
-                className="p-2 bg-blue-500 text-white rounded mt-2 w-full"
-              >
-                Agregar al Carrito
-              </button>
-              <button
-                onClick={() => handleViewDetails(producto)}
-                className="p-2 bg-green-500 text-white rounded mt-2 w-full"
-              >
-                Ver Detalles
-              </button>
-            </div>
-          </div>
-        ))}
+  {filteredProductos.map((producto) => (
+    <div key={producto.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
+      <div>
+        {/* Aplicar clases de Tailwind para un tamaño uniforme de las imágenes */}
+        <img
+          src={producto.imagen}
+          alt={producto.nombre}
+          className="w-full h-48 object-contain mb-4"
+        />
+        <h3 className="text-lg font-semibold">{producto.nombre}</h3>
+        <p className="text-gray-600">Precio: ${producto.precio}</p>
+        <p className="text-gray-600">Categoría: {producto.categoria}</p>
+        <p className="text-gray-600">Stock: {producto.stock}</p>
       </div>
+      <div>
+        <input
+          type="number"
+          min="1"
+          max={producto.stock}
+          value={productQuantities[producto.id] || 1}
+          onChange={(e) => handleQuantityChange(producto.id, parseInt(e.target.value, 10))}
+          className="border rounded p-1 w-16 mr-2"
+        />
+        <button
+          onClick={() => handleAddToCart(producto, productQuantities[producto.id] || 1)}
+          className="p-2 bg-blue-500 text-white rounded mt-2 w-full"
+        >
+          Agregar al Carrito
+        </button>
+        <button
+          onClick={() => handleViewDetails(producto)}
+          className="p-2 bg-green-500 text-white rounded mt-2 w-full"
+        >
+          Ver Detalles
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
 
       {selectedProduct && (
         <ProductDetailModal

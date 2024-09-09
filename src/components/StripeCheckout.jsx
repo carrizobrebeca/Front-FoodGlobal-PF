@@ -1,25 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import React from 'react';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 
+// Cargar la clave pública de Stripe
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const CheckoutForm = ({ totalAmount, onSuccess, onError }) => {
+const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = React.useState(null);
+  const [success, setSuccess] = React.useState(false);
+  const [showSuccess, setShowSuccess] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (success) {
       setShowSuccess(true);
       const timer = setTimeout(() => {
         setShowSuccess(false);
-      }, 5000); // 5000 ms = 5 segundos
+      }, 5000);
 
-      return () => clearTimeout(timer); // Limpiar temporizador si el componente se desmonta antes de tiempo
+      return () => clearTimeout(timer);
     }
   }, [success]);
 
@@ -46,6 +47,7 @@ const CheckoutForm = ({ totalAmount, onSuccess, onError }) => {
         setError(error.message);
         onError(error.message);
       } else if (paymentIntent.status === 'succeeded') {
+ 
         setSuccess(true);
         onSuccess();
       }
@@ -54,6 +56,8 @@ const CheckoutForm = ({ totalAmount, onSuccess, onError }) => {
       onError(error.message);
     }
   };
+
+
 
   return (
     <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg w-full max-w-md mx-auto">
@@ -98,9 +102,15 @@ const CheckoutForm = ({ totalAmount, onSuccess, onError }) => {
   );
 };
 
-const StripeCheckout = ({ totalAmount, onSuccess, onError }) => (
+const StripeCheckout = ({ totalAmount, cartItems, userId, onSuccess, onError }) => (
   <Elements stripe={stripePromise}>
-    <CheckoutForm totalAmount={totalAmount} onSuccess={onSuccess} onError={onError} />
+    <CheckoutForm 
+      totalAmount={totalAmount} 
+      cartItems={cartItems} 
+      userId={userId}
+      onSuccess={onSuccess} 
+      onError={onError} 
+    />
   </Elements>
 );
 
