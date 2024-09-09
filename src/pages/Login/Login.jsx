@@ -78,6 +78,15 @@ const Login = () => {
     }
   };
 
+  const handleValidateGoogle= (googleCredential) => {
+
+    dispatch(fetchLogin(googleCredential))
+      .unwrap()
+      .catch((err) => {
+        console.error(err);
+      });
+   };
+
   const disable = () => {
     if (formSubmitted) return true;
     let disabled = true;
@@ -153,7 +162,7 @@ const Login = () => {
               <h5>or continue with</h5>
               <GoogleLogin
                 onSuccess={(credentialResponse) => {
-                  console.log(credentialResponse);
+                  handleValidateGoogle(credentialResponse)
                 }}
                 onError={() => {
                   console.log("Login Failed");

@@ -5,7 +5,7 @@ import axios from 'axios';
 export const fetchLogin = createAsyncThunk('login/fetchLogin', async (userData, { rejectWithValue }) => {
   try {
     const response = await axios.post('http://localhost:3001/login', userData);
-    return response.data.usuario; // Asegúrate de que esto devuelva el usuario correctamente
+    return response.data.user; // Asegúrate de que esto devuelva el usuario correctamente
   } catch (error) {
     // Manejo de errores: Devuelve el error del servidor si la autenticación falla
     return rejectWithValue(error.response?.data || 'Error de autenticación');

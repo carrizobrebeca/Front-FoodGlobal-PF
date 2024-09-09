@@ -6,7 +6,7 @@
 
 .container {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: 190px 190px 190px 190px 190px 190px;
   gap: 10px;
   align-items: center;
   padding: 10px;
@@ -15,10 +15,12 @@
   background-color: #f9f9f9;
   width: 100%;
   box-sizing: border-box;
-  margin: 0;
 }
 
 .content img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -29,7 +31,4 @@ button {
   cursor: pointer;
   margin-right: 10px;
 }
-.container h2{
 
-  margin: 0;
-}

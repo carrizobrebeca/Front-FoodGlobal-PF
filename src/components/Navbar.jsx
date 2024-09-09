@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import logo from '../assets/images/logofood.png';
@@ -14,6 +14,9 @@ const Navbar = ({ onOpenCarrito }) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.login.user);
   const carrito = useSelector((state) => state.carrito);
+
+  // Referencia para el menú lateral
+  const sidebarRef = useRef(null);
 
   useEffect(() => {
     const fetchLocation = async () => {
@@ -46,6 +49,19 @@ const Navbar = ({ onOpenCarrito }) => {
     if (onOpenCarrito) onOpenCarrito(toggleCarritoPanel);
   }, [onOpenCarrito]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   return (
     <>
       <nav className="bg-white text-gray-800 p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
@@ -59,7 +75,7 @@ const Navbar = ({ onOpenCarrito }) => {
           <input
             type="text"
             placeholder="Buscar..."
-            className="p-2 w-3/5 max-w-lg rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-blue-500"
+            className="p-2 w-3/5 max-w-lg rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
           />
         </div>
 
@@ -113,6 +129,7 @@ const Navbar = ({ onOpenCarrito }) => {
 
         {/* Sidebar */}
         <div
+          ref={sidebarRef}
           className={`fixed top-0 right-0 h-full w-64 bg-gray-900 text-white transition-transform transform ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
@@ -131,6 +148,11 @@ const Navbar = ({ onOpenCarrito }) => {
               <li><Link to="/locales">Locales</Link></li>
               <li><Link to="/afiliarse">Afiliarse</Link></li>
               <li><Link to="/about">Sobre Nosotros</Link></li>
+
+              {/* Mostrar Dashboard solo si el usuario es admin o socio */}
+              {(user?.rol === 'admin' || user?.rol === 'socio') && (
+                <li><Link to="/dashboard">Dashboard</Link></li>
+              )}
             </ul>
           </div>
         </div>

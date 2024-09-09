@@ -3,7 +3,7 @@ import axios from 'axios';
 import ProductDetailModal from './ProductDetailModal';
 import CarritoPanel from './CarritoPanel';
 import { useDispatch, useSelector } from 'react-redux';
-import { agregarProducto } from '../store/carritoSlice'; // Actualiza la ruta y el nombre
+import { agregarProducto } from '../store/carritoSlice';
 
 const NegocioProductos = ({ negocioId }) => {
   const [productos, setProductos] = useState([]);
@@ -19,7 +19,7 @@ const NegocioProductos = ({ negocioId }) => {
   const [isCarritoOpen, setIsCarritoOpen] = useState(false);
 
   const dispatch = useDispatch();
-  const carritoProductos = useSelector(state => state.carrito.productos); // Obtener productos del carrito desde Redux
+  const carritoProductos = useSelector(state => state.carrito.productos);
 
   useEffect(() => {
     const fetchProductos = async () => {
@@ -31,7 +31,6 @@ const NegocioProductos = ({ negocioId }) => {
         const response = await axios.get(`http://localhost:3001/negocios/${negocioId}/productos`);
         const productosData = response.data;
 
-        // Comprobar que todos los productos tienen la propiedad precio
         productosData.forEach(producto => {
           if (!producto.precio) {
             console.error('Producto sin precio:', producto);
@@ -76,28 +75,43 @@ const NegocioProductos = ({ negocioId }) => {
   };
 
   const handleQuantityChange = (id, value) => {
-    setProductQuantities(prev => ({
-      ...prev,
-      [id]: Math.min(value, productos.find(p => p.id === id)?.stock || 0)
-    }));
+    const producto = productos.find(prod => prod.id === id);
+    if (producto) {
+      const cantidad = Math.min(value, producto.stock);
+      setProductQuantities(prev => ({
+        ...prev,
+        [id]: cantidad
+      }));
+    }
   };
-
-  const handleAddToCart = (producto) => {
+  
+  const handleAddToCart = (producto, cantidad = 1) => {
     if (!producto || typeof producto.precio === 'undefined') {
       console.error('Producto inválido:', producto);
       return;
     }
   
-    const cantidad = productQuantities[producto.id] || 1;
-    console.log('Agregando al carrito:', { ...producto, cantidad });
+    // Verificar si la cantidad excede el stock disponible
+    const cantidadFinal = Math.min(cantidad, producto.stock);
   
-    dispatch(agregarProducto({ ...producto, cantidad }));
-    setIsCarritoOpen(true); // Asegúrate de que esta línea se ejecuta
-    setProductQuantities(prev => ({ ...prev, [producto.id]: 1 }));
+    if (cantidadFinal > 0) {
+      dispatch(agregarProducto({ ...producto, cantidad: cantidadFinal }));
+      setIsCarritoOpen(true);
+      setProductQuantities(prev => ({ ...prev, [producto.id]: cantidadFinal }));
+      // Actualizar el stock disponible del producto
+      setProductos(prevProductos => prevProductos.map(prod => {
+        if (prod.id === producto.id) {
+          return { ...prod, stock: prod.stock - cantidadFinal };
+        }
+        return prod;
+      }));
+    } else {
+      console.error('Cantidad no válida para agregar al carrito.');
+    }
   };
 
   const filteredProductos = productos.filter((producto) => {
-    console.log('Producto:', producto); // Agrega este log para verificar los productos
+    console.log('Producto:', producto);
     const isInCategory = selectedCategory ? producto.categoria === selectedCategory : true;
     const isInPriceRange = (
       (minPrice === '' || producto.precio >= Number(minPrice)) &&
@@ -135,7 +149,6 @@ const NegocioProductos = ({ negocioId }) => {
         </button>
       </div>
 
-      {/* Filtros */}
       <div className="mb-4 flex flex-wrap gap-4 items-center">
         <div className="flex flex-col w-full md:w-1/4">
           <label htmlFor="category" className="text-sm font-medium mb-2">Categoría</label>
@@ -167,61 +180,76 @@ const NegocioProductos = ({ negocioId }) => {
           <input
             id="maxPrice"
             type="number"
-            placeholder="10000"
+            placeholder="0"
             value={maxPrice}
             onChange={(e) => setMaxPrice(e.target.value)}
             className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
           />
         </div>
+        <div className="mt-4 md:mt-0 md:w-1/4">
+          <button
+            onClick={handleResetFilters}
+            className="p-2 bg-red-500 text-white rounded w-full"
+          >
+            Resetear Filtros
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  {filteredProductos.map((producto) => (
+    <div key={producto.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
+      <div>
+        {/* Aplicar clases de Tailwind para un tamaño uniforme de las imágenes */}
+        <img
+          src={producto.imagen}
+          alt={producto.nombre}
+          className="w-full h-48 object-contain mb-4"
+        />
+        <h3 className="text-lg font-semibold">{producto.nombre}</h3>
+        <p className="text-gray-600">Precio: ${producto.precio}</p>
+        <p className="text-gray-600">Categoría: {producto.categoria}</p>
+        <p className="text-gray-600">Stock: {producto.stock}</p>
+      </div>
+      <div>
+        <input
+          type="number"
+          min="1"
+          max={producto.stock}
+          value={productQuantities[producto.id] || 1}
+          onChange={(e) => handleQuantityChange(producto.id, parseInt(e.target.value, 10))}
+          className="border rounded p-1 w-16 mr-2"
+        />
         <button
-          onClick={handleResetFilters}
-          className="mt-4 p-2 bg-red-500 text-white rounded"
+          onClick={() => handleAddToCart(producto, productQuantities[producto.id] || 1)}
+          className="p-2 bg-blue-500 text-white rounded mt-2 w-full"
         >
-          Resetear Filtros
+          Agregar al Carrito
+        </button>
+        <button
+          onClick={() => handleViewDetails(producto)}
+          className="p-2 bg-green-500 text-white rounded mt-2 w-full"
+        >
+          Ver Detalles
         </button>
       </div>
+    </div>
+  ))}
+</div>
 
-      {/* Lista de productos */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProductos.map((producto) => (
-          <div key={producto.id} className="bg-white p-4 rounded-lg shadow-lg">
-            <img src={producto.imagen} alt={producto.nombre} className="w-full h-40 object-cover mb-4 rounded" />
-            <h3 className="text-lg font-semibold mb-2">{producto.nombre}</h3>
-            <p className="text-gray-700 mb-2">{producto.descripcion}</p>
-            <p className="text-xl font-bold mb-4">${producto.precio}</p>
-            <input
-              type="number"
-              min="1"
-              value={productQuantities[producto.id] || 1}
-              onChange={(e) => handleQuantityChange(producto.id, e.target.value)}
-              className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 w-full"
-            />
-            <button
-              onClick={() => handleAddToCart(producto)}
-              className="p-2 bg-blue-500 text-white rounded w-full"
-            >
-              Agregar al carrito
-            </button>
-            <button
-              onClick={() => handleViewDetails(producto)}
-              className="p-2 bg-gray-500 text-white rounded w-full mt-2"
-            >
-              Ver detalles
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {/* Modal de detalles del producto */}
       {selectedProduct && (
         <ProductDetailModal
           product={selectedProduct}
           onClose={handleCloseModal}
-          agregarAlCarrito={handleAddToCart}
+          agregarAlCarrito={handleAddToCart} // Pasar función correctamente
         />
       )}
-      {/* Panel de carrito */}
-      {isCarritoOpen && <CarritoPanel   productos={carritoProductos} onClose={toggleCarritoPanel} isOpen={isCarritoOpen} />}
+
+      <CarritoPanel
+        isOpen={isCarritoOpen}
+        onClose={() => setIsCarritoOpen(false)}
+        productos={carritoProductos}
+      />
     </div>
   );
 };

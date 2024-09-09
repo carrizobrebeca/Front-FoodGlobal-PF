@@ -1,29 +1,39 @@
-// src/StripeCheckout.js
-import React, { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import React from 'react';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import axios from 'axios';
 
+// Cargar la clave pública de Stripe
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const CheckoutForm = ({ totalAmount }) => {
+const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [error, setError] = React.useState(null);
+  const [success, setSuccess] = React.useState(false);
+  const [showSuccess, setShowSuccess] = React.useState(false);
+
+  React.useEffect(() => {
+    if (success) {
+      setShowSuccess(true);
+      const timer = setTimeout(() => {
+        setShowSuccess(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [success]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-  
+
     try {
-      // Solicitar el client_secret al backend con el monto total del carrito
       const response = await axios.post('/create-payment-intent', {
-        amount: totalAmount, // Monto en centavos
+        amount: totalAmount,
       });
-  
+
       const { clientSecret } = response.data;
-  
-      // Confirmar el pago con el client_secret
+
       const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -32,26 +42,44 @@ const CheckoutForm = ({ totalAmount }) => {
           },
         },
       });
-  
+
       if (error) {
         setError(error.message);
+        onError(error.message);
       } else if (paymentIntent.status === 'succeeded') {
+ 
         setSuccess(true);
+        onSuccess();
       }
     } catch (error) {
       setError('Error al procesar el pago: ' + error.message);
+      onError(error.message);
     }
   };
 
+
+
   return (
-    <div className="flex flex-col items-center justify-center p-6 bg-white shadow-md rounded-lg">
+    <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg w-full max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4">Pago</h2>
-      <form onSubmit={handleSubmit} className="w-full max-w-md">
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="card">
-            Datos de la Tarjeta
-          </label>
-          <CardElement className="p-2 border border-gray-300 rounded-lg" />
+      <form onSubmit={handleSubmit} className="w-full">
+        <div className="bg-gray-200 p-4 rounded-lg shadow-md mb-4">
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-1">Número de tarjeta</label>
+            <CardElement 
+              options={{ 
+                style: { 
+                  base: { 
+                    fontSize: '16px', 
+                    color: '#424770', 
+                    '::placeholder': { color: '#aab7c4' },
+                    padding: '10px',
+                  } 
+                } 
+              }} 
+              className="w-full p-2 border border-gray-300 rounded-lg"
+            />
+          </div>
         </div>
         <div className="mb-4">
           <p className="text-lg font-semibold">Monto: ${totalAmount / 100}</p>
@@ -64,15 +92,25 @@ const CheckoutForm = ({ totalAmount }) => {
           Pagar
         </button>
         {error && <div className="mt-4 text-red-600">{error}</div>}
-        {success && <div className="mt-4 text-green-600">¡Pago exitoso!</div>}
+        {showSuccess && (
+          <div className="mt-4 text-green-600">
+            ¡Pago exitoso!
+          </div>
+        )}
       </form>
     </div>
   );
 };
 
-const StripeCheckout = ({ totalAmount }) => (
+const StripeCheckout = ({ totalAmount, cartItems, userId, onSuccess, onError }) => (
   <Elements stripe={stripePromise}>
-    <CheckoutForm totalAmount={totalAmount} />
+    <CheckoutForm 
+      totalAmount={totalAmount} 
+      cartItems={cartItems} 
+      userId={userId}
+      onSuccess={onSuccess} 
+      onError={onError} 
+    />
   </Elements>
 );
 
