@@ -111,27 +111,27 @@ const NegociosPage = () => {
           {error && <p>Error: {error}</p>}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {negocios.length > 0 ? (
-              negocios.map((negocio) => (
-                <div key={negocio.id} className="p-4 border rounded-lg shadow-md">
-                  <h2 className="text-lg font-semibold">{negocio.nombre}</h2>
-                  <p>{negocio.descripcion}</p>
-                  <img
-                    src={negocio.imagen || 'https://via.placeholder.com/150'} // Imagen por defecto si es null
-                    alt={negocio.nombre}
-                    className="w-full h-32 object-cover mt-2"
-                  />
-                  <button
-                    onClick={() => handleNegocioClick(negocio.id)}
-                    className="mt-2 p-2 bg-blue-500 text-white rounded"
-                  >
-                    Ver Productos
-                  </button>
-                </div>
-              ))
-            ) : (
-              <p>No hay negocios para mostrar.</p>
-            )}
+          {Array.isArray(negocios) && negocios.length > 0 ? (
+  negocios.map((negocio) => (
+    <div key={negocio.id} className="p-4 border rounded-lg shadow-md">
+      <h2 className="text-lg font-semibold">{negocio.nombre}</h2>
+      <p>{negocio.descripcion}</p>
+      <img
+        src={negocio.imagen || 'https://via.placeholder.com/150'}
+        alt={negocio.nombre}
+        className="w-full h-32 object-cover mt-2"
+      />
+      <button
+        onClick={() => handleNegocioClick(negocio.id)}
+        className="mt-2 p-2 bg-blue-500 text-white rounded"
+      >
+        Ver Productos
+      </button>
+    </div>
+  ))
+) : (
+  <p>No hay negocios para mostrar.</p>
+)}
           </div>
         </>
       )}
