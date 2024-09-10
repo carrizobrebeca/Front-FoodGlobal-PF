@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios'
+import axios from 'axios';
 
-
+// Función para manejar el inicio de sesión
 export const fetchLogin = createAsyncThunk('login/fetchLogin', async (userData, { rejectWithValue }) => {
   try {
     const response = await axios.post('/login', userData);
