@@ -7,7 +7,7 @@ export const fetchNegocios = createAsyncThunk(
   "negocios/fetchNegocios",
   async (categoria) => {
     const response = await axios.get(
-      `/negocios?categoria=${categoria}`
+      `https://back-foodglobal-pf.up.railway.app/negocios?categoria=${categoria}`
     );
     return response.data;
   }
@@ -16,7 +16,7 @@ export const crearNegocio = createAsyncThunk(
   "negocios/crearNegocio",
   async (negocioData) => {
     const response = await axios.post(
-      "/negocios",
+      "https://back-foodglobal-pf.up.railway.app/negocios",
       negocioData
     );
     return response.data;
@@ -27,7 +27,7 @@ export const editNegocio = createAsyncThunk(
   async ( id, negocioData ) => {
     try {
       const response = await axios.put(
-        `//negocios/${id}`,
+        `https://back-foodglobal-pf.up.railway.app/negocios/${id}`,
         negocioData
       );
       return response.data;

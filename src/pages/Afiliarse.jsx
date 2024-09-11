@@ -10,7 +10,7 @@ const RegistroAfiliacion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/afiliacion', {
+      await axios.post('https://back-foodglobal-pf.up.railway.app/api/afiliacion', {
         nombreLocal,
         direccion,
         email,
