@@ -5,7 +5,7 @@ import axios from "axios";
 import Card from "../components/Card/Card"; // Asegúrate de que la ruta sea correcta
 import { useDispatch, useSelector } from "react-redux";
 
-const API_URL = process.env.REACT_APP_API_URL;
+
 
 const DashboardSocio = () => {
   const navigate = useNavigate();
@@ -18,7 +18,7 @@ const DashboardSocio = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/usuarios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
       const data = response.data;
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
       const recentUsers = data
@@ -35,7 +35,7 @@ const DashboardSocio = () => {
     try {
       setLoading(true);
       setError(null); // Resetear el error
-      const response = await axios.get(`${API_URL}/negocios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
       const negocios = response.data;
       // Filtrar negocios que pertenecen al usuario
       const userNegocios = negocios.filter(
