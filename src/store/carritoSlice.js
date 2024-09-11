@@ -33,7 +33,7 @@ export const realizarCompra = createAsyncThunk(
   async (productos, { dispatch, rejectWithValue }) => {
     try {
       // Aquí puedes enviar una solicitud al backend para procesar la compra
-      await axios.post(`${API_URL}/compras`, { productos });
+      await axios.post(`https://back-foodglobal-pf.up.railway.app/compras`, { productos });
 
       // Vaciar el carrito en el localStorage y en el estado
       dispatch(vaciarCarrito());
