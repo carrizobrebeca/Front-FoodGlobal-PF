@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL;
 // Función para manejar el inicio de sesión
 export const fetchLogin = createAsyncThunk('login/fetchLogin', async (userData, { rejectWithValue }) => {
   try {
-    const response = await axios.post('https://back-foodglobal-pf.up.railway.app/login', userData);
+    const response = await axios.post(`${API_URL}/login`, userData);
     return response.data.user; // Asegúrate de que esto devuelva el usuario correctamente
   } catch (error) {
     // Manejo de errores: Devuelve el error del servidor si la autenticación falla
