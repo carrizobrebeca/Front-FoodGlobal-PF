@@ -16,7 +16,7 @@ const DashboardSocio = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/usuarios");
+      const response = await axios.get("https://back-foodglobal-pf.up.railway.app/usuarios");
       const data = response.data;
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
       const recentUsers = data
@@ -33,7 +33,7 @@ const DashboardSocio = () => {
     try {
       setLoading(true);
       setError(null); // Resetear el error
-      const response = await axios.get("/negocios");
+      const response = await axios.get("https://back-foodglobal-pf.up.railway.app/negocios");
       const negocios = response.data;
       // Filtrar negocios que pertenecen al usuario
       const userNegocios = negocios.filter(
