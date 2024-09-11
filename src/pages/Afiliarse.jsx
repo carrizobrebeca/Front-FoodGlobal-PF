@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
+const API_URL = process.env.REACT_APP_API_URL;
+
 const RegistroAfiliacion = () => {
   const [nombreLocal, setNombreLocal] = useState('');
   const [direccion, setDireccion] = useState('');
@@ -10,7 +13,7 @@ const RegistroAfiliacion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://back-foodglobal-pf.up.railway.app/api/afiliacion', {
+      await axios.post(`${API_URL}/api/afiliacion`, {
         nombreLocal,
         direccion,
         email,

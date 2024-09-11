@@ -4,6 +4,8 @@ import NegocioProductos from '../components/NegocioProductos';
 
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const NegociosPage = () => {
   const [category, setCategory] = useState('');
   const [allNegocios, setAllNegocios] = useState([]);
@@ -18,7 +20,7 @@ const NegociosPage = () => {
       try {
         setLoading(true);
         setError(null); // Resetear el error
-        const response = await axios.get('https://back-foodglobal-pf.up.railway.app/negocios');
+        const response = await axios.get(`${API_URL}/negocios`);
         setAllNegocios(response.data);
       } catch (err) {
         setError(err.message);

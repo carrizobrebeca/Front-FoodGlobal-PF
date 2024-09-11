@@ -2,12 +2,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 // Acción para obtener todos los negocios
 export const fetchNegocios = createAsyncThunk(
   "negocios/fetchNegocios",
   async (categoria) => {
     const response = await axios.get(
-      `https://back-foodglobal-pf.up.railway.app/negocios?categoria=${categoria}`
+      `${API_URL}/negocios?categoria=${categoria}`
     );
     return response.data;
   }
@@ -16,7 +18,7 @@ export const crearNegocio = createAsyncThunk(
   "negocios/crearNegocio",
   async (negocioData) => {
     const response = await axios.post(
-      "https://back-foodglobal-pf.up.railway.app/negocios",
+      `${API_URL}/negocios`,
       negocioData
     );
     return response.data;
@@ -27,7 +29,7 @@ export const editNegocio = createAsyncThunk(
   async ( id, negocioData ) => {
     try {
       const response = await axios.put(
-        `https://back-foodglobal-pf.up.railway.app/negocios/${id}`,
+        `${API_URL}/negocios/${id}`,
         negocioData
       );
       return response.data;
