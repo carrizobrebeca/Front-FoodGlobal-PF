@@ -7,7 +7,7 @@ import style from "./dashBoard.module.css";
 
 import { useDispatch } from "react-redux";
 
-const API_URL = process.env.REACT_APP_API_URL;
+
 
 const DashBoardAdmin = () => {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ const DashBoardAdmin = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${API_URL}/usuarios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
       const data = response.data;
 
       // Filtra el usuario con rol 'socio'
@@ -59,7 +59,7 @@ const DashBoardAdmin = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`${API_URL}/negocios`);
+        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
         const negocios = response.data;
         setAllNegocios(negocios);
         const negociosRecientes = negocios

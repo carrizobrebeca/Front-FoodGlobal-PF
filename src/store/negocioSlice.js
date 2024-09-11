@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL;
+
 
 // Thunk para obtener los negocios
 export const fetchNegocios = createAsyncThunk('negocios/fetchNegocios', async () => {
-  const response = await axios.get(`${API_URL}/negocios`);
+  const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
   return response.data;
 });
 
