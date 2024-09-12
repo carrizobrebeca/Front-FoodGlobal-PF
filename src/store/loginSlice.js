@@ -5,7 +5,7 @@ import axios from 'axios';
 // Función para manejar el inicio de sesión
 export const fetchLogin = createAsyncThunk('login/fetchLogin', async (userData, { rejectWithValue }) => {
   try {
-    const response = await axios.post(`http://localhost:3001/login`, userData);
+    const response = await axios.post(`https://back-foodglobal-pf.up.railway.app/login`, userData);
     return response.data.user; // Asegúrate de que esto devuelva el usuario correctamente
   } catch (error) {
     // Manejo de errores: Devuelve el error del servidor si la autenticación falla

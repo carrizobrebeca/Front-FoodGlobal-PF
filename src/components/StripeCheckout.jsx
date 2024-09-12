@@ -28,7 +28,7 @@ const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) =>
     event.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:3001/create-payment-intent', {
+      const response = await axios.post('https://back-foodglobal-pf.up.railway.app/create-payment-intent', {
         amount: totalAmount,
       });
 

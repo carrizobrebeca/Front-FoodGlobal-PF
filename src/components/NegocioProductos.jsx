@@ -28,7 +28,7 @@ const NegocioProductos = ({ negocioId }) => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`http://localhost:3001/negocios/${negocioId}/productos`);
+        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios/${negocioId}/productos`);
         const productosData = response.data;
 
         productosData.forEach(producto => {

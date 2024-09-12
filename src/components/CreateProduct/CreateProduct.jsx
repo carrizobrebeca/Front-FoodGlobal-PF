@@ -29,7 +29,7 @@ const CreateProduct = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get("http://localhost:3001/negocios");
+        const response = await axios.get("https://back-foodglobal-pf.up.railway.app/negocios");
         const negocios = response.data;
 
         // Filtrar negocios que pertenecen al usuario
@@ -55,7 +55,7 @@ const CreateProduct = () => {
           setLoading(true);
           setError(null);
           const response = await axios.get(
-            `http://localhost:3001/negocios/${negocioId}/productos`
+            `https://back-foodglobal-pf.up.railway.app/negocios/${negocioId}/productos`
           );
           const productosData = response.data;
 
@@ -206,7 +206,7 @@ const CreateProduct = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`http://localhost:3001/productos/${selectedProductId}`
+        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/productos/${selectedProductId}`
         );
         const producto = response.data;
 

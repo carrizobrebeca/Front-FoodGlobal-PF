@@ -27,7 +27,7 @@ const CreateNegocio = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("http://localhost:3001/negocios");
+      const response = await axios.get("https://back-foodglobal-pf.up.railway.app/negocios");
       const negocios = response.data;
 
       // Filtrar negocios que pertenecen al usuario
@@ -106,7 +106,7 @@ const CreateNegocio = () => {
     if (selectedId) {
       try {
         const response = await axios.get(
-          `http://localhost:3001/negocios/${selectedId}`
+          `https://back-foodglobal-pf.up.railway.app/negocios/${selectedId}`
         );
         const negocio = response.data;
 

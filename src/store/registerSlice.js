@@ -7,7 +7,7 @@ export const checkUserExists = createAsyncThunk(
   "register/checkUserExists",
   async (email, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:3001/usuarios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
       const users = response.data;
       const userExists = users.some((user) => user.email === email);
       return userExists;
@@ -29,7 +29,7 @@ export const registerUser = createAsyncThunk(
         return rejectWithValue("Email already in use");
       }
 
-      const response = await axios.post(`http://localhost:3001/usuarios`,
+      const response = await axios.post(`https://back-foodglobal-pf.up.railway.app/usuarios`,
         userData
       );
       return response.data;
@@ -78,7 +78,7 @@ export const fetchUserByEmail = createAsyncThunk(
   async (email, { rejectWithValue }) => {
     try {
       // Obtén todos los usuarios
-      const response = await axios.get(`http://localhost:3001/usuarios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
       const users = response.data;
 
       // Filtra el usuario con el email proporcionado

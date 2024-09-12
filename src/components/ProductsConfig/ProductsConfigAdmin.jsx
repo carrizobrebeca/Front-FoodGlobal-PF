@@ -20,7 +20,7 @@ const ProductsConfigAdmin = () => {
     try {
       setLoading(true);
       setError(null); // Resetear el error
-      const response = await axios.get("http://localhost:3001/negocios");
+      const response = await axios.get("https://back-foodglobal-pf.up.railway.app/negocios");
       const negocios = response.data;
       setAllNegocios(negocios);
     } catch (err) {
@@ -35,7 +35,7 @@ const ProductsConfigAdmin = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("http://localhost:3001/productos");
+      const response = await axios.get("https://back-foodglobal-pf.up.railway.app/productos");
       const productosData = response.data;
 
       setProductos(productosData);

@@ -63,7 +63,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       const amount = calcularTotal() * 100;
 
       // Solicita un PaymentIntent al backend
-      await axios.post('http://localhost:3001/create-payment-intent', {
+      await axios.post('https://back-foodglobal-pf.up.railway.app/create-payment-intent', {
         amount,
       });
 
@@ -95,7 +95,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       };
 
       // Finaliza la compra y actualiza el stock
-      await axios.post('http://localhost:3001/finalizar-compra', compraData);
+      await axios.post('https://back-foodglobal-pf.up.railway.app/finalizar-compra', compraData);
 
       dispatch(vaciarCarrito());
 
