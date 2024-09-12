@@ -15,7 +15,7 @@ const CreateUser = () => {
   const navigate = useNavigate();
   const { status, error, user } = useSelector((state) => state.register);
 
-  const [formSubmitted, setFormSubmitted] = useState(false);
+
 
   const optionRol = ["admin", "socio", "usuario"];
 
@@ -145,9 +145,6 @@ const CreateUser = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormSubmitted(true);
-
-    if (disable()) return;
 
     if (state.id) {
       dispatch(editUser({ id: state.id, userData: state }))
@@ -252,11 +249,7 @@ const CreateUser = () => {
     setState((prevState) => ({ ...prevState, imagen: url }));
   };
 
-  const disable = () => {
-    if (formSubmitted) return true;
-    return Object.values(errors).some((error) => error !== "");
-  };
-
+  
   return (
     <div className="bg-gray-100 p-12">
       <div className="flex justify-between bg-gray-300 p-4 rounded-md mb-4">
@@ -437,7 +430,7 @@ const CreateUser = () => {
         </button>
         <button
           type="submit"
-          disabled={disable()}
+        
           onClick={handleSubmit}
           className="bg-blue-500 p-2 rounded-md text-white flex items-center gap-2"
         >
@@ -459,7 +452,7 @@ const CreateUser = () => {
         </button>
         <button
           type="submit"
-          disabled={disable()}
+         
           onClick={handleSubmit}
           className="bg-green-500 p-2 rounded-md text-white flex items-center gap-2"
         >

@@ -63,8 +63,6 @@ export const editproducto= createAsyncThunk(
       return response.data;
     } catch (error) {
       alert("Error al Editar Producto")
-      
-      
     }
   }
 );
@@ -144,7 +142,7 @@ const productosSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
         console.error('Error al crear el producto:', action.error.message);
-        alert(`Error: failed Create a Product - ${action.error.message}`);
+        alert(`Error al crear producto, asegurese de completar todos los campos y crear productos con nombre unico - ${action.error.message}`);
       })
       .addCase(fetchNewProducts.fulfilled, (state, action) => {
         state.status = 'succeeded';

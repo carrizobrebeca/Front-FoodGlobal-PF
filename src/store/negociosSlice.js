@@ -25,7 +25,7 @@ export const crearNegocio = createAsyncThunk(
 );
 export const editNegocio = createAsyncThunk(
   "negocios/editNegocio",
-  async ( id, negocioData ) => {
+  async ({ id, negocioData }) => {
     try {
       const response = await axios.put(
         `https://back-foodglobal-pf.up.railway.app/negocios/${id}`,
@@ -33,12 +33,11 @@ export const editNegocio = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      alert("Error al Editar Negocio")
-      
-      
+      throw new Error("Error al editar el negocio");
     }
   }
 );
+
 
 const negociosSlice = createSlice({
   name: "negocios",
@@ -74,16 +73,23 @@ const negociosSlice = createSlice({
         state.error = action.error.message;
         alert("Error al crear negocio");
       })
+      .addCase(editNegocio.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(editNegocio.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
-        alert("Negocio editado con éxito");
+        // Actualiza el negocio en el estado
+        state.items = state.items.map(negocio =>
+          negocio.id === action.payload.id ? action.payload : negocio
+        );
+        alert('Producto editado exitosamente!');
       })
       .addCase(editNegocio.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-        alert("Error al editar negocio");
+        alert('Error al editar producto!');
       })
+    
   },
 });
 

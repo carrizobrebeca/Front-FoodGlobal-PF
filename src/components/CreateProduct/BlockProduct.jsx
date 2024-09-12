@@ -93,30 +93,6 @@ const CreateProduct = () => {
     imagen: "*",
   });
 
-  const fetchNegocios = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await axios.get("https://dglobal-pf.up.railway.app/negocios");
-      const negocios = response.data;
-
-      // Filtrar negocios que pertenecen al usuario
-      const userNegocios = negocios.filter(
-        (negocio) => negocio.usuario_id === user.id
-      );
-
-      setAllNegocios(userNegocios);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchNegocios();
-  }, [user]);
-
   const validate = (state, name) => {
     let newErrors = { ...errors };
     if (name === "nombre") {
@@ -167,27 +143,20 @@ const CreateProduct = () => {
       dispatch(fetchNewProducts(state));
     }
   };
- 
+
   const handleDelete = (e) => {
     e.preventDefault();
-  
+    // Mostrar un cuadro de confirmación
     const confirmDelete = window.confirm(
       "ADVERTENCIA: ELIMINACION PERMANENTE DE PRODUCTO ¿Estás seguro de que deseas eliminar este producto?"
     );
-  
+
     // Si el usuario confirma, proceder con la eliminación
     if (confirmDelete) {
       if (state.id) {
-        // Crear una copia del estado y actualizar el campo 'status' a 'eliminado'
-        const updatedProductData = {
-          ...state,
-          status: "eliminado",
-        };
-  
-        // Despachar la acción con los datos actualizados
-        dispatch(editproducto({ id: state.id, productData: updatedProductData }));
+        dispatch(deleteProductos(state.id));
       } else {
-        alert("Por favor, seleccione producto para eliminar");
+        alert("Por favor, ingrese un ID de producto para eliminar");
       }
     } else {
       // Si el usuario cancela, no hacer nada
@@ -206,7 +175,8 @@ const CreateProduct = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/productos/${selectedProductId}`
+        const response = await axios.get(
+          `https://back-foodglobal-pf.up.railway.app/productos/${selectedProductId}`
         );
         const producto = response.data;
 
@@ -252,7 +222,7 @@ const CreateProduct = () => {
         <button onClick={() => navigate("/products")} className="text-blue-600">
           ❮ Back
         </button>
-        <h2 className="text-lg text-blue-600 font-bold">Producto</h2>
+        <h2 className="text-lg text-blue-600 font-bold">Product</h2>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row bg-gray-200 p-4 rounded-lg mb-4">
@@ -387,7 +357,24 @@ const CreateProduct = () => {
               </select>
               <label className="text-red-500">{errors.negocio_id}</label>
             </div>
-         
+            <div className="flex items-center gap-2 mb-2">
+              <label className="w-32">Estado |</label>
+              <select
+                onChange={handleChange}
+                name="status"
+                id="status"
+                value={state.status}
+                className="flex-1 p-2 border rounded-md"
+              >
+                <option value="">Seleccione Estado</option>
+                {optionStatus.map((opc) => (
+                  <option key={opc} value={opc}>
+                    {opc}
+                  </option>
+                ))}
+              </select>
+              <label className="text-red-500">{errors.status}</label>
+            </div>
             {hasErrors && (
               <div className="text-red-500 py-5 pl-5">Campos requeridos *</div>
             )}

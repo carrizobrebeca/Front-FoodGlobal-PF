@@ -13,6 +13,7 @@ const Login = () => {
   const [state, setState] = useState({
     email: "",
     password: "",
+  
   });
   const [errors, setErrors] = useState({
     email: "Email cannot be empty",
@@ -31,7 +32,7 @@ const Login = () => {
   const validate = (state, name) => {
     if (name === "email") {
       if (state.email === "")
-        setErrors({ ...errors, email: "Email cannot be empty" });
+        setErrors({ ...errors, email: "Email no puede estar vacío" });
       else {
         setErrors({ ...errors, email: "" });
       }
@@ -39,7 +40,7 @@ const Login = () => {
 
     if (name === "password") {
       if (state.password === "")
-        setErrors({ ...errors, password: "Password cannot be empty" });
+        setErrors({ ...errors, password: "Password no puede estar vacío" });
       else {
         setErrors({ ...errors, password: "" });
       }
