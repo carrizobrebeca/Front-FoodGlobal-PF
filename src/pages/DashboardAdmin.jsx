@@ -7,6 +7,8 @@ import style from "./dashBoard.module.css";
 
 import { useDispatch } from "react-redux";
 
+
+
 const DashBoardAdmin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ const DashBoardAdmin = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/usuarios");
+      const response = await axios.get(`http://localhost:3001/usuarios`);
       const data = response.data;
 
       // Filtra el usuario con rol 'socio'
@@ -57,7 +59,7 @@ const DashBoardAdmin = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get("/negocios");
+        const response = await axios.get(`http://localhost:3001/negocios`);
         const negocios = response.data;
         setAllNegocios(negocios);
         const negociosRecientes = negocios

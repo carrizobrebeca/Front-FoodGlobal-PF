@@ -5,6 +5,8 @@ import axios from "axios";
 import Card from "../components/Card/Card"; // Asegúrate de que la ruta sea correcta
 import { useDispatch, useSelector } from "react-redux";
 
+
+
 const DashboardSocio = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -16,7 +18,7 @@ const DashboardSocio = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/usuarios");
+      const response = await axios.get(`http://localhost:3001/usuarios`);
       const data = response.data;
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
       const recentUsers = data
@@ -33,7 +35,7 @@ const DashboardSocio = () => {
     try {
       setLoading(true);
       setError(null); // Resetear el error
-      const response = await axios.get("/negocios");
+      const response = await axios.get(`http://localhost:3001/negocios`);
       const negocios = response.data;
       // Filtrar negocios que pertenecen al usuario
       const userNegocios = negocios.filter(

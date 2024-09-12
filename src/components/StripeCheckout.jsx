@@ -28,7 +28,7 @@ const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) =>
     event.preventDefault();
 
     try {
-      const response = await axios.post('/create-payment-intent', {
+      const response = await axios.post('http://localhost:3001/create-payment-intent', {
         amount: totalAmount,
       });
 

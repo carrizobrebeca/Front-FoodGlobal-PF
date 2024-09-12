@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
+
+
 const RegistroAfiliacion = () => {
   const [nombreLocal, setNombreLocal] = useState('');
   const [direccion, setDireccion] = useState('');
@@ -10,7 +13,7 @@ const RegistroAfiliacion = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/afiliacion', {
+      await axios.post(`http://localhost:3001/api/afiliacion`, {
         nombreLocal,
         direccion,
         email,

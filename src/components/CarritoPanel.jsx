@@ -63,7 +63,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       const amount = calcularTotal() * 100;
 
       // Solicita un PaymentIntent al backend
-      await axios.post('/create-payment-intent', {
+      await axios.post('http://localhost:3001/create-payment-intent', {
         amount,
       });
 
@@ -85,7 +85,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
     try {
       // Datos de compra
       const compraData = {
-        usuario_id: "30e7abe5-ade2-43eb-bbd0-1bdc5f0e703b", // ID del usuario
+        usuario_id: "785786f7-b8a6-4fa8-8c6d-f01b703a493a", // ID del usuario
         productos: productos.map((producto) => ({
           producto_id: producto.id,
           cantidad: producto.cantidad,
@@ -95,7 +95,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       };
 
       // Finaliza la compra y actualiza el stock
-      await axios.post('/finalizar-compra', compraData);
+      await axios.post('http://localhost:3001/finalizar-compra', compraData);
 
       dispatch(vaciarCarrito());
 

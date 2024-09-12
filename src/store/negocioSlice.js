@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+
+
 // Thunk para obtener los negocios
 export const fetchNegocios = createAsyncThunk('negocios/fetchNegocios', async () => {
-  const response = await axios.get('/negocios');
+  const response = await axios.get(`http://localhost:3001/negocios`);
   return response.data;
 });
 
