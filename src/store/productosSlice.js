@@ -7,7 +7,7 @@ import axios from 'axios';
 export const fetchProductos = createAsyncThunk(
   "productos/fetchProductos",
   async () => {
-    const response = await axios.get('https://back-foodglobal-pf.up.railway.app/productos');
+    const response = await axios.get('http://localhost:3001/productos');
     return response.data;
   }
 );
@@ -16,7 +16,7 @@ export const fetchProductos = createAsyncThunk(
 export const fetchProductoById = createAsyncThunk(
   "productos/fetchProductoById",
   async (id) => {
-    const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/productos/${id}`);
+    const response = await axios.get(`http://localhost:3001/productos/${id}`);
     return response.data;
   }
 );
@@ -24,26 +24,26 @@ export const fetchProductoById = createAsyncThunk(
 // Acción para obtener productos de un supermercado específico
 
 export const fetchProductosPorSupermercado = createAsyncThunk('productos/fetchProductosPorSupermercado', async (supermercado) => {
-  const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/productos/supermercado/${supermercado}`);
+  const response = await axios.get(`http://localhost:3001/productos/supermercado/${supermercado}`);
   return response.data;
 });
 
 
 // Acción para obtener todos los negocios
 export const fetchNegocios = createAsyncThunk('productos/fetchNegocios', async () => {
-  const response = await axios.get('https://back-foodglobal-pf.up.railway.app/negocios');
+  const response = await axios.get('http://localhost:3001/negocios');
   return response.data;
 });
 
 // Acción para obtener productos de un negocio específico por ID
 export const fetchProductosPorNegocio = createAsyncThunk('productos/fetchProductosPorNegocio', async (negocioId) => {
-  const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios/${negocioId}/productos`);
+  const response = await axios.get(`http://localhost:3001/negocios/${negocioId}/productos`);
   return response.data;
 });
 
 export const fetchNewProducts = createAsyncThunk('productos/fetchNewProducts', async (productData) => {
   const { nombre, descripcion, precio, negocio_id, imagen, categoria, stock } = productData;
-  const response = await axios.post('https://back-foodglobal-pf.up.railway.app/productos', { nombre, descripcion, precio, negocio_id, imagen, categoria, stock });
+  const response = await axios.post('http://localhost:3001/productos', { nombre, descripcion, precio, negocio_id, imagen, categoria, stock });
   return response.data;
 });
 
@@ -57,14 +57,12 @@ export const editproducto= createAsyncThunk(
   async ( {id, productData }) => {
     try {
       const response = await axios.put(
-        `https://back-foodglobal-pf.up.railway.app/productos/${id}`,
+        `http://localhost:3001/productos/${id}`,
         productData
       );
       return response.data;
     } catch (error) {
       alert("Error al Editar Producto")
-      
-      
     }
   }
 );
@@ -144,7 +142,7 @@ const productosSlice = createSlice({
         state.status = 'failed';
         state.error = action.error.message;
         console.error('Error al crear el producto:', action.error.message);
-        alert(`Error: failed Create a Product - ${action.error.message}`);
+        alert(`Error al crear producto, asegurese de completar todos los campos y crear productos con nombre unico - ${action.error.message}`);
       })
       .addCase(fetchNewProducts.fulfilled, (state, action) => {
         state.status = 'succeeded';

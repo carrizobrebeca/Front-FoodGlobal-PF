@@ -8,7 +8,7 @@ import axios from "axios";
 export const fetchNegocios = createAsyncThunk(
   "negocios/fetchNegocios",
   async (categoria) => {
-    const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios?categoria=${categoria}`
+    const response = await axios.get(`http://localhost:3001/negocios?categoria=${categoria}`
     );
     return response.data;
   }
@@ -17,7 +17,7 @@ export const crearNegocio = createAsyncThunk(
   "negocios/crearNegocio",
   async (negocioData) => {
     const response = await axios.post(
-      `https://back-foodglobal-pf.up.railway.app/negocios`,
+      `http://localhost:3001/negocios`,
       negocioData
     );
     return response.data;
@@ -25,20 +25,19 @@ export const crearNegocio = createAsyncThunk(
 );
 export const editNegocio = createAsyncThunk(
   "negocios/editNegocio",
-  async ( id, negocioData ) => {
+  async ({ id, negocioData }) => {
     try {
       const response = await axios.put(
-        `https://back-foodglobal-pf.up.railway.app/negocios/${id}`,
+        `http://localhost:3001/negocios/${id}`,
         negocioData
       );
       return response.data;
     } catch (error) {
-      alert("Error al Editar Negocio")
-      
-      
+      throw new Error("Error al editar el negocio");
     }
   }
 );
+
 
 const negociosSlice = createSlice({
   name: "negocios",
@@ -74,16 +73,23 @@ const negociosSlice = createSlice({
         state.error = action.error.message;
         alert("Error al crear negocio");
       })
+      .addCase(editNegocio.pending, (state) => {
+        state.status = "loading";
+      })
       .addCase(editNegocio.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
-        alert("Negocio editado con éxito");
+        // Actualiza el negocio en el estado
+        state.items = state.items.map(negocio =>
+          negocio.id === action.payload.id ? action.payload : negocio
+        );
+        alert('Producto editado exitosamente!');
       })
       .addCase(editNegocio.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-        alert("Error al editar negocio");
+        alert('Error al editar producto!');
       })
+    
   },
 });
 
