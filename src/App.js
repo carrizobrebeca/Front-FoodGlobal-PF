@@ -16,6 +16,7 @@ import CreateProduct from "./components/CreateProduct/CreateProduct";
 import CreateUser from "./components/CreateUser/CreateUser";
 import DashBoard from "./pages/Dashboard";
 import CreateNegocio from "./components/Negocio/CreateNegocio";
+import PedidoPage from "./pages/PedidoPage";
 
 const App = () => {
 
@@ -35,7 +36,7 @@ const App = () => {
               <DashBoard />
           }
         />
-        
+         <Route path="/pedido/:id" element={<PedidoPage />} /> 
         <Route path="/createnegocio" element={<CreateNegocio />} />
         <Route path="/productos" element={<NegociosPage />} />
         <Route path="/products" element={<ProductsConfig />} />

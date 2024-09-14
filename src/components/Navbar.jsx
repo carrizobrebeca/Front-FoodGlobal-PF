@@ -122,7 +122,6 @@ const Navbar = ({ onOpenCarrito }) => {
         {/* Carrito Panel */}
         <CarritoPanel
           productos={carrito.items || []}
-          total={carrito.total || 0}
           onClose={toggleCarritoPanel}
           isOpen={isCarritoOpen}
         />

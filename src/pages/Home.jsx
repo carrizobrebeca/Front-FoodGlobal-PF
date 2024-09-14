@@ -1,38 +1,63 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import heroImage from '../assets/images/bg1.png';
+import heroImage from '../assets/images/bg2.png';
 import user1 from '../assets/images/user1.jpg';
 import user2 from '../assets/images/user2.jpg';
 import user3 from '../assets/images/user3.jpg';
-// Home Component
+import { motion } from 'framer-motion'; 
 const Home = () => {
   return (
     <>
 
  
-      {/* Hero Section */}
-      <section
+     {/* Hero Section */}
+     <section
         className="hero-section relative text-white text-center"
         style={{
           backgroundImage: `url(${heroImage})`,
-          backgroundSize: 'contain', // Cambiado a 'contain' para que no se corte
+          backgroundSize: 'contain', // Mantiene la relación de aspecto
           backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat', // Asegura que no se repita la imagen
+          backgroundRepeat: 'no-repeat',
           width: '100%',
           minHeight: '50vh', // Altura mínima para pantallas pequeñas
-          height: '100vh',    // Altura completa de la pantalla
+          height: '100vh',   // Altura completa de la pantalla
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
         }}
       >
-        <h1 className="text-4xl font-bold mb-4 text-black">Conecta Comercios Globales con Clientes Internacionales</h1>
-        <p className="text-xl mb-8 max-w-3xl text-black">
-          FoodGlobal te permite comprar productos de cualquier parte del mundo, apoyando a comercios locales y facilitando el acceso a una amplia gama de productos internacionales.
-        </p>
-        <Link to="/register" className="bg-yellow-500 text-black py-2 px-4 rounded">Regístrate Ahora</Link>
-      </section>
+      {/* Animación del título */}
+      <motion.h1
+        initial={{ opacity: 0, x: -100 }} // Empieza invisible y a la izquierda
+        animate={{ opacity: 1, x: 0 }} // Termina visible y centrado
+        transition={{ duration: 0.5 }} // Duración de la animación
+        className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4 text-black font-custom"
+      >
+        Conecta Comercios Globales con Clientes Internacionales
+      </motion.h1>
+
+      {/* Animación del párrafo */}
+      <motion.p
+        initial={{ opacity: 0, x: -100 }} // Empieza invisible y a la izquierda
+        animate={{ opacity: 1, x: 0 }} // Termina visible y centrado
+        transition={{ duration: 0.7, delay: 0.3 }} // Con un pequeño retraso para que aparezca después del título
+        className="text-lg md:text-2xl lg:text-3xl mb-8 max-w-3xl text-black"
+      >
+        FoodGlobal te permite comprar productos de cualquier parte del mundo, apoyando a comercios locales y facilitando el acceso a una amplia gama de productos internacionales.
+      </motion.p>
+
+      {/* Animación del botón */}
+      <motion.div
+        initial={{ opacity: 0, x: -100 }} // Empieza invisible y a la izquierda
+        animate={{ opacity: 1, x: 0 }} // Termina visible y centrado
+        transition={{ duration: 0.9, delay: 0.5 }} // Un retraso adicional para que el botón aparezca después del texto
+      >
+        <Link to="/register" className="bg-yellow-500 text-black py-2 px-4 rounded text-lg">
+          Regístrate Ahora
+        </Link>
+      </motion.div>
+    </section>
 
      {/* Mission Section */}
      <section className="mission-section bg-white text-center py-16 px-4">
