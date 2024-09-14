@@ -23,7 +23,7 @@ const DashBoardAdmin = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
+      const response = await axios.get(`http://localhost:3001/usuarios`);
       const data = response.data;
 
       // Filtra el usuario con rol 'socio'
@@ -59,7 +59,7 @@ const DashBoardAdmin = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
+        const response = await axios.get(`http://localhost:3001/negocios`);
         const negocios = response.data;
         setAllNegocios(negocios);
         const negociosRecientes = negocios

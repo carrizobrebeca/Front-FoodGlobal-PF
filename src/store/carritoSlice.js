@@ -13,7 +13,7 @@ export const validarStock = createAsyncThunk(
   'carrito/validarStock',
   async ({ id, cantidad }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/productos/${id}`);
+      const response = await axios.get(`http://localhost:3001/productos/${id}`);
       const producto = response.data;
 
       if (cantidad > producto.stock) {
@@ -33,7 +33,7 @@ export const realizarCompra = createAsyncThunk(
   async (productos, { dispatch, rejectWithValue }) => {
     try {
       // Aquí puedes enviar una solicitud al backend para procesar la compra
-      await axios.post(`https://back-foodglobal-pf.up.railway.app/compras`, { productos });
+      await axios.post(`http://localhost:3001/compras`, { productos });
 
       // Vaciar el carrito en el localStorage y en el estado
       dispatch(vaciarCarrito());

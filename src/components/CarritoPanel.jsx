@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux';
 import { eliminarProducto, validarStock , vaciarCarrito } from '../store/carritoSlice';
 import axios from 'axios';
 import StripeCheckout from '../components/StripeCheckout'; // Ajusta la ruta
-
+import { useNavigate } from 'react-router-dom';
 const CarritoPanel = ({ productos, onClose, isOpen }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showCheckout, setShowCheckout] = useState(false);
   const [paymentMessage, setPaymentMessage] = useState('');
@@ -63,7 +64,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       const amount = calcularTotal() * 100;
 
       // Solicita un PaymentIntent al backend
-      await axios.post('https://back-foodglobal-pf.up.railway.app/create-payment-intent', {
+      await axios.post('http://localhost:3001/create-payment-intent', {
         amount,
       });
 
@@ -81,25 +82,28 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const handleSuccess = async () => {
     setPaymentMessage('¡Pago exitoso!');
     setShowCheckout(false);
-
+  
     try {
-      // Datos de compra
       const compraData = {
-        usuario_id: "785786f7-b8a6-4fa8-8c6d-f01b703a493a", // ID del usuario
+        usuario_id: "e8e2ac8c-5c0e-419f-8d6a-e7f0bc607e05",
         productos: productos.map((producto) => ({
           producto_id: producto.id,
           cantidad: producto.cantidad,
         })),
-        tipo_entrega: entregaSeleccionada, // Valor de tipo de entrega seleccionado
+        tipo_entrega: entregaSeleccionada,
         total: calcularTotal(),
       };
-
-      // Finaliza la compra y actualiza el stock
-      await axios.post('https://back-foodglobal-pf.up.railway.app/finalizar-compra', compraData);
-
+  
+      const response = await axios.post('http://localhost:3001/finalizar-compra', compraData);
+      const { id } = response.data.pedido; // Obtén el ID del pedido de la respuesta
+  
+      console.log(id); // Asegúrate de que el ID se está obteniendo correctamente
+  
       dispatch(vaciarCarrito());
-
       setPaymentMessage('¡Stock actualizado y compra finalizada!');
+  
+      // Usa navigate en lugar de window.location.href
+      navigate(`/pedido/${id}`);
     } catch (err) {
       console.error('Error al finalizar la compra:', err);
       setPaymentMessage('Error al finalizar la compra: ' + err.message);
