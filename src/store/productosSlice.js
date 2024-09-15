@@ -167,12 +167,12 @@ const productosSlice = createSlice({
       .addCase(editproducto.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.items = action.payload;
-        alert('Producto editado exitosamente!');
+        alert('Producto actualizado exitosamente!');
       })
       .addCase(editproducto.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
-        alert('Error al editar poducto!');
+        alert('Error al actualizar poducto!');
       })
   },
 });

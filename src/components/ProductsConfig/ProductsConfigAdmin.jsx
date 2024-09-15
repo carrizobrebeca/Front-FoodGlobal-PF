@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { editproducto } from "../../store/productosSlice"; // Asegúrate de importar correctamente
+import SidebarAdmin from "../SidebarAdmin";
+import Header from "../Header";
 
 const ProductsConfigAdmin = () => {
   const dispatch = useDispatch();
@@ -132,22 +134,21 @@ const ProductsConfigAdmin = () => {
   };
 
   return (
+    <div className="grid lg:grid-cols-4 xl:grid-cols-6 min-h-screen">
+    <SidebarAdmin />
+    <main className="lg:col-span-3 xl:col-span-5 bg-gray-100 p-8 h-[100vh] overflow-y-scroll">
+      <Header />
+
     <div className="p-10 bg-gray-200">
-      <div className="flex justify-between mb-4">
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="text-blue-500 cursor-pointer"
-        >
-          ❮ Back
-        </button>
-      </div>
+   
 
       <div className="grid grid-cols-9 gap-2.5 p-2.5 border border-gray-200 rounded-lg bg-gray-100 mb-4">
-        <button className="col-span-1 cursor-pointer"></button>
-        <button className="col-span-1 cursor-pointer text-orange-500"></button>
-        <button className="col-span-1 cursor-pointer text-green-500"></button>
-        <button className="col-span-1 cursor-pointer text-blue-500"></button>
-        <label className="col-span-1 cursor-pointer text-blue-500">
+     
+        <button className="col-span-1 cursor-pointer text-green-500 font-bold"></button>
+        <button className="col-span-1 cursor-pointer text-orange-500 "></button>
+        <button className="col-span-1 cursor-pointer text-green-500 font-bold"></button>
+        <button className="col-span-1 cursor-pointer text-blue-500 font-bold"></button>
+        <label className="col-span-1 cursor-pointer text-blue-500 font-bold">
           Negocio
         </label>
         <select
@@ -281,6 +282,9 @@ const ProductsConfigAdmin = () => {
         )}
       </div>
     </div>
+          </main>
+          </div>
+      
   );
 };
 
