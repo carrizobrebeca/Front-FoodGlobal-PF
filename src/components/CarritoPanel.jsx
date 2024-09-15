@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { eliminarProducto, validarStock , vaciarCarrito } from '../store/carritoSlice';
+import { eliminarProducto, validarStock, vaciarCarrito } from '../store/carritoSlice';
 import axios from 'axios';
 import StripeCheckout from '../components/StripeCheckout'; // Ajusta la ruta
 import { useNavigate } from 'react-router-dom';
+
 const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -11,7 +12,6 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const [paymentMessage, setPaymentMessage] = useState('');
   const [showPaymentMessage, setShowPaymentMessage] = useState(false);
   const [isCartDisabled, setIsCartDisabled] = useState(false);
-  const [stockInfo, setStockInfo] = useState({});
   const [entregaSeleccionada, setEntregaSeleccionada] = useState('retiro'); // Valor inicial
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
 
   const handleCantidadChange = (id, cantidad) => {
     if (!isCartDisabled) {
-      const producto = productos.find(prod => prod.id === id);
+      const producto = productos.find((prod) => prod.id === id);
       if (producto && cantidad <= producto.stock) {
         dispatch(validarStock({ id, cantidad }));
       } else {
@@ -55,15 +55,16 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
   };
 
   const calcularTotal = () => {
-    return productos.reduce((total, producto) => total + producto.precio * producto.cantidad, 0);
+    return productos.reduce(
+      (total, producto) => total + producto.precio * producto.cantidad,
+      0
+    );
   };
 
   const handleComprar = async () => {
     try {
-      // Obtén el total a pagar
       const amount = calcularTotal() * 100;
 
-      // Solicita un PaymentIntent al backend
       await axios.post('http://localhost:3001/create-payment-intent', {
         amount,
       });
@@ -82,10 +83,10 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const handleSuccess = async () => {
     setPaymentMessage('¡Pago exitoso!');
     setShowCheckout(false);
-  
+
     try {
       const compraData = {
-        usuario_id: "e8e2ac8c-5c0e-419f-8d6a-e7f0bc607e05",
+        usuario_id: 'e8e2ac8c-5c0e-419f-8d6a-e7f0bc607e05',
         productos: productos.map((producto) => ({
           producto_id: producto.id,
           cantidad: producto.cantidad,
@@ -93,16 +94,15 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
         tipo_entrega: entregaSeleccionada,
         total: calcularTotal(),
       };
-  
-      const response = await axios.post('http://localhost:3001/finalizar-compra', compraData);
-      const { id } = response.data.pedido; // Obtén el ID del pedido de la respuesta
-  
-      console.log(id); // Asegúrate de que el ID se está obteniendo correctamente
-  
+
+      const response = await axios.post(
+        'http://localhost:3001/finalizar-compra',
+        compraData
+      );
+      const { id } = response.data.pedido;
+
       dispatch(vaciarCarrito());
       setPaymentMessage('¡Stock actualizado y compra finalizada!');
-  
-      // Usa navigate en lugar de window.location.href
       navigate(`/pedido/${id}`);
     } catch (err) {
       console.error('Error al finalizar la compra:', err);
@@ -147,7 +147,9 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
                       <h3 className="text-lg font-semibold">{producto.nombre}</h3>
                       <p className="text-gray-600">Precio: ${producto.precio}</p>
                       <div className="flex items-center">
-                        <label htmlFor={`cantidad-${producto.id}`} className="text-gray-600 mr-2">Cantidad:</label>
+                        <label htmlFor={`cantidad-${producto.id}`} className="text-gray-600 mr-2">
+                          Cantidad:
+                        </label>
                         <input
                           type="number"
                           id={`cantidad-${producto.id}`}
@@ -162,17 +164,18 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
                       onClick={() => handleEliminar(producto.id)}
                       className={`text-red-600 hover:underline ${isCartDisabled ? 'pointer-events-none opacity-50' : ''}`}
                     >
-                      Eliminar
+                      X
                     </button>
                   </li>
                 ))}
               </ul>
               <div className="mt-4">
                 <h3 className="text-xl font-bold">Total: ${calcularTotal().toFixed(2)}</h3>
-                
-                {/* Agregar selección de tipo de entrega */}
+
                 <div className="mt-4">
-                  <label htmlFor="tipo-entrega" className="text-gray-600 mr-2">Tipo de Entrega:</label>
+                  <label htmlFor="tipo-entrega" className="text-gray-600 mr-2">
+                    Tipo de Entrega:
+                  </label>
                   <select
                     id="tipo-entrega"
                     value={entregaSeleccionada}

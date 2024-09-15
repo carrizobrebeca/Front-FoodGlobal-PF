@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CategorySelector from '../components/CategorySelector';
 import NegocioProductos from '../components/NegocioProductos';
-
 import axios from 'axios';
 
 const NegociosPage = () => {
@@ -78,6 +77,8 @@ const NegociosPage = () => {
   };
 
   if (selectedNegocio) {
+    const negocioSeleccionado = allNegocios.find(negocio => negocio.id === selectedNegocio);
+    
     return (
       <div className="p-8 bg-white">
         <button
@@ -86,6 +87,17 @@ const NegociosPage = () => {
         >
           Volver a la Lista de Productos
         </button>
+        
+        {negocioSeleccionado && (
+          <div className="text-center mb-8">
+            <img
+              src={negocioSeleccionado.imagen || 'https://via.placeholder.com/300'}
+              alt={negocioSeleccionado.nombre}
+              className="mx-auto mb-4 w-48 h-auto object-contain"
+            />
+          </div>
+        )}
+
         <NegocioProductos negocioId={selectedNegocio} agregarAlCarrito={agregarAlCarrito} />
       </div>
     );
@@ -113,20 +125,17 @@ const NegociosPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {negocios.length > 0 ? (
               negocios.map((negocio) => (
-                <div key={negocio.id} className="p-4 border rounded-lg shadow-md">
-                  <h2 className="text-lg font-semibold">{negocio.nombre}</h2>
-                  <p>{negocio.descripcion}</p>
+                <div
+                  key={negocio.id}
+                  className="cursor-pointer p-4 border rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg"
+                  onClick={() => handleNegocioClick(negocio.id)} // Hacer clic en cualquier parte de la card
+                >
                   <img
-                    src={negocio.imagen || 'https://via.placeholder.com/150'} // Imagen por defecto si es null
+                    src={negocio.imagen || 'https://via.placeholder.com/150'}
                     alt={negocio.nombre}
-                    className="w-full h-32 object-cover mt-2"
+                    className="w-full h-48 object-cover mb-4 rounded-t-lg"
                   />
-                  <button
-                    onClick={() => handleNegocioClick(negocio.id)}
-                    className="mt-2 p-2 bg-blue-500 text-white rounded"
-                  >
-                    Ver Productos
-                  </button>
+                  <h2 className="text-lg font-semibold text-center">{negocio.nombre}</h2>
                 </div>
               ))
             ) : (
