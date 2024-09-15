@@ -18,6 +18,7 @@ import CreateNegocio from "./components/Negocio/CreateNegocio";
 import Dashboard from "./pages/Dashboard"
 import PedidoPage from "./pages/PedidoPage";
 
+
 const App = () => {
   return (
     <Router>
