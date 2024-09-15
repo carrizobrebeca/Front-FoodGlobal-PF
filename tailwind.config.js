@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      borderRadius: {
+        'custom-left': '50%', // Define el radio que desees
+      }
+    },
   },
   plugins: [],
 }
