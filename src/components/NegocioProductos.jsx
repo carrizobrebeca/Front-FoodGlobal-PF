@@ -23,6 +23,8 @@ const NegocioProductos = ({ negocioId }) => {
   const carritoProductos = useSelector(state => state.carrito.productos);
 
   useEffect(() => {
+    
+    
     const fetchProductos = async () => {
       if (!negocioId) return;
 
@@ -111,6 +113,7 @@ const NegocioProductos = ({ negocioId }) => {
   const toggleCarritoPanel = () => {
     setIsCarritoOpen(prev => !prev);
   };
+
 
   if (loading) return <p>Cargando productos...</p>;
   if (error) return <p>Error: {error}</p>;

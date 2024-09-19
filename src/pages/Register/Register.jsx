@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../store/registerSlice";
-import style from "../Login/login.module.css";
 import logo from "../../assets/images/logofood.png";
 
 const Register = () => {
@@ -24,13 +23,13 @@ const Register = () => {
 
   useEffect(() => {
     if (status === "succeeded") {
-      navigate("/login"); // Redirige a la página principal o al destino deseado
+      navigate("/login");
     }
   }, [status, navigate]);
 
   useEffect(() => {
     if (status === "failed" && error) {
-      alert(error); // Muestra el error como una alerta
+      alert(error);
     }
   }, [status, error]);
 
@@ -40,18 +39,18 @@ const Register = () => {
   const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
   const [errors, setErrors] = useState({
-    nombre: "Name cannot be empty",
-    apellido: "Last Name cannot be empty",
-    email: "Email cannot be empty",
-    password: "Password cannot be empty",
+    nombre: "*",
+    apellido: "*",
+    email: "*",
+    password: "*",
   });
 
   const validate = (state, name) => {
     if (name === "nombre") {
       if (state.nombre === "")
-        setErrors({ ...errors, nombre: "Name cannot be empty" });
+        setErrors({ ...errors, nombre: "Nombre no puede estar vacío" });
       else if (!nombreRegex.test(state.nombre))
-        setErrors({ ...errors, nombre: "Name format is not valid" });
+        setErrors({ ...errors, nombre: "Formato de nombre inválido" });
       else {
         setErrors({ ...errors, nombre: "" });
         return;
@@ -60,9 +59,9 @@ const Register = () => {
 
     if (name === "apellido") {
       if (state.apellido === "")
-        setErrors({ ...errors, apellido: "Last Name cannot be empty" });
+        setErrors({ ...errors, apellido: "Apellido no puede estar vacío" });
       else if (!apellidoRegex.test(state.apellido))
-        setErrors({ ...errors, apellido: "Last Name format is not valid" });
+        setErrors({ ...errors, apellido: "Formato de apellido inválido" });
       else {
         setErrors({ ...errors, apellido: "" });
         return;
@@ -71,9 +70,9 @@ const Register = () => {
 
     if (name === "email") {
       if (state.email === "")
-        setErrors({ ...errors, email: "Email cannot be empty" });
+        setErrors({ ...errors, email: "Email Formato de nombre inválido" });
       else if (!emailRegex.test(state.email))
-        setErrors({ ...errors, email: "Email format is not valid" });
+        setErrors({ ...errors, email: "Formato de email inválido" });
       else {
         setErrors({ ...errors, email: "" });
         return;
@@ -86,7 +85,7 @@ const Register = () => {
       else if (!passwordRegex.test(state.password))
         setErrors({
           ...errors,
-          password: "6-20, Password must contain at least one number",
+          password: "Formato de contraseña inválido, debe contener entre 6-20 caracteres, al menos una mayúscula, al menos un número",
         });
       else {
         setErrors({ ...errors, password: "" });
@@ -97,20 +96,10 @@ const Register = () => {
 
   const handleChange = (e) => {
     e.preventDefault();
-
-    if (
-      e.target.name === "nombre" ||
-      e.target.name === "apellido" ||
-      e.target.name === "email" ||
-      e.target.name === "password"
-    ) {
-      setState({
-        ...state,
-        [e.target.name]: e.target.value,
-        imagen: state.imagen,
-      });
-    }
-
+    setState({
+      ...state,
+      [e.target.name]: e.target.value,
+    });
     validate(
       {
         ...state,
@@ -128,7 +117,7 @@ const Register = () => {
       dispatch(registerUser(state))
         .unwrap()
         .then(() => {
-          navigate("/login"); // Redirige a la página principal o al destino deseado
+          navigate("/login");
         })
         .catch((err) => {
           console.log(err);
@@ -138,116 +127,91 @@ const Register = () => {
 
   const disable = () => {
     if (formSubmitted) return true;
-    let disabled = true;
-    for (let error in errors) {
-      if (errors[error] === "" || errors[error].length === 0) disabled = false;
-      else {
-        disabled = true;
-        break;
-      }
-    }
-    return disabled;
+    return Object.values(errors).some((error) => error !== "");
   };
-
+  const hasErrors = Object.values(errors).some((error) => error === "*");
   return (
-    <>
-      <div className={style.container}>
-        <div className={style.left}>
-          <div>
-            <button onClick={() => navigate("/")}>❮</button>
-          </div>
-          <div className={style.logo}>
-            <h2>Registrate y accede a nuestro sitio</h2>
-          </div>
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: "url('https://www.campdenbri.co.uk/images/food-cuisine-large.jpg')" }}
+    >
+      <form onSubmit={handleSubmit} className="bg-[rgba(53,51,50,0.97)] p-6 rounded-xl shadow-md w-96 relative z-10">
+        <div className="text-center mb-6">
+          <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto mx-auto" />
+          <h1 className="text-xl font-bold text-white">Ingresa tus datos para registrarte</h1>
         </div>
-        <div className={style.right}>
-          <form onSubmit={handleSubmit}>
-            <div className={style.login}>
-              <h5>
-                <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto" />
-              </h5>
-              <h1>Ingresa tus datos para continuar</h1>
-              <label htmlFor="">Name</label>
-              <input onChange={handleChange} name="nombre" id="nombre" />
-              <label className={style.form_error}>{errors.nombre}</label>
-              <label htmlFor="">Last Name</label>
-              <input onChange={handleChange} name="apellido" id="apellido" />
-              <label className={style.form_error}>{errors.apellido}</label>
-              <label htmlFor="">Mail</label>
-              <input onChange={handleChange} name="email" id="email" />
-              <label className={style.form_error}>{errors.email}</label>
-              <label htmlFor="">Password</label>
-              <div className={style.passwordContainer}>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  onChange={handleChange}
-                  name="password"
-                  id="password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className={style.showPasswordButton}
-                >
-                  {showPassword ? (
-                    <img
-                      src="https://img.icons8.com/ios-filled/50/000000/visible.png" // Icono para mostrar
-                      alt="Show"
-                      className={style.passwordIcon}
-                    />
-                  ) : (
-                    <img
-                      src="https://img.icons8.com/ios-filled/50/000000/invisible.png" // Icono para ocultar
-                      alt="Hide"
-                      className={style.passwordIcon}
-                    />
+        <label className="block text-white">Nombre</label>
+        <input
+          onChange={handleChange}
+          name="nombre"
+          id="nombre"
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <label className="text-red-600 mb-2">{errors.nombre}</label>
+        
+        <label className="block text-white">Apellido</label>
+        <input
+          onChange={handleChange}
+          name="apellido"
+          id="apellido"
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <label className="text-red-600 mb-2">{errors.apellido}</label>
+
+        <label className="block text-white">Email</label>
+        <input
+          onChange={handleChange}
+          name="email"
+          id="email"
+          className="w-full p-2 border border-gray-300 rounded mb-4"
+        />
+        <label className="text-red-600 mb-2">{errors.email}</label>
+
+        <label className="block text-white">Contraseña</label>
+        <div className="relative mb-4">
+          <input
+            type={showPassword ? "text" : "password"}
+            onChange={handleChange}
+            name="password"
+            id="password"
+            className="w-full p-2 border border-gray-300 rounded"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2"
+          >
+            <img
+              src={showPassword ? "https://img.icons8.com/ios-filled/50/000000/visible.png" : "https://img.icons8.com/ios-filled/50/000000/invisible.png"}
+              alt={showPassword ? "Show" : "Hide"}
+              className="w-5 h-5"
+            />
+          </button>
+        </div>
+        <label className="text-red-600 mb-4">{errors.password}</label>
+        {hasErrors && (
+                    <div className="text-red-500 py-5 pl-5">
+                      Campos requeridos *
+                    </div>
                   )}
-                </button>
-              </div>
-              <label className={style.form_error}>{errors.password}</label>
-              <button
-                type="submit"
-                name="submit"
-                // disabled={disable()}
-                className={style.buttonStyle}
-              >
-                Continue
-              </button>
-              <Link to="/password" className="underline">
-                Forgot password?
-              </Link>
-              <h5>or continue with</h5>
-              <div className={style.appBn}>
-                <a href="" className={style.buttonApp}>
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/012/871/371/non_2x/google-search-icon-google-product-illustration-free-png.png"
-                    alt="boton"
-                    className={style.resizable}
-                  />
-                </a>
-                <a href="" className={style.buttonApp}>
-                  <img
-                    src="https://static.vecteezy.com/system/resources/previews/016/716/447/non_2x/facebook-icon-free-png.png"
-                    alt="boton"
-                    className={style.resizable}
-                  />
-                </a>
-              </div>
-              <p>
-                Continua y aceptas{" "}
-                <Link to="/terms" className="underline">
-                  Términos y Condiciones
-                </Link>{" "}
-                |{" "}
-                <Link to="/privacy" className="underline">
-                  Política de Privacidad
-                </Link>{" "}
-              </p>
-            </div>
-          </form>
-        </div>
-      </div>
-    </>
+
+        <button
+          type="submit"
+          className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        >
+          Registrarse
+        </button>
+        <Link to="/password" className="block text-center underline mt-2 text-white">
+          Olvidó su contraseña?
+        </Link>
+        
+        <p className="text-center mt-4 text-white">
+          Al continuar aceptas{" "}
+          <Link to="/terms" className="underline text-white">Términos y Condiciones</Link>{" "} |{" "}
+          <Link to="/privacy" className="underline text-white">Política de Privacidad</Link>
+        </p>
+      </form>
+    </div>
   );
 };
 

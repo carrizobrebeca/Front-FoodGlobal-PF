@@ -17,6 +17,9 @@ import CreateUser from "./components/CreateUser/CreateUser";
 import CreateNegocio from "./components/Negocio/CreateNegocio";
 import Dashboard from "./pages/Dashboard"
 import PedidoPage from "./pages/PedidoPage";
+import Pedidos from "./components/PedidosSocio/Pedidos";
+import Ventas from "./components/PedidosSocio/Ventas";
+import ResetPassword from "./pages/ResetPassword";
 
 
 const App = () => {
@@ -32,14 +35,14 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
   
       
-    
+        <Route path="/reset" element={<ResetPassword />} />
       
          <Route path="/pedido/:id" element={<PedidoPage />} /> 
         <Route path="/createnegocio" element={<CreateNegocio />} />
         <Route path="/productos" element={<NegociosPage />} />
-        
+        <Route path="/pedidos" element={<Pedidos />} />
         <Route path="/products" element={<ProductsConfig />} />
-        
+        <Route path="/ventas" element={<Ventas />} />
         <Route path="/createproducts" element={<CreateProduct />} />
         <Route path="/users" element={<UsersConfig />} />
         <Route path="/locales" element={<Locales />} />

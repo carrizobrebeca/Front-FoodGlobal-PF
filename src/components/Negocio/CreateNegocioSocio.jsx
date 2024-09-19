@@ -138,6 +138,14 @@ const CreateNegocioSocio = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(crearNegocio(state));
+    // if (hasErrors) {
+    //     alert("Por favor, completa todos los campos requeridos.");
+        
+        
+    //     return;
+    // }
+    // console.log("Datos enviados:", state);
+    
   };
 
   const handleEdit = (e) => {

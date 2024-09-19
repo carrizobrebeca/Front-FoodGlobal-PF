@@ -2,11 +2,12 @@ import React from "react";
 
 const CardDashboard = ({ item }) => {
   return (
-    <div className="flex items-center gap-4 mb-10 bg-white rounded-l-custom-left">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <img
-        src={item.imagen}
+        src={item.imagen ||
+          "https://w7.pngwing.com/pngs/857/213/png-transparent-man-avatar-user-business-avatar-icon.png"}
         alt={item.nombre}
-        className="w-14 h-14 object-cover rounded-full"
+        className="w-10 h-10 object-cover rounded-full"
       />
 
       <div>
