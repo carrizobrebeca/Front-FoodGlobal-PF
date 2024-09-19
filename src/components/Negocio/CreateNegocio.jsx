@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import CreateNegocioSocio from "./CreateNegocioSocio";
-import CreateNegocioAdmin from "./CreateNegocioAdmin";
+import CreateNegocioAdmin from "./CreateNegocioAdmin2";
 
 const CreateNegocio = () => {
   const navigate = useNavigate();

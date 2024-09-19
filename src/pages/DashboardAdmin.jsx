@@ -3,10 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../store/loginSlice";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import Header from "../components/Header";
+
 import CardsProducts from "../components/CardsProducts";
 import CardDashboard from "../components/CardDashboard";
 import SidebarAdmin from "../components/SidebarAdmin";
+import HeaderAdmin from "../components/HeaderAdmin";
 
 const DashBoardAdmin = () => {
   const navigate = useNavigate();
@@ -83,7 +84,7 @@ const DashBoardAdmin = () => {
       const recentSocios = data
         .filter((socio) => socio.rol === "socio")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        .slice(0, 5);
+        .slice(0, 3);
 
       setSocios(recentSocios);
     } catch (error) {
@@ -134,16 +135,13 @@ const DashBoardAdmin = () => {
     fetchNegocios();
   }, []);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
-  };
+
 
   return (
     <div className="grid lg:grid-cols-4 xl:grid-cols-6 min-h-screen">
       <SidebarAdmin />
       <main className="lg:col-span-3 xl:col-span-5 bg-gray-100 p-8 h-[100vh] overflow-y-scroll">
-        <Header />
+        <HeaderAdmin />
 
         <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 mt-10 gap-8">
           <div className="bg-primary-100 p-8 rounded-xl text-gray-300 flex flex-col gap-6 bg-gradient-to-r from-green-300 via-yellow-100 to-yellow-200">
@@ -152,13 +150,13 @@ const DashBoardAdmin = () => {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                strokeWidth="1.5"
                 stroke="currentColor"
                 class="size-6"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"
                 />
               </svg>
@@ -177,13 +175,13 @@ const DashBoardAdmin = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   class="size-6"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"
                   />
                 </svg>
@@ -217,14 +215,14 @@ const DashBoardAdmin = () => {
             </div>
           </div>
 
-          <div className="col-span-1 md:col-span-2 flex flex-col justify-between ">
+          <div className="col-span-1 md:col-span-2 flex flex-col justify-around">
             <h1 className="text-2xl font-bold text-gray-500 ">
               Socios recientes
             </h1>
             <div className="bg-white p-8 rounded-xl shadow-2xl bg-gradient-to-r from-indigo-300 via-indigo-100 to-yellow-200">
               {/* <div className="p-4 bg-white rounded-xl flex-1"> */}
 
-              <div className="flex overflow-x-auto gap-2">
+              <div className="flex flex-col gap-4">
                 {socios.length > 0 ? (
                   socios.map((user) => (
                     <CardDashboard key={user.id} item={user} />

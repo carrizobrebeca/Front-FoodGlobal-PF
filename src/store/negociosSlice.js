@@ -1,4 +1,5 @@
-// src/store/negociosSlice.js
+
+// // src/store/negociosSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -82,7 +83,7 @@ const negociosSlice = createSlice({
         state.items = state.items.map(negocio =>
           negocio.id === action.payload.id ? action.payload : negocio
         );
-        alert('Producto editado exitosamente!');
+        alert('Negocio editado exitosamente!');
       })
       .addCase(editNegocio.rejected, (state, action) => {
         state.status = "failed";

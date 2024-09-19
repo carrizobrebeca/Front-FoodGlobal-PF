@@ -17,7 +17,7 @@ const DashBoard = () => {
     }
   }, [user, navigate]);
 
-  console.log(user);
+
 
   return (
     <>

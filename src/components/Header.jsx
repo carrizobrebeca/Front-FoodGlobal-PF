@@ -1,7 +1,4 @@
 import React from "react";
-// Icons
-import { RiSearch2Line } from "react-icons/ri";
-// import { useSelector } from "react-redux";
 
 const Header = () => {
   // const user = useSelector((state) => state.login.user);

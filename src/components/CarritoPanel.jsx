@@ -86,7 +86,8 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
 
     try {
       const compraData = {
-        usuario_id: 'e8e2ac8c-5c0e-419f-8d6a-e7f0bc607e05',
+        usuario_id: '377657b2-7e97-4bdb-a388-97c2c75bff85',
+        negocio_id: '8dae138f-ad07-47a5-8104-d987f70d3b7d',
         productos: productos.map((producto) => ({
           producto_id: producto.id,
           cantidad: producto.cantidad,
