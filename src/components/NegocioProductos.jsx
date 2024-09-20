@@ -21,7 +21,7 @@ const NegocioProductos = ({ negocioId }) => {
 
   const dispatch = useDispatch();
   const carritoProductos = useSelector(state => state.carrito.productos);
-
+  const user = useSelector((state) => state.login.user);
   useEffect(() => {
     const fetchProductos = async () => {
       if (!negocioId) return;
@@ -175,12 +175,15 @@ const NegocioProductos = ({ negocioId }) => {
                 onChange={(e) => handleQuantityChange(producto.id, parseInt(e.target.value, 10))}
                 className="border rounded p-2 w-20 mb-2"
               />
+              {user.rol === "usuario" && 
+              (
               <button
                 onClick={() => handleAddToCart(producto, productQuantities[producto.id] || 1)}
                 className="p-2 bg-blue-600 text-white rounded-lg w-full font-medium mb-2 hover:bg-blue-700 transition-colors duration-300"
               >
                 Agregar al carrito
               </button>
+              )}
               <button
                 onClick={() => handleViewDetails(producto)}
                 className="p-2 bg-green-500 text-white rounded-lg w-full font-medium hover:bg-green-600 transition-colors duration-300"
