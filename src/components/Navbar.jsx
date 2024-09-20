@@ -15,7 +15,6 @@ const Navbar = ({ onOpenCarrito }) => {
   const user = useSelector((state) => state.login.user);
   const carrito = useSelector((state) => state.carrito);
 
-  // Referencia para el menú lateral
   const sidebarRef = useRef(null);
 
   useEffect(() => {
@@ -65,14 +64,10 @@ const Navbar = ({ onOpenCarrito }) => {
   return (
     <>
       <nav className="bg-white text-gray-800 p-4 flex justify-between items-center shadow-lg sticky top-0 z-50">
-        {/* Logo */}
         <Link to="/" className="flex items-center">
           <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto animate-pulse" />
         </Link>
 
-
-
-        {/* Ubicación, Bandera y Estado de Usuario */}
         <div className="flex items-center">
           {location && (
             <div className="flex items-center text-gray-600 mr-4">
@@ -89,7 +84,7 @@ const Navbar = ({ onOpenCarrito }) => {
               <span className="mr-4">Bienvenido, {user.nombre}</span>
               <img src={usuarioSvg} alt="User" className="w-8 h-8 rounded-full mr-4" />
               <button onClick={handleLogout} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                Cerrar Sesion
+                Logout
               </button>
             </div>
           ) : (
@@ -98,7 +93,6 @@ const Navbar = ({ onOpenCarrito }) => {
             </Link>
           )}
 
-          {/* Botón de la Barra Lateral */}
           <button className="ml-4" onClick={toggleSidebar}>
             <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -106,17 +100,15 @@ const Navbar = ({ onOpenCarrito }) => {
           </button>
         </div>
 
-        {/* Carrito Panel */}
         <CarritoPanel
           productos={carrito.items || []}
           onClose={toggleCarritoPanel}
           isOpen={isCarritoOpen}
         />
 
-        {/* Sidebar */}
         <div
           ref={sidebarRef}
-          className={`fixed top-0 right-0 h-full w-64 bg-gray-900 text-white transition-transform transform ${
+          className={`fixed top-0 right-0 h-full w-64 bg-gradient-to-b from-orange-300 via-white to-orange-200 text-gray-900 shadow-lg transition-transform transform ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
@@ -124,21 +116,67 @@ const Navbar = ({ onOpenCarrito }) => {
             X
           </button>
           <div className="p-4">
+            {!user && (
             <div className="mb-4">
-              <Link to="/login" className="block py-2 px-4 bg-blue-600 rounded">Ingresar</Link>
-              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-600 rounded">Registrar</Link>
+              <Link to="/login" className="block py-2 px-4 bg-blue-600 rounded hover:bg-orange-500 transition">
+                Login
+              </Link>
+              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-600 rounded hover:bg-orange-500 transition">
+                Register
+              </Link>
             </div>
+            )}
             <ul className="space-y-4">
-              <li><Link to="/">Inicio</Link></li>
-              <li><Link to="/productos">Productos</Link></li>
-              <li><Link to="/pedido/:id">Mis Pedidos</Link></li>
-              <li><Link to="/afiliarse">Afiliarse</Link></li>
-              <li><Link to="/about">Sobre Nosotros</Link></li>
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-4 hover:bg-orange-500 transition rounded"
+                >
+                  Inicio
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/productos"
+                  className="block py-2 px-4 hover:bg-orange-500 transition rounded"
+                >
+                  Productos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/pedido/:id"
+                  className="block py-2 px-4 hover:bg-orange-500 transition rounded"
+                >
+                  Mis Pedidos
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/afiliarse"
+                  className="block py-2 px-4 hover:bg-orange-500 transition rounded"
+                >
+                  Afiliarse
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/about"
+                  className="block py-2 px-4 hover:bg-orange-500 transition rounded"
+                >
+                  Sobre Nosotros
+                </Link>
+              </li>
 
-
-              {/* Mostrar Dashboard solo si el usuario es admin o socio */}
               {(user?.rol === 'admin' || user?.rol === 'socio') && (
-                <li><Link to="/dashboard">Dashboard</Link></li>
+                <li>
+                  <Link
+                    to="/dashboard"
+                    className="block py-2 px-4 hover:bg-orange-500 transition rounded"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
               )}
             </ul>
           </div>
