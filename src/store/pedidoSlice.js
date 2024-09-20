@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const fetchPedidos = createAsyncThunk('pedido/fetchPedidos', async ({id, estado }) => {
-    const response = await axios.put(`http://localhost:3001/pedidos/{id}`, estado);
+    const response = await axios.put(`https://back-foodglobal-pf.up.railway.app/pedidos/{id}`, estado);
     return response.data;
   });
   

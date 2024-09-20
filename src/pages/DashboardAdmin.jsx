@@ -29,7 +29,7 @@ const DashBoardAdmin = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/usuarios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
       const data = response.data;
 
       // Get the current and previous months
@@ -94,7 +94,7 @@ const DashBoardAdmin = () => {
   };
   const fetchProductos = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/productos`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/productos`);
       const data = response.data;
       // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
       const blockProducts = data
@@ -117,7 +117,7 @@ const DashBoardAdmin = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await axios.get(`http://localhost:3001/negocios`);
+        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
         const negocios = response.data;
         setAllNegocios(negocios);
         const negociosRecientes = negocios

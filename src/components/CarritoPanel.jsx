@@ -89,7 +89,7 @@ const CarritoPanel = ({ productos, onClose, isOpen, setProductos, negocioId }) =
     try {
       const amount = calcularTotal() * 100;
 
-      await axios.post('http://localhost:3001/create-payment-intent', {
+      await axios.post('https://back-foodglobal-pf.up.railway.app/create-payment-intent', {
         amount,
       });
 
@@ -135,7 +135,7 @@ const CarritoPanel = ({ productos, onClose, isOpen, setProductos, negocioId }) =
         estado: "pendiente",
       };
       console.log(compraData)
-      const response = await axios.post('http://localhost:3001/finalizar-compra', compraData);
+      const response = await axios.post('https://back-foodglobal-pf.up.railway.app/finalizar-compra', compraData);
       const { id } = response.data.pedido;
   
       dispatch(vaciarCarrito());

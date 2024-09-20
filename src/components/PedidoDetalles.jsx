@@ -9,7 +9,7 @@ const PedidoDetalles = () => {
   useEffect(() => {
     const fetchPedidoDetalles = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/pedidos/${id}`);
+        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/pedidos/${id}`);
         setPedido(response.data);
       } catch (error) {
         console.error('Error al obtener los detalles del pedido:', error);

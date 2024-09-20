@@ -5,7 +5,7 @@ import axios from 'axios';
 
 // Thunk para obtener los negocios
 export const fetchNegocios = createAsyncThunk('negocios/fetchNegocios', async () => {
-  const response = await axios.get(`http://localhost:3001/negocios`);
+  const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
   return response.data;
 });
 

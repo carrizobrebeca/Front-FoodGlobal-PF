@@ -17,7 +17,7 @@ const NegociosPage = () => {
       try {
         setLoading(true);
         setError(null); // Resetear el error
-        const response = await axios.get(`http://localhost:3001/negocios`);
+        const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
         setAllNegocios(response.data);
       } catch (err) {
         setError(err.message);

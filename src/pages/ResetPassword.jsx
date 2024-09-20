@@ -19,7 +19,7 @@ const ResetPassword = () => {
     const token = new URLSearchParams(window.location.search).get('token');
   
     try {
-      await axios.post('http://localhost:3001/update-password', { token, nuevaPassword: newPassword });
+      await axios.post('https://back-foodglobal-pf.up.railway.app/update-password', { token, nuevaPassword: newPassword });
       alert('Contraseña actualizada exitosamente');
       navigate('/login');
     } catch (error) {

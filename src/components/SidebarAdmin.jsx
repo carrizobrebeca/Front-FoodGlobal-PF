@@ -18,7 +18,7 @@ const SidebarAdmin = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/usuarios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
       const data = response.data;
 
       const recentUsers = data
@@ -35,7 +35,7 @@ const SidebarAdmin = () => {
     try {
       setLoading(true);
       setError(null); // Resetear el error
-      const response = await axios.get(`http://localhost:3001/negocios`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios`);
       const negocios = response.data;
       // Filtrar negocios que pertenecen al usuario
       const userNegocios = negocios.filter(

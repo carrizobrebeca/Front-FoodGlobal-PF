@@ -85,7 +85,7 @@ const handleValidateGoogle = (googleCredential) => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3001/reset-password",
+        "https://back-foodglobal-pf.up.railway.app/reset-password",
         { email: state.email }
       );
       alert(response.data.message); // Mensaje de éxito

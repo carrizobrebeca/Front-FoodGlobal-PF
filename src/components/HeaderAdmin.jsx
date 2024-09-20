@@ -10,7 +10,7 @@ const HeaderAdmin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/usuarios");
+        const response = await axios.get("https://back-foodglobal-pf.up.railway.app/usuarios");
         const users = response.data;
 
         const usuariosPendientes = users.filter(

@@ -33,7 +33,7 @@ const MisPedidosPage = () => {
     if (usuarioId) {
       const fetchPedidos = async () => {
         try {
-          const response = await axios.get('http://localhost:3001/pedidos');
+          const response = await axios.get('https://back-foodglobal-pf.up.railway.app/pedidos');
           const allPedidos = response.data;
       
           // Filtra los pedidos por usuario_id
@@ -43,7 +43,7 @@ const MisPedidosPage = () => {
           // Obtener información del negocio para cada pedido
           const negocioIds = [...new Set(userPedidos.map(pedido => pedido.negocio_id))];
           const negocioRequests = negocioIds.map(id =>
-            axios.get(`http://localhost:3001/negocios/${id}`)
+            axios.get(`https://back-foodglobal-pf.up.railway.app/negocios/${id}`)
           );
           const negocioResponses = await Promise.all(negocioRequests);
           const negociosData = negocioResponses.reduce((acc, response) => {
@@ -62,7 +62,7 @@ const MisPedidosPage = () => {
 
   const mostrarDetallesPedido = async (pedidoId) => {
     try {
-      const response = await axios.get(`http://localhost:3001/pedidos/${pedidoId}`);
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/pedidos/${pedidoId}`);
       setPedidoSeleccionado(response.data);
       setModalVisible(true); // Abre el modal
     } catch (error) {
