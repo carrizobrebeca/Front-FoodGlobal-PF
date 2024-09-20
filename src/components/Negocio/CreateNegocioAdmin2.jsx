@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { crearNegocio, editNegocio } from "../../store/negociosSlice";
-
+import Header from "../Header";
+import SidebarAdmin from "../SidebarAdmin";
 const CreateNegocio = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -189,7 +190,13 @@ const CreateNegocio = () => {
   const hasErrors = Object.values(errors).some((error) => error === "*");
 
   return (
-    <div className="bg-gray-100 p-12">
+    <div className="grid lg:grid-cols-4 xl:grid-cols-6 min-h-screen">
+    <SidebarAdmin />
+    <main className="lg:col-span-3 xl:col-span-5 bg-gray-100 p-8 h-[100vh] overflow-y-scroll">
+      <Header />
+      
+      <section className="">
+  
       <div className="flex justify-between bg-gray-300 p-4 rounded-md mb-4">
         <button
           onClick={() => navigate("/dashboard")}
@@ -342,6 +349,8 @@ const CreateNegocio = () => {
           </button>
         </div>
       </form>
+      </section>
+      </main>
     </div>
   );
 };

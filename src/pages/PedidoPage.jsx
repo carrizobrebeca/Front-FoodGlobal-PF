@@ -98,7 +98,7 @@ const MisPedidosPage = () => {
                 />
                 <div>
                   <h2 className="text-xl font-semibold text-gray-800">{negocio.nombre}</h2>
-                  <p className="text-gray-600">{negocio.descripcion}</p>
+  
                 </div>
               </div>
             )}

@@ -89,7 +89,7 @@ const Navbar = ({ onOpenCarrito }) => {
               <span className="mr-4">Bienvenido, {user.nombre}</span>
               <img src={usuarioSvg} alt="User" className="w-8 h-8 rounded-full mr-4" />
               <button onClick={handleLogout} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
-                Logout
+                Cerrar Sesion
               </button>
             </div>
           ) : (
@@ -125,8 +125,8 @@ const Navbar = ({ onOpenCarrito }) => {
           </button>
           <div className="p-4">
             <div className="mb-4">
-              <Link to="/login" className="block py-2 px-4 bg-blue-600 rounded">Login</Link>
-              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-600 rounded">Register</Link>
+              <Link to="/login" className="block py-2 px-4 bg-blue-600 rounded">Ingresar</Link>
+              <Link to="/register" className="block py-2 px-4 mt-2 bg-green-600 rounded">Registrar</Link>
             </div>
             <ul className="space-y-4">
               <li><Link to="/">Inicio</Link></li>
