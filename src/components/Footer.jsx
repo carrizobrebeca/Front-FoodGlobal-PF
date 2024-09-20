@@ -41,8 +41,6 @@ const Footer = () => {
               <h2 className="text-lg font-semibold mb-4">Enlaces Rápidos</h2>
               <ul className="space-y-2">
                 <li><Link to="/about" className="hover:text-orange-500 transition-colors">Sobre Nosotros</Link></li>
-                <li><Link to="/support" className="hover:text-orange-500 transition-colors">Ayuda y Soporte</Link></li>
-                <li><Link to="/contact" className="hover:text-orange-500 transition-colors">Contacto</Link></li>
                 <li><Link to="/privacy" className="hover:text-orange-500 transition-colors">Política de Privacidad</Link></li>
                 <li><Link to="/terms" className="hover:text-orange-500 transition-colors">Términos y Condiciones</Link></li>
               </ul>
@@ -70,21 +68,13 @@ const Footer = () => {
             {/* Sección de Contacto */}
             <div className="border border-gray-300 p-4 rounded-lg shadow-md bg-white transform hover:scale-105 transition-transform duration-300">
               <h2 className="text-lg font-semibold mb-4">Contacto</h2>
-              <p className="text-gray-600">Dirección de la empresa</p>
-              <p className="text-gray-600">Ciudad, País</p>
-              <p className="text-gray-600">Email: contacto@foodglobal.com</p>
+              <p className="text-gray-600">Av. 9 de julio 139</p>
+              <p className="text-gray-600">Buenos Aires, Argentina</p>
+              <p className="text-gray-600">foodglobal46@gmaill.com</p>
               <p className="text-gray-600">Teléfono: +123 456 7890</p>
             </div>
 
-            {/* Sección de Suscripción */}
-            <div className="border border-gray-300 p-4 rounded-lg shadow-md bg-white transform hover:scale-105 transition-transform duration-300">
-              <h2 className="text-lg font-semibold mb-4">Suscríbete</h2>
-              <p className="text-gray-600 mb-4">Recibe las últimas noticias y ofertas directamente en tu bandeja de entrada.</p>
-              <form className="flex flex-col space-y-2">
-                <input type="email" placeholder="Tu email" className="p-2 rounded-md border border-gray-300 bg-gray-100 text-gray-800 placeholder-gray-500 focus:ring-2 focus:ring-orange-500" />
-                <button type="submit" className="bg-orange-500 text-white p-2 rounded-md hover:bg-orange-600 transition-colors">Suscribirse</button>
-              </form>
-            </div>
+
           </div>
         </div>
       </div>

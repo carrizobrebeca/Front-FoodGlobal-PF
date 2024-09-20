@@ -48,24 +48,30 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormSubmitted(false);
-
+  
     if (!disable()) {
       dispatch(fetchLogin(state))
         .unwrap()
+        .then((response) => {
+          localStorage.setItem('usuario_id', response.usuario_id); // Guardar el ID de usuario en localStorage
+        })
         .catch((err) => {
           console.error(err);
         });
     }
   };
 
-  const handleValidateGoogle = (googleCredential) => {
-    dispatch(fetchLogin(googleCredential))
-      .unwrap()
-      .catch((err) => {
-        console.error(err);
-      });
-  };
 
+const handleValidateGoogle = (googleCredential) => {
+  dispatch(fetchLogin(googleCredential))
+    .unwrap()
+    .then((response) => {
+      localStorage.setItem('usuario_id', response.usuario_id); // Guardar el ID de usuario en localStorage
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
   const disable = () => {
     if (formSubmitted) return true;
     return Object.values(errors).some((error) => error !== "");

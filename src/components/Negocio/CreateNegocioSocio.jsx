@@ -138,13 +138,7 @@ const CreateNegocioSocio = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(crearNegocio(state));
-    // if (hasErrors) {
-    //     alert("Por favor, completa todos los campos requeridos.");
-        
-        
-    //     return;
-    // }
-    // console.log("Datos enviados:", state);
+  
     
   };
 
@@ -160,6 +154,7 @@ const CreateNegocioSocio = () => {
       };
 
       dispatch(editNegocio({ id: state.id, negocioData }));
+      alert("Negocio actualizado con éxito");
     } else {
       alert("Por favor, seleccione un negocio para editarlo");
     }
@@ -178,15 +173,16 @@ const CreateNegocioSocio = () => {
           nombre: state.nombre,
           descripcion: state.descripcion,
           imagen: state.imagen,
-          status: state.status,
+          status: "eliminado",
         };
 
         dispatch(editNegocio({ id: state.id, negocioData }));
+        alert("Negocio eliminado con éxito");
       } else {
-        alert("Por favor, seleccione un negocio para editarlo");
+        alert("Por favor, seleccione un negocio para eliminar");
       }
     } else {
-      console.log("Eliminación cancelada");
+      console.log("Bloqueo cancelado");
     }
   };
 

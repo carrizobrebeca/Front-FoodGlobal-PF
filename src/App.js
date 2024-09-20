@@ -20,7 +20,8 @@ import PedidoPage from "./pages/PedidoPage";
 import Pedidos from "./components/PedidosSocio/Pedidos";
 import Ventas from "./components/PedidosSocio/Ventas";
 import ResetPassword from "./pages/ResetPassword";
-
+import TerminosyCondiciones from "./pages/TerminosyCondiciones";
+import PoliticasPrivacidad from "./pages/PoliticasPrivacidad";
 
 const App = () => {
   return (
@@ -33,10 +34,10 @@ const App = () => {
         
         <Route path="/createusers" element={<CreateUser />} />
         <Route path="/dashboard" element={<Dashboard />} />
-  
-      
+        <Route path="/privacy" element={<PoliticasPrivacidad />} />
+        <Route path="/terms" element={<TerminosyCondiciones />} />
         <Route path="/reset" element={<ResetPassword />} />
-      
+
          <Route path="/pedido/:id" element={<PedidoPage />} /> 
         <Route path="/createnegocio" element={<CreateNegocio />} />
         <Route path="/productos" element={<NegociosPage />} />
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/users" element={<UsersConfig />} />
         <Route path="/locales" element={<Locales />} />
         <Route path="/afiliarse" element={<Afiliarse />} />
+        <Route path="/about" element={<SobreNosotros />} />
         <Route path="/about" element={<SobreNosotros />} />
       </Routes>
       <Footer />

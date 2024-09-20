@@ -47,6 +47,7 @@ const NegociosPage = () => {
   };
 
   const handleNegocioClick = (negocioId) => {
+    
     setSelectedNegocio(negocioId);
   };
 
