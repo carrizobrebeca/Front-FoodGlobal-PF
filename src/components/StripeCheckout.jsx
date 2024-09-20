@@ -6,7 +6,7 @@ import axios from 'axios';
 // Cargar la clave pública de Stripe
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) => {
+const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError, onClose }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = React.useState(null);
@@ -47,7 +47,6 @@ const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) =>
         setError(error.message);
         onError(error.message);
       } else if (paymentIntent.status === 'succeeded') {
- 
         setSuccess(true);
         onSuccess();
       }
@@ -57,10 +56,11 @@ const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) =>
     }
   };
 
-
-
   return (
-    <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg w-full max-w-md mx-auto">
+    <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg w-full max-w-md mx-auto relative">
+      <button onClick={onClose} className="absolute top-4 right-4 text-gray-600 hover:text-gray-900">
+        X
+      </button>
       <h2 className="text-2xl font-bold mb-4">Pago</h2>
       <form onSubmit={handleSubmit} className="w-full">
         <div className="bg-gray-200 p-4 rounded-lg shadow-md mb-4">
@@ -102,7 +102,7 @@ const CheckoutForm = ({ totalAmount, cartItems, userId, onSuccess, onError }) =>
   );
 };
 
-const StripeCheckout = ({ totalAmount, cartItems, userId, onSuccess, onError }) => (
+const StripeCheckout = ({ totalAmount, cartItems, userId, onSuccess, onError, onClose }) => (
   <Elements stripe={stripePromise}>
     <CheckoutForm 
       totalAmount={totalAmount} 
@@ -110,6 +110,7 @@ const StripeCheckout = ({ totalAmount, cartItems, userId, onSuccess, onError }) 
       userId={userId}
       onSuccess={onSuccess} 
       onError={onError} 
+      onClose={onClose} // Añadir el onClose aquí
     />
   </Elements>
 );

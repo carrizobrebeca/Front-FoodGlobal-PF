@@ -147,7 +147,9 @@ const CarritoPanel = ({ productos, onClose, isOpen, setProductos, negocioId }) =
       alert('Error al finalizar la compra: ' + err.message);
     }
   };
-  
+  const handleCloseCheckout = () => {
+    setShowCheckout(false);
+  };
 
   const handleError = (message) => {
     setPaymentMessage(`Error en el pago: ${message}`);
@@ -173,43 +175,49 @@ const CarritoPanel = ({ productos, onClose, isOpen, setProductos, negocioId }) =
             <p>El carrito está vacío</p>
           ) : (
             <div>
-              <ul className="space-y-4">
-                {productos.map((producto) => (
-                  <li key={producto.id} className="flex flex-col sm:flex-row items-center bg-gray-100 p-4 rounded-lg shadow-md">
-                    <img
-                      src={producto.imagen}
-                      alt={producto.nombre}
-                      className="w-16 h-16 object-cover rounded-lg mb-4 sm:mb-0 sm:mr-4"
-                    />
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold">{producto.nombre}</h3>
-                      <p className="text-gray-600">Precio: ${producto.precio}</p>
-                      <div className="flex items-center">
-                        <label htmlFor={`cantidad-${producto.id}`} className="text-gray-600 mr-2">
-                          Cantidad:
-                        </label>
-                        <input
-                          type="number"
-                          id={`cantidad-${producto.id}`}
-                          value={producto.cantidad}
-                          min="1"
-                          onChange={(e) => {
-                            handleCantidadChange(producto.id, Number(e.target.value));
-                            handleQuantityChange(producto.id, Number(e.target.value));
-                          }}
-                          className="w-20 p-1 border rounded"
-                        />
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => handleEliminar(producto.id)}
-                      className={`text-red-600 hover:underline ${isCartDisabled ? 'pointer-events-none opacity-50' : ''}`}
-                    >
-                      X
-                    </button>
-                  </li>
-                ))}
-              </ul>
+              <div className="flex-1 overflow-y-auto max-h-96">
+  <ul className="space-y-4">
+    {productos.map((producto) => (
+      <li
+        key={producto.id}
+        className="flex flex-col sm:flex-row items-center bg-gray-100 p-4 rounded-lg shadow-md"
+      >
+        <img
+          src={producto.imagen}
+          alt={producto.nombre}
+          className="w-16 h-16 object-cover rounded-lg mb-4 sm:mb-0 sm:mr-4"
+        />
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold">{producto.nombre}</h3>
+          <p className="text-gray-600">Precio: ${producto.precio}</p>
+          <div className="flex items-center">
+            <label htmlFor={`cantidad-${producto.id}`} className="text-gray-600 mr-2">
+              Cantidad:
+            </label>
+            <input
+              type="number"
+              id={`cantidad-${producto.id}`}
+              value={producto.cantidad}
+              min="1"
+              onChange={(e) => {
+                handleCantidadChange(producto.id, Number(e.target.value));
+                handleQuantityChange(producto.id, Number(e.target.value));
+              }}
+              className="w-20 p-1 border rounded"
+            />
+          </div>
+        </div>
+        <button
+          onClick={() => handleEliminar(producto.id)}
+          className={`text-red-600 hover:underline ${isCartDisabled ? 'pointer-events-none opacity-50' : ''}`}
+        >
+          X
+        </button>
+      </li>
+    ))}
+  </ul>
+</div>
+
               <div className="mt-4">
                 <h3 className="text-xl font-bold">Total: ${calcularTotal().toFixed(2)}</h3>
 
@@ -296,7 +304,7 @@ const CarritoPanel = ({ productos, onClose, isOpen, setProductos, negocioId }) =
 
       {showCheckout && (
         <div className="fixed inset-0 flex justify-center items-center z-50">
-<StripeCheckout totalAmount={totalAmount} onSuccess={handleSuccess} onError={handleError} />
+<StripeCheckout totalAmount={totalAmount} onSuccess={handleSuccess} onError={handleError}  onClose={handleCloseCheckout}/>
         </div>
       )}
     </>
