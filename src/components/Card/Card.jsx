@@ -1,5 +1,5 @@
 import React from "react";
-import style from "./card.module.css";
+
 import { useNavigate } from "react-router-dom";
 
 function Card({ item }) {
@@ -7,7 +7,7 @@ function Card({ item }) {
 
   return (
     <div>
-      <div className="max-w-2xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-1 bg-gradient-to-tr hover:bg-gradient-to-l from-gray-300 to-gray-100 shadow-xl rounded-lg text-gray-200">
+      <div className="max-w-xl mx-4 sm:max-w-sm md:max-w-sm lg:max-w-sm xl:max-w-sm sm:mx-auto md:mx-auto lg:mx-auto xl:mx-auto mt-1 bg-gradient-to-tr hover:bg-gradient-to-l from-gray-300 to-gray-100 shadow-xl rounded-lg text-gray-200">
         <div className="rounded-t-lg h-32 overflow-hidden">
           <img
             classNameName="object-cover object-top w-full"
@@ -18,18 +18,25 @@ function Card({ item }) {
         <div className="mx-auto w-32 h-32 relative -mt-16 border-4 border-white rounded-full overflow-hidden">
           <img
             className="object-cover object-center h-32"
-            src={item.imagen}
+            src={
+              item.imagen ||
+              "https://w7.pngwing.com/pngs/857/213/png-transparent-man-avatar-user-business-avatar-icon.png"
+            }
             alt={item.nombre}
           />
         </div>
         <div className="text-center">
-          <h2 className="text-gray-500">{item.nombre} {item.apellido}</h2>
-         
+          <h2 className="text-gray-500">
+            {item.nombre} {item.apellido}
+          </h2>
         </div>
-      
+
         <div className="p-4 border-t mx-8 mt-2">
-          <button className="w-1/2 block mx-auto rounded-full bg-blue-600 hover:shadow-lg font-semibold text-white px-6 py-2" onClick={() => navigate(`/user/${item.id}`)}>
-            Detail
+          <button
+            className="w-1/2 block mx-auto rounded-full bg-blue-600 hover:shadow-lg font-semibold text-white px-6 py-2"
+            onClick={() => navigate(`/user/${item.id}`)}
+          >
+            {item.email}
           </button>
         </div>
       </div>

@@ -4,13 +4,14 @@ import ProductDetailModal from './ProductDetailModal';
 import CarritoPanel from './CarritoPanel';
 import { useDispatch, useSelector } from 'react-redux';
 import { agregarProducto } from '../store/carritoSlice';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 const NegocioProductos = ({ negocioId }) => {
   const [productos, setProductos] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+  const [priceRange, setPriceRange] = useState([0, 100]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,17 +30,8 @@ const NegocioProductos = ({ negocioId }) => {
         setLoading(true);
         setError(null);
         const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/negocios/${negocioId}/productos`);
-        const productosData = response.data;
-
-        productosData.forEach(producto => {
-          if (!producto.precio) {
-            console.error('Producto sin precio:', producto);
-          }
-        });
-
-        setProductos(productosData);
-
-        const categorias = [...new Set(productosData.map(producto => producto.categoria))];
+        setProductos(response.data);
+        const categorias = [...new Set(response.data.map(producto => producto.categoria))];
         setCategories(categorias);
       } catch (err) {
         setError(err.message);
@@ -59,10 +51,13 @@ const NegocioProductos = ({ negocioId }) => {
     setSelectedCategory(e.target.value);
   };
 
+  const handlePriceRangeChange = (value) => {
+    setPriceRange(value);
+  };
+
   const handleResetFilters = () => {
     setSearchTerm('');
-    setMinPrice('');
-    setMaxPrice('');
+    setPriceRange([0, 100]);
     setSelectedCategory('');
   };
 
@@ -84,44 +79,33 @@ const NegocioProductos = ({ negocioId }) => {
       }));
     }
   };
-  
+
   const handleAddToCart = (producto, cantidad = 1) => {
     if (!producto || typeof producto.precio === 'undefined') {
       console.error('Producto inválido:', producto);
       return;
     }
   
-    // Verificar si la cantidad excede el stock disponible
     const cantidadFinal = Math.min(cantidad, producto.stock);
   
     if (cantidadFinal > 0) {
       dispatch(agregarProducto({ ...producto, cantidad: cantidadFinal }));
       setIsCarritoOpen(true);
       setProductQuantities(prev => ({ ...prev, [producto.id]: cantidadFinal }));
-      // Actualizar el stock disponible del producto
-      setProductos(prevProductos => prevProductos.map(prod => {
-        if (prod.id === producto.id) {
-          return { ...prod, stock: prod.stock - cantidadFinal };
-        }
-        return prod;
-      }));
+      setProductos(prevProductos =>
+        prevProductos.map(prod => (prod.id === producto.id ? { ...prod, stock: prod.stock - cantidadFinal } : prod))
+      );
     } else {
       console.error('Cantidad no válida para agregar al carrito.');
     }
   };
 
-  const filteredProductos = productos.filter((producto) => {
-    console.log('Producto:', producto);
+  const [minPrice, maxPrice] = priceRange;
+
+  const filteredProductos = productos.filter(producto => {
     const isInCategory = selectedCategory ? producto.categoria === selectedCategory : true;
-    const isInPriceRange = (
-      (minPrice === '' || producto.precio >= Number(minPrice)) &&
-      (maxPrice === '' || producto.precio <= Number(maxPrice))
-    );
-    return (
-      producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      isInCategory &&
-      isInPriceRange
-    );
+    const isInPriceRange = (minPrice === '' || producto.precio >= minPrice) && (maxPrice === '' || producto.precio <= maxPrice);
+    return producto.nombre.toLowerCase().includes(searchTerm.toLowerCase()) && isInCategory && isInPriceRange;
   });
 
   const toggleCarritoPanel = () => {
@@ -132,124 +116,97 @@ const NegocioProductos = ({ negocioId }) => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <div className="p-8 bg-gray-200">
-      <div className="mb-4 flex justify-between items-center">
+    <div className="p-8 bg-gray-100 flex">
+      {/* Filtros a la izquierda */}
+      <div className="w-1/4 bg-white p-4 shadow-lg rounded-lg">
         <input
           type="text"
           placeholder="Buscar producto..."
           value={searchTerm}
           onChange={handleSearch}
-          className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-3/4"
+          className="p-2 border border-gray-300 rounded-lg shadow-sm mb-4 w-full"
         />
-        <button
-          onClick={toggleCarritoPanel}
-          className="p-2 bg-green-500 text-white rounded ml-4"
+        <select
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          className="p-2 border border-gray-300 rounded-lg shadow-sm mb-4 w-full"
         >
-          Carrito
-        </button>
-      </div>
-
-      <div className="mb-4 flex flex-wrap gap-4 items-center">
-        <div className="flex flex-col w-full md:w-1/4">
-          <label htmlFor="category" className="text-sm font-medium mb-2">Categoría</label>
-          <select
-            id="category"
-            value={selectedCategory}
-            onChange={handleCategoryChange}
-            className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-          >
-            <option value="">Todas las categorías</option>
-            {categories.map((categoria, index) => (
-              <option key={index} value={categoria}>{categoria}</option>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-col w-full md:w-1/4">
-          <label htmlFor="minPrice" className="text-sm font-medium mb-2">Precio Mínimo</label>
-          <input
-            id="minPrice"
-            type="number"
-            placeholder="0"
-            value={minPrice}
-            onChange={(e) => setMinPrice(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+          <option value="">Todas las categorías</option>
+          {categories.map((categoria, index) => (
+            <option key={index} value={categoria}>{categoria}</option>
+          ))}
+        </select>
+        <div className="mb-4">
+          <p>Rango de precios: ${priceRange[0]} - ${priceRange[1]}</p>
+          <Slider
+            range
+            min={0}
+            max={100}
+            step={1}
+            value={priceRange}
+            onChange={handlePriceRangeChange}
+            className="w-full"
           />
         </div>
-        <div className="flex flex-col w-full md:w-1/4">
-          <label htmlFor="maxPrice" className="text-sm font-medium mb-2">Precio Máximo</label>
-          <input
-            id="maxPrice"
-            type="number"
-            placeholder="0"
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(e.target.value)}
-            className="p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-          />
-        </div>
-        <div className="mt-4 md:mt-0 md:w-1/4">
-          <button
-            onClick={handleResetFilters}
-            className="p-2 bg-red-500 text-white rounded w-full"
-          >
-            Resetear Filtros
-          </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-  {filteredProductos.map((producto) => (
-    <div key={producto.id} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
-      <div>
-        {/* Aplicar clases de Tailwind para un tamaño uniforme de las imágenes */}
-        <img
-          src={producto.imagen}
-          alt={producto.nombre}
-          className="w-full h-48 object-contain mb-4"
-        />
-        <h3 className="text-lg font-semibold">{producto.nombre}</h3>
-        <p className="text-gray-600">Precio: ${producto.precio}</p>
-        <p className="text-gray-600">Categoría: {producto.categoria}</p>
-        <p className="text-gray-600">Stock: {producto.stock}</p>
-      </div>
-      <div>
-        <input
-          type="number"
-          min="1"
-          max={producto.stock}
-          value={productQuantities[producto.id] || 1}
-          onChange={(e) => handleQuantityChange(producto.id, parseInt(e.target.value, 10))}
-          className="border rounded p-1 w-16 mr-2"
-        />
         <button
-          onClick={() => handleAddToCart(producto, productQuantities[producto.id] || 1)}
-          className="p-2 bg-blue-500 text-white rounded mt-2 w-full"
+          onClick={handleResetFilters}
+          className="p-2 bg-red-500 text-white rounded-lg shadow-lg w-full"
         >
-          Agregar al Carrito
-        </button>
-        <button
-          onClick={() => handleViewDetails(producto)}
-          className="p-2 bg-green-500 text-white rounded mt-2 w-full"
-        >
-          Ver Detalles
+          Resetear filtros
         </button>
       </div>
-    </div>
-  ))}
-</div>
 
+      {/* Productos en cuadrícula */}
+      <div className="w-3/4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredProductos.map((producto) => (
+          <div key={producto.id} className="bg-white p-4 rounded-lg shadow-lg flex flex-col items-center justify-between w-full h-auto hover:shadow-2xl transition-shadow duration-300">
+            <img src={producto.imagen} alt={producto.nombre} className="w-48 h-48 object-contain mb-4 rounded-lg" />
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">{producto.nombre}</h3>
+              <p className="text-gray-500">Precio: <span className="text-gray-700 font-medium">${producto.precio}</span></p>
+              <p className="text-gray-500">Stock: <span className={`font-medium ${producto.stock > 0 ? 'text-green-500' : 'text-red-500'}`}>{producto.stock}</span></p>
+            </div>
+            <div className="flex flex-col items-center mt-4 w-full">
+              <input
+                type="number"
+                min="1"
+                max={producto.stock}
+                value={productQuantities[producto.id] || 1}
+                onChange={(e) => handleQuantityChange(producto.id, parseInt(e.target.value, 10))}
+                className="border rounded p-2 w-20 mb-2"
+              />
+              <button
+                onClick={() => handleAddToCart(producto, productQuantities[producto.id] || 1)}
+                className="p-2 bg-blue-600 text-white rounded-lg w-full font-medium mb-2 hover:bg-blue-700 transition-colors duration-300"
+              >
+                Agregar al carrito
+              </button>
+              <button
+                onClick={() => handleViewDetails(producto)}
+                className="p-2 bg-green-500 text-white rounded-lg w-full font-medium hover:bg-green-600 transition-colors duration-300"
+              >
+                Ver detalles
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Modal de detalles y carrito */}
       {selectedProduct && (
         <ProductDetailModal
           product={selectedProduct}
           onClose={handleCloseModal}
-          agregarAlCarrito={handleAddToCart} // Pasar función correctamente
+          agregarAlCarrito={handleAddToCart}
         />
       )}
-
-      <CarritoPanel
-        isOpen={isCarritoOpen}
-        onClose={() => setIsCarritoOpen(false)}
-        productos={carritoProductos}
-      />
+<CarritoPanel
+  negocioId={negocioId} // Aquí pasas el negocioId
+  productos={carritoProductos}
+  onClose={() => setIsCarritoOpen(false)}
+  isOpen={isCarritoOpen}
+  setProductos={setProductos} // Pass setProductos as a prop
+/>
     </div>
   );
 };

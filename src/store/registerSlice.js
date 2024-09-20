@@ -45,7 +45,7 @@ export const editUser = createAsyncThunk(
   async ({ id, userData }, { rejectWithValue }) => {
     try {
       const response = await axios.put(
-        `/usuarios/${id}`,
+        `https://back-foodglobal-pf.up.railway.app/usuarios/${id}`,
         userData
       );
       return response.data;

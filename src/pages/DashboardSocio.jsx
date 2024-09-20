@@ -4,8 +4,10 @@ import { logout } from "../store/loginSlice";
 import axios from "axios";
 import Card from "../components/Card/Card"; // Asegúrate de que la ruta sea correcta
 import { useDispatch, useSelector } from "react-redux";
-
-
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+import CardDashboard from "../components/CardDashboard";
+import CardsProducts from "../components/CardsProducts";
 
 const DashboardSocio = () => {
   const navigate = useNavigate();
@@ -13,22 +15,85 @@ const DashboardSocio = () => {
   const user = useSelector((state) => state.login.user);
   const [users, setUsers] = useState([]);
   const [allNegocios, setAllNegocios] = useState([]);
+  const [productos, setProductos] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const [userStats, setUserStats] = useState({
+    currentMonthCount: 0,
+    previousMonthCount: 0,
+    percentageChange: 0,
+  });
   const fetchData = async () => {
     try {
       const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/usuarios`);
       const data = response.data;
-      // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
+
+      // Get the current and previous months
+      const now = new Date();
+      const currentMonth = now.getMonth(); // 0-based month index (0 = January)
+      const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+      const currentYear = now.getFullYear();
+      const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+
+      // Function to get month and year from a date
+      const getMonthYear = (dateString) => {
+        const date = new Date(dateString);
+        return { month: date.getMonth(), year: date.getFullYear() };
+      };
+
+      // Filter users by the current and previous months
+      const counts = data.reduce(
+        (acc, user) => {
+          const { month, year } = getMonthYear(user.createdAt);
+          if (year === currentYear && month === currentMonth) {
+            acc.currentMonth++;
+          } else if (year === previousYear && month === previousMonth) {
+            acc.previousMonth++;
+          }
+          return acc;
+        },
+        { currentMonth: 0, previousMonth: 0 }
+      );
+
+      // Calculate the percentage change
+      const percentageChange =
+        counts.previousMonth > 0
+          ? ((counts.currentMonth - counts.previousMonth) /
+              counts.previousMonth) *
+            100
+          : counts.currentMonth > 0
+          ? 100
+          : 0;
+
+      // Update state with user data and statistics
       const recentUsers = data
         .filter((user) => user.rol === "usuario")
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         .slice(0, 5);
+
       setUsers(recentUsers);
+      setUserStats({
+        currentMonthCount: counts.currentMonth,
+        previousMonthCount: counts.previousMonth,
+        percentageChange: percentageChange.toFixed(2), // Round to 2 decimal places
+      });
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
+    // try {
+    //   const response = await axios.get(`http://localhost:3001/usuarios`);
+    //   const data = response.data;
+    //   // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
+    //   const recentUsers = data
+    //     .filter((user) => user.rol === "usuario")
+    //     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    //     .slice(0, 5);
+    //   setUsers(recentUsers);
+    // } catch (error) {
+    //   console.error("Error fetching user data:", error);
+    // }
   };
 
   const fetchNegocios = async () => {
@@ -48,177 +113,155 @@ const DashboardSocio = () => {
       setLoading(false);
     }
   };
+  const fetchProductos = async () => {
+    try {
+      const response = await axios.get(`https://back-foodglobal-pf.up.railway.app/productos`);
+      const data = response.data;
+      // Filtra los usuarios con rol 'usuario', ordénalos y toma los 5 más recientes
+      const blockProducts = data.filter(
+        (product) => product.status === "bloqueado"
+      );
 
+      setProductos(blockProducts);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
   useEffect(() => {
     fetchNegocios();
     fetchData();
+    fetchProductos();
   }, [user]);
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/");
-  };
-
   return (
-    <div className="flex h-screen">
-      <aside className="bg-gray-100 w-64 p-5 border-r-2 border-gray-200 flex-shrink-0">
-        <button
-          className="mb-4 text-slate-600 flex justify-between items-center w-full"
-          onClick={() => navigate("/")}
-          aria-label="Ir al inicio"
-        >
-          <span>❮</span>
-          <span className="flex-1 text-center">Inicio</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
-            />
-          </svg>
-        </button>
-        <div className="flex flex-col items-center mb-10 mt-10 rounded-lg bg-gradient-to-r from-gray-300 via-gray-100 to-gray-200">
-          <img
-            src={user?.imagen}
-            alt="User"
-            className="w-20 h-20 rounded-full bg-gray-500 mb-2 mt-2"
-          />
-          <div className="text-left">
-            <p className="text-xl">
-              {user?.nombre + " " + user?.apellido || "Nombre"}
-            </p>
-            <p>{user?.rol || "Rol"}</p>
-          </div>
-        </div>
-        <div className="mt-12 mb-12">
-          <button
-            className="w-full py-2 mb-4 text-slate-600 flex justify-between items-center"
-            onClick={() => navigate("/products")}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z"
-              />
-            </svg>
-            Productos
-            <span>›</span>
-          </button>
-          <button
-            className="w-full py-2 mb-4 text-slate-600 flex justify-between items-center"
-            onClick={() => navigate("/createnegocio")}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122"
-              />
-            </svg>
-            Negocios
-            <span>›</span>
-          </button>
-          <button
-            className="w-full py-2 mb-4 text-slate-600 flex justify-between items-center"
-            onClick={() => navigate("/orders")}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"
-              />
-            </svg>
-            Pedidos
-            <span>›</span>
-          </button>
+    <div className="grid lg:grid-cols-4 xl:grid-cols-6 min-h-screen">
+      <Sidebar />
+      <main className="lg:col-span-3 xl:col-span-5 bg-gray-100 p-8 h-[100vh] overflow-y-scroll">
+        <Header />
 
-          <button
-            className="w-full py-2 mb-4 text-slate-600 flex justify-between items-center"
-            onClick={() => navigate("/createnegocio")}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m3.75 9v7.5m2.25-6.466a9.016 9.016 0 0 0-3.461-.203c-.536.072-.974.478-1.021 1.017a4.559 4.559 0 0 0-.018.402c0 .464.336.844.775.994l2.95 1.012c.44.15.775.53.775.994 0 .136-.006.27-.018.402-.047.539-.485.945-1.021 1.017a9.077 9.077 0 0 1-3.461-.203M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z"
-              />
-            </svg>
-            Historial de Ventas
-            <span>›</span>
-          </button>
-        </div>
-      </aside>
-
-      <main className="flex-1 flex flex-col bg-white-100 overflow-y-auto">
-        <nav className="bg-gray-100 text-black p-4 border-b-2 border-gray-200">
-          {/* Agrega botones de navegación aquí si es necesario */}
-        </nav>
-        <div className="p-4 bg-white rounded-xl flex-1">
-          <h2 className="text-2xl">Usuarios recientes de la plataforma</h2>
-          <div className="flex overflow-x-auto gap-2">
-            {users.length > 0 ? (
-              users.map((user) => <Card key={user.id} item={user} />)
-            ) : (
-              <p>Parece que no hay nuevos usuarios...</p>
-            )}
+        <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 mt-10 gap-8">
+          <div className="bg-primary-100 p-8 rounded-xl text-gray-300 flex flex-col gap-6 bg-gradient-to-r from-green-300 via-yellow-100 to-yellow-200">
+            <span className="py-1 px-3 text-green-700 rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941"
+                />
+              </svg>
+            </span>
+            <h4 className="text-2xl text-green-700">Ventas totales</h4>
+            <span className="text-5xl text-green-800">$ 8,350</span>
+            <span className="py-1 px-3 bg-white text-green-700 rounded-full">
+              10% mes anterior
+            </span>
           </div>
-          <Link to="/users" className="text-orange-500 flex justify-end mt-2">
-            View More
-          </Link>
-        </div>
 
-        <div className="p-4 bg-white rounded-xl mt-4 flex-1">
-          <h2 className="text-2xl mb-4">Tu Negocio</h2>
-          <div className="flex overflow-x-auto gap-2">
-            {allNegocios.length > 0 ? (
-              allNegocios.map((negocio) => (
-                <Card key={negocio.id} item={negocio} />
-              ))
-            ) : (
-              <p>Parece que no tienes un negocio aún...</p>
-            )}
+          <div className="p-4 bg-white rounded-xl flex flex-col justify-between gap-4 drop-shadow-2xl bg-gradient-to-r from-orange-300 via-yellow-100 to-yellow-200">
+            <div className="flex items-center gap-4 bg-white rounded-xl p-4">
+              <span className="bg-orange-400 text-gray-200 text-2xl font-bold p-4 rounded-xl">
+                98
+              </span>
+              <div>
+                <h3 className="font-bold">Ventas</h3>
+                <p className="text-gray-500">+ 30% mes anterior</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl p-4">
+              <div className="flex items-center gap-4 mb-4">
+                <span className="bg-orange-400 text-gray-200 text-2xl font-bold p-4 rounded-xl">
+                  {userStats.currentMonthCount}
+                </span>
+                <div>
+                  <h3 className="font-bold">Usuarios</h3>
+                  <p>nuevos este mes</p>
+                  <p className="text-gray-500"></p>
+                  <p>
+                    
+                    {userStats.percentageChange > 0
+                      ? `+${userStats.percentageChange}%`
+                      : `${userStats.percentageChange}%`} / mes anterior
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 text-gray-500 text-sm">
+                <span className="bg-primary-100/20 py-1 px-4 rounded-full"></span>
+                <span className="bg-primary-100/20 py-1 px-4 rounded-full"></span>
+              </div>
+            </div>
           </div>
-          <Link to="/users" className="text-orange-500 flex justify-end mt-2">
-            View More
-          </Link>
-        </div>
+
+          <div className="col-span-1 md:col-span-2 flex flex-col justify-between ">
+            <h1 className="text-2xl font-bold text-gray-500 ">
+              Usuarios recientes de la platforma
+            </h1>
+            <div className="bg-white p-8 rounded-xl shadow-2xl bg-gradient-to-r from-indigo-300 via-indigo-100 to-yellow-200">
+              {/* <div className="p-4 bg-white rounded-xl flex-1"> */}
+
+              <div className="flex overflow-x-auto gap-2">
+                {users.length > 0 ? (
+                  users.map((user) => (
+                    <CardDashboard key={user.id} item={user} />
+                  ))
+                ) : (
+                  <p>Parece que no hay nuevos usuarios...</p>
+                )}
+              </div>
+
+              <div className="flex justify-end">
+                <a
+                  href="/users"
+                  className="hover:text-orange-600 transition-colors hover:underline"
+                >
+                  Todos los usuarios
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="grid grid-cols-1 md:grid-cols-2 mt-10 gap-8">
+          <div>
+            <h1 className="text-2xl font-bold mb-8 text-gray-500 mb-8">
+              Productos bloqueados por el administrador
+            </h1>
+            <div className="bg-white p-8 rounded-xl shadow-2xl mb-8 flex flex-col gap-8">
+              {productos.length > 0 ? (
+                productos.map((producto) => (
+                  <CardsProducts key={producto.id} item={producto} />
+                ))
+              ) : (
+                <p>Parece que no hay productos bloqueados...</p>
+              )}
+            </div>
+            <div className="bg-primary-900 text-gray-300 p-8 rounded-xl shadow-2xl flex items-center justify-between flex-wrap xl:flex-nowrap gap-8">
+              <button className="bg-blue-500 py-2 px-6 rounded-xl text-white w-full">
+                Contactar admin
+              </button>
+            </div>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold  text-gray-500 mb-8">
+              Tu negocio
+            </h1>
+            <div className="bg-white p-8 rounded-xl shadow-2xl mb-8 flex flex-col gap-3">
+              {allNegocios.length > 0 ? (
+                allNegocios.map((negocio) => (
+                  <CardsProducts key={negocio.id} item={negocio} />
+                ))
+              ) : (
+                <p>Parece que todavia no creaste tu negocio...</p>
+              )}
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
