@@ -70,14 +70,7 @@ const Navbar = ({ onOpenCarrito }) => {
           <img src={logo} alt="FoodGlobal Logo" className="w-32 h-auto animate-pulse" />
         </Link>
 
-        {/* Barra de Búsqueda Centrada */}
-        <div className="flex-1 flex justify-center">
-          <input
-            type="text"
-            placeholder="Buscar..."
-            className="p-2 w-3/5 max-w-lg rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-orange-500"
-          />
-        </div>
+
 
         {/* Ubicación, Bandera y Estado de Usuario */}
         <div className="flex items-center">
@@ -104,13 +97,7 @@ const Navbar = ({ onOpenCarrito }) => {
               Ingresar
             </Link>
           )}
-          {/* Botón de Carrito */}
-          <button
-            onClick={toggleCarritoPanel}
-            className="ml-4 p-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg"
-          >
-            Carrito
-          </button>
+
           {/* Botón de la Barra Lateral */}
           <button className="ml-4" onClick={toggleSidebar}>
             <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -144,9 +131,10 @@ const Navbar = ({ onOpenCarrito }) => {
             <ul className="space-y-4">
               <li><Link to="/">Inicio</Link></li>
               <li><Link to="/productos">Productos</Link></li>
-              <li><Link to="/locales">Locales</Link></li>
+              <li><Link to="/pedido/:id">Mis Pedidos</Link></li>
               <li><Link to="/afiliarse">Afiliarse</Link></li>
               <li><Link to="/about">Sobre Nosotros</Link></li>
+
 
               {/* Mostrar Dashboard solo si el usuario es admin o socio */}
               {(user?.rol === 'admin' || user?.rol === 'socio') && (

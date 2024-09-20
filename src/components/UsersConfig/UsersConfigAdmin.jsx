@@ -130,11 +130,12 @@ const UsersConfigAdmin = () => {
       const userToUpdate = users.find((user) => user.id === id);
       const updatedUserData = {
         ...userToUpdate,
-        status: "activo",
+        status: "activo", // Asegúrate de que esto sea permitido en tu lógica
         rol: "socio",
       };
 
       try {
+        console.log("Updating user with data:", updatedUserData); // Debugging
         await dispatch(editUser({ id, userData: updatedUserData }));
         alert("Usuario asociado con éxito");
       } catch (error) {

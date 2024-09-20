@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { eliminarProducto, validarStock, vaciarCarrito } from '../store/carritoSlice';
 import axios from 'axios';
 import StripeCheckout from '../components/StripeCheckout'; // Ajusta la ruta
 import { useNavigate } from 'react-router-dom';
 
-const CarritoPanel = ({ productos, onClose, isOpen }) => {
+const CarritoPanel = ({ productos, onClose, isOpen, setProductos, negocioId }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showCheckout, setShowCheckout] = useState(false);
@@ -13,6 +13,14 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const [showPaymentMessage, setShowPaymentMessage] = useState(false);
   const [isCartDisabled, setIsCartDisabled] = useState(false);
   const [entregaSeleccionada, setEntregaSeleccionada] = useState('retiro'); // Valor inicial
+  const [direccion, setDireccion] = useState('');
+  const [ciudad, setCiudad] = useState('');
+  const [codigoPostal, setCodigoPostal] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [documentoIdentidad, setDocumentoIdentidad] = useState('');
+
+  
+  const user = useSelector((state) => state.login.user);
 
   useEffect(() => {
     if (paymentMessage) {
@@ -35,7 +43,23 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
 
   const handleEliminar = (id) => {
     if (!isCartDisabled) {
-      dispatch(eliminarProducto({ id }));
+      const producto = productos.find((prod) => prod.id === id);
+      if (producto) {
+        dispatch(eliminarProducto({ id }));
+        setProductos(prevProductos =>
+          prevProductos.map(prod => (prod.id === producto.id ? { ...prod, stock: prod.stock + producto.cantidad } : prod))
+        );
+      }
+    }
+  };
+
+  const handleQuantityChange = (id, newQuantity) => {
+    const producto = productos.find((prod) => prod.id === id);
+    if (producto) {
+      const quantityDiff = newQuantity - producto.cantidad;
+      setProductos(prevProductos =>
+        prevProductos.map(prod => (prod.id === producto.id ? { ...prod, stock: prod.stock - quantityDiff } : prod))
+      );
     }
   };
 
@@ -83,25 +107,37 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
   const handleSuccess = async () => {
     setPaymentMessage('¡Pago exitoso!');
     setShowCheckout(false);
-
+  
+    const usuarioId = localStorage.getItem('usuario_id');
+    
+    if (!usuarioId) {
+      alert('Por favor, inicia sesión para continuar.');
+      return; // Detener la ejecución si no hay usuario logueado
+    }
+  
     try {
       const compraData = {
-        usuario_id: '377657b2-7e97-4bdb-a388-97c2c75bff85',
-        negocio_id: '8dae138f-ad07-47a5-8104-d987f70d3b7d',
+        usuario_id: user.id,
+        negocio_id: negocioId,
         productos: productos.map((producto) => ({
           producto_id: producto.id,
           cantidad: producto.cantidad,
         })),
         tipo_entrega: entregaSeleccionada,
-        total: calcularTotal(),
+        datos_entrega: entregaSeleccionada === 'domicilio' ? {
+          ciudad,
+          direccion_envio: direccion,
+          codigo_postal: codigoPostal,
+        } : entregaSeleccionada === 'retiro' ? {
+          nombre,
+          documento_identidad: documentoIdentidad
+        } : null,
+        estado: "pendiente",
       };
-
-      const response = await axios.post(
-        'http://localhost:3001/finalizar-compra',
-        compraData
-      );
+      console.log(compraData)
+      const response = await axios.post('http://localhost:3001/finalizar-compra', compraData);
       const { id } = response.data.pedido;
-
+  
       dispatch(vaciarCarrito());
       setPaymentMessage('¡Stock actualizado y compra finalizada!');
       navigate(`/pedido/${id}`);
@@ -111,6 +147,7 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       alert('Error al finalizar la compra: ' + err.message);
     }
   };
+  
 
   const handleError = (message) => {
     setPaymentMessage(`Error en el pago: ${message}`);
@@ -123,14 +160,14 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
       )}
 
       <div
-        className={`fixed top-0 right-0 h-full w-80 bg-white text-gray-800 transition-transform transform ${
+        className={`fixed top-0 right-0 h-full w-full md:w-80 bg-white text-gray-800 transition-transform transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
-        } shadow-lg z-50`}
+        } shadow-lg z-50 flex flex-col`}
       >
         <button className="absolute top-4 right-4 text-xl" onClick={onClose}>
           X
         </button>
-        <div className={`p-4 ${isCartDisabled ? 'pointer-events-none opacity-50' : ''}`}>
+        <div className={`p-4 flex-1 ${isCartDisabled ? 'pointer-events-none opacity-50' : ''}`}>
           <h2 className="text-lg font-bold mb-4">Carrito</h2>
           {productos.length === 0 ? (
             <p>El carrito está vacío</p>
@@ -138,11 +175,11 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
             <div>
               <ul className="space-y-4">
                 {productos.map((producto) => (
-                  <li key={producto.id} className="flex items-center bg-gray-100 p-4 rounded-lg shadow-md">
+                  <li key={producto.id} className="flex flex-col sm:flex-row items-center bg-gray-100 p-4 rounded-lg shadow-md">
                     <img
                       src={producto.imagen}
                       alt={producto.nombre}
-                      className="w-16 h-16 object-cover rounded-lg mr-4"
+                      className="w-16 h-16 object-cover rounded-lg mb-4 sm:mb-0 sm:mr-4"
                     />
                     <div className="flex-1">
                       <h3 className="text-lg font-semibold">{producto.nombre}</h3>
@@ -156,7 +193,10 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
                           id={`cantidad-${producto.id}`}
                           value={producto.cantidad}
                           min="1"
-                          onChange={(e) => handleCantidadChange(producto.id, Number(e.target.value))}
+                          onChange={(e) => {
+                            handleCantidadChange(producto.id, Number(e.target.value));
+                            handleQuantityChange(producto.id, Number(e.target.value));
+                          }}
                           className="w-20 p-1 border rounded"
                         />
                       </div>
@@ -188,35 +228,75 @@ const CarritoPanel = ({ productos, onClose, isOpen }) => {
                   </select>
                 </div>
 
+                {entregaSeleccionada === 'domicilio' && (
+                  <div className="mt-4">
+                    <label htmlFor="direccion" className="text-gray-600">Dirección:</label>
+                    <input
+                      type="text"
+                      id="direccion"
+                      value={direccion}
+                      onChange={(e) => setDireccion(e.target.value)}
+                      className="p-2 border rounded w-full"
+                    />
+                    <label htmlFor="ciudad" className="text-gray-600 mt-2">Ciudad:</label>
+                    <input
+                      type="text"
+                      id="ciudad"
+                      value={ciudad}
+                      onChange={(e) => setCiudad(e.target.value)}
+                      className="p-2 border rounded w-full"
+                    />
+                    <label htmlFor="codigo-postal" className="text-gray-600 mt-2">Código Postal:</label>
+                    <input
+                      type="text"
+                      id="codigo-postal"
+                      value={codigoPostal}
+                      onChange={(e) => setCodigoPostal(e.target.value)}
+                      className="p-2 border rounded w-full"
+                    />
+                  </div>
+                )}
+
+                {entregaSeleccionada === 'retiro' && (
+                  <div className="mt-4">
+                    <label htmlFor="nombre" className="text-gray-600">Nombre:</label>
+                    <input
+                      type="text"
+                      id="nombre"
+                      value={nombre}
+                      onChange={(e) => setNombre(e.target.value)}
+                      className="p-2 border rounded w-full"
+                    />
+                    <label htmlFor="documento" className="text-gray-600 mt-2">Documento de Identidad:</label>
+                    <input
+                      type="text"
+                      id="documento"
+                      value={documentoIdentidad}
+                      onChange={(e) => setDocumentoIdentidad(e.target.value)}
+                      className="p-2 border rounded w-full"
+                    />
+                  </div>
+                )}
+
                 <button
                   onClick={handleComprar}
-                  className="mt-4 w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+                  className={`mt-4 p-2 bg-blue-500 text-white rounded ${isCartDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   Comprar
                 </button>
               </div>
             </div>
           )}
+
+          {showPaymentMessage && (
+            <p className="mt-4 text-green-500">{paymentMessage}</p>
+          )}
         </div>
       </div>
 
       {showCheckout && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-60">
-          <div className="relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md mx-auto">
-            <button
-              className="absolute top-4 right-4 text-xl text-gray-600"
-              onClick={() => setShowCheckout(false)}
-            >
-              X
-            </button>
-            <StripeCheckout totalAmount={totalAmount} onSuccess={handleSuccess} onError={handleError} />
-          </div>
-        </div>
-      )}
-
-      {showPaymentMessage && (
-        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 p-4 text-center text-white bg-blue-600 rounded-lg mt-4 z-50">
-          {paymentMessage}
+        <div className="fixed inset-0 flex justify-center items-center z-50">
+<StripeCheckout totalAmount={totalAmount} onSuccess={handleSuccess} onError={handleError} />
         </div>
       )}
     </>

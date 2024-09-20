@@ -21,6 +21,10 @@ const loginSlice = createSlice({
     error: null,
   },
   reducers: {
+    loginSuccess: (state, action) => {
+      state.status = 'succeeded';
+      state.user = action.payload; // Aquí debería venir el usuario con el `usuario_id`
+    },
     logout: (state) => {
       state.user = null;
       state.status = 'idle';

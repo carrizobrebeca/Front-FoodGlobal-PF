@@ -23,8 +23,6 @@ const NegocioProductos = ({ negocioId }) => {
   const carritoProductos = useSelector(state => state.carrito.productos);
 
   useEffect(() => {
-    
-    
     const fetchProductos = async () => {
       if (!negocioId) return;
 
@@ -87,9 +85,9 @@ const NegocioProductos = ({ negocioId }) => {
       console.error('Producto inválido:', producto);
       return;
     }
-
+  
     const cantidadFinal = Math.min(cantidad, producto.stock);
-
+  
     if (cantidadFinal > 0) {
       dispatch(agregarProducto({ ...producto, cantidad: cantidadFinal }));
       setIsCarritoOpen(true);
@@ -113,7 +111,6 @@ const NegocioProductos = ({ negocioId }) => {
   const toggleCarritoPanel = () => {
     setIsCarritoOpen(prev => !prev);
   };
-
 
   if (loading) return <p>Cargando productos...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -203,11 +200,13 @@ const NegocioProductos = ({ negocioId }) => {
           agregarAlCarrito={handleAddToCart}
         />
       )}
-      <CarritoPanel
-        isOpen={isCarritoOpen}
-        onClose={() => setIsCarritoOpen(false)}
-        productos={carritoProductos}
-      />
+<CarritoPanel
+  negocioId={negocioId} // Aquí pasas el negocioId
+  productos={carritoProductos}
+  onClose={() => setIsCarritoOpen(false)}
+  isOpen={isCarritoOpen}
+  setProductos={setProductos} // Pass setProductos as a prop
+/>
     </div>
   );
 };
